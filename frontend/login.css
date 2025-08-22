@@ -1,0 +1,101 @@
+
+/* Imagen de fondo */
+.bg-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* Ajusta la imagen a toda la pantalla */
+  z-index: -1;         /* La manda detrás del formulario */
+}
+
+/* Fondo general */
+body {
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+/* Caja principal */
+.login-container {
+  background-color: #000;
+  border-radius: 20px;
+  padding: 80px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+  border: 5px solid #41DC97;
+}
+
+/* Avatar */
+.avatar img {
+  width: 80px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+}
+
+/* Inputs */
+form input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 20px;
+  background-color: #38115C;
+  border: 3px solid #41DC97;
+  color: white;
+
+}
+
+/* Texto placeholder */
+form input::placeholder {
+  color: #868585;
+  font-weight: bold;
+}
+
+
+/* Links */
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0 20px;
+  font-size: 12px;
+}
+
+.links a {
+  color: #41DC97;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* Botón */
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 30px;
+  background-color: #19486E;
+  border: 3px solid #41DC97;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #38115C;
+}
