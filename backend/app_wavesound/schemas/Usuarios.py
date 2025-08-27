@@ -16,5 +16,4 @@ class UsuarioOut(UsuarioBase):
     id_usuario: int
     rol: Optional[RolOut]
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}

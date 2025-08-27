@@ -115,6 +115,7 @@ class Derechos_Autor(BASE):
     activo = Column(Boolean, default=True)
     id_usuario_autor = Column(Integer, ForeignKey("usuarios.id_usuario"))
 
+    documentos = relationship("Documentos_Derechos_Autor", back_populates="derecho_autor")
     cancion = relationship("Canciones", back_populates="derechos")
 # Documentos De Derechos De Autor
 class Documentos_Derechos_Autor(BASE):
@@ -128,6 +129,7 @@ class Documentos_Derechos_Autor(BASE):
     vigente = Column(Boolean, default=True)
 
     derecho_autor = relationship("Derechos_Autor", back_populates="documentos")
+      
 
 # Listas de reproducción
 
