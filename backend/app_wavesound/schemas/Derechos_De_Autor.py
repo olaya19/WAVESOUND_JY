@@ -19,5 +19,5 @@ class DerechoAutorOut(DerechoAutorBase):
     id_registro: int
 
     class Config:
-        orm_mode = True
+       model_config = {"from_attributes": True}
 

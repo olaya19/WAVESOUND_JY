@@ -14,4 +14,4 @@ class PermisoReproduccionOut(PermisoReproduccionBase):
     id_permiso: int
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}

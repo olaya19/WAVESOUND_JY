@@ -13,4 +13,4 @@ class ReproduccionOut(ReproduccionBase):
     fecha_reproduccion: datetime
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}

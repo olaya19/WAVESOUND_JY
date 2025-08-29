@@ -11,5 +11,4 @@ class RolCreate(RolBase):
 class RolOut(RolBase):
     id_rol: int
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True} 

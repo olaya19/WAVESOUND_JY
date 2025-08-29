@@ -1,13 +1,13 @@
-from pydantic import BaseModel, EmailStr
-from typing import List, Optional
-from datetime import datetime, date
+from pydantic import BaseModel
 
 class GeneroBase(BaseModel):
     genero: str
 
+class GeneroCreate(GeneroBase):
+    pass
 
-class GeneroResponse(GeneroBase):
+class GeneroOut(GeneroBase):
     id_genero: int
 
     class Config:
-        from_attributes = True
+        model_config = {"from_attributes": True}

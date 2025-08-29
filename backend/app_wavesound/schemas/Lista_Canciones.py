@@ -9,4 +9,4 @@ class ListaCancionCreate(ListaCancionBase):
 
 class ListaCancionOut(ListaCancionBase):
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
