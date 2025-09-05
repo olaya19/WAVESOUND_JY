@@ -1,0 +1,40 @@
+.sidebar-right {
+  background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.sidebar-right h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar-right p {
+  font-style: italic;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.sidebar-right .buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-right button {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #0077ff;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.sidebar-right button:hover {
+  background: #005fcc;
+  transform: scale(1.05);
+}

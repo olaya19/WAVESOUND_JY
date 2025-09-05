@@ -1,100 +1,90 @@
-# Guía de Estándares de Codificación – WaveSound
+# Guia_EstandaresCodigo.md
+## 1. Reglas de nombres
+Python (Backend)
+Elemento	Convención	Ejemplo correcto	Ejemplo incorrecto
+Variables	snake_case	user_name	UserName, username
+Funciones	snake_case	get_user()	GetUser(), getUser()
+Clases	PascalCase	UserController	user_controller, usercontroller
+Constantes	MAYUSCULA_SEPARADA_POR_GUION_BAJO	MAX_RETRIES	MaxRetries
 
-## 1. Reglas de Nomenclatura
+JavaScript / React (Frontend)
+Elemento	Convención	Ejemplo correcto	Ejemplo incorrecto
+Variables	camelCase	userName	user_name, UserName
+Funciones	camelCase	getUser()	GetUser(), get_user()
+Componentes	PascalCase	UserCard	userCard, usercard
+Constantes	UPPER_SNAKE_CASE	API_URL	apiUrl, ApiUrl
 
-### Variables
-- Utilizar `snake_case`.
-- Ser descriptivas pero concisas.
-- Evitar abreviaturas innecesarias.
+## 2. Comentarios y documentación interna
+Explicar el qué y el porqué, no el cómo obvio.
 
- Ejemplos aceptados:
-```python
-user_name = "Carlos"
-total_price = 250.0
- Ejemplos no aceptados:
-
-python
-Copiar
-Editar
-UserName = "Carlos"
-tp = 250.0
-Clases
-Utilizar PascalCase.
-
-✅ Ejemplo aceptado:
-
-python
-Copiar
-Editar
-class UserProfile:
-    pass
-  Ejemplo no aceptado:
-
-python
-Copiar
-Editar
-class user_profile:
-    pass
-Funciones y Métodos
-Utilizar snake_case.
-
-Ser verbales y claras.
-
- Ejemplo Aceptado:
-
-python
-Copiar
-Editar
-def get_user_data():
-    pass
-Ejemplo no aceptado:
-
-python
-Copiar
-Editar
-def GetUserData():
-    pass
-2. Comentarios y Documentación
-Usar comentarios solo donde sea necesario.
-
-Escribir docstrings para funciones y clases.
-
-Utilizar comillas triples """ para docstrings.
-
- Ejemplo aceptado:
-
-
-
-def calculate_total(price, tax):
+Usar docstrings en Python:
+def get_user(user_id: int) -> dict:
     """
-    Calcula el total con impuestos.
+    Retorna un diccionario con la información del usuario según su ID.
     """
-    return price + tax
- Ejemplo no aceptado:
+    pass
 
-# Esta función hace un cálculo
-def calc(price, tax):
-    return price + tax
-3. Identación y Estilo
-Utilizar 4 espacios por nivel de indentación (no tabs).
+Documentar componentes y funciones en JS con comentarios claros:
 
-Limitar líneas a 79 caracteres.
+// Componente que muestra la información de un usuario
+function UserCard({ user }) {
+    return <div>{user.name}</div>;
+}
 
-Separar funciones con una línea en blanco.
+## 3. Identación y estilo de código
+Python: 4 espacios por nivel, no usar tab.
 
-Usar comillas simples o dobles, pero ser consistente.
+JS/React: 2 espacios por nivel.
 
- Ejemplo aceptado:
+Mantener líneas ≤ 80-100 caracteres.
 
-def login():
-    user = request.form['user']
-    return redirect('/home')
- Ejemplo no aceptado:
+Abrir llaves {} en la misma línea en JS.
 
-def login():
- user=request.form["user"]
- return redirect("/home")
+Evitar espacios innecesarios al final de la línea.
 
-4. Herramientas de Estilo
-Linter y Formateador
-Black: formateador automático para código Python.
+## 4. Ejemplos aceptados y no aceptados
+
+Python
+# Correcto
+def calculate_total(items):
+    total = sum(items)
+    return total
+
+# Incorrecto
+def calculateTotal(items):
+    total=sum(items)
+    return total
+
+JavaScript
+
+// Correcto
+const calculateTotal = (items) => {
+  return items.reduce((acc, item) => acc + item, 0);
+};
+
+// Incorrecto
+function CalculateTotal(items){
+return items.reduce((a,b)=>a+b,0)
+}
+
+## 5. Linters y formateadores
+Python: Black
+
+pip install black
+black backend/
+
+
+JavaScript / React: ESLint + Prettier
+
+npm install eslint prettier --save-dev
+npx eslint --init
+npx prettier --write frontend/
+
+
+## 6. Aplicación de reglas
+Todo el código nuevo debe pasar los linters antes de hacer commit.
+
+Mantener consistencia de nombres, indentación y comentarios en todas las carpetas.
+
+Revisar ejemplos del archivo para evitar errores de estilo.
+
