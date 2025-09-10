@@ -32,3 +32,14 @@ def obtener_usuarios(db: Session) -> list[UsuarioOut]:
     usuarios = db.query(Usuarios).all()
     # Convertir cada objeto a esquema
     return [UsuarioOut.model_validate(u) for u in usuarios]
+
+def autenticar_usuario(db: Session, login: str, password: str):
+    user = db.query(Usuarios).filter(
+        (Usuarios.email == login) | (Usuarios.nickname == login)
+    ).first()
+    
+    if not user:
+        return None
+    if not pwd_context.verify(password, user.contraseña):
+        return None
+    return user

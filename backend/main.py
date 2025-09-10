@@ -21,6 +21,7 @@ app = FastAPI(
     debug=True
 )
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ---------- Endpoints de Usuarios ----------
 @app.post("/usuarios/", response_model=UsuarioOut, status_code=201)

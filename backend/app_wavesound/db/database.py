@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 
 # Cambia los datos de conexión según tu configuración
-DATABASE_URL = "mysql+pymysql://root:admin@localhost:3315/wavesound"
+DATABASE_URL = "mysql+pymysql://root:@localhost:3306/wavesound"
 
 # Crea el motor de conexión
 engine = create_engine(

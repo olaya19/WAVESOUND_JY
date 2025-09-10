@@ -4,7 +4,8 @@ from typing import Optional
 from .Roles import RolOut
 
 class UsuarioBase(BaseModel):
-    nombre_usuario: str
+    nombre_usuario: str             
+    nickname: str                   
     email: EmailStr
     telefono: Optional[str] = None
 

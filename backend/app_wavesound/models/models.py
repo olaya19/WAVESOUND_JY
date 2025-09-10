@@ -15,10 +15,10 @@ class Usuarios(BASE):
     __tablename__ = "usuarios"
     id_usuario = Column(Integer, primary_key=True)
     id_rol = Column(Integer, ForeignKey("roles.id_rol"))
+    nickname = Column(String(50), unique=True, nullable=False)
     nombre_usuario = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     contraseña = Column(String(255), nullable=False)  # guardar hash
-    telefono = Column(String(30))
 
     rol = relationship("Roles", back_populates="usuarios")
     perfil = relationship("Perfiles", back_populates="usuario", uselist=False)
