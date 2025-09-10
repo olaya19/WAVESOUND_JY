@@ -1,23 +1,61 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* 🔹 Reset básico para ocupar toda la pantalla */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
 }
 
+/* Contenedor general */
+.app-container {
+  display: flex;
+  flex-direction: column; /* nav arriba, luego grid */
+  min-height: 100%;       /* ocupa toda la altura disponible */
+  width: 100%;
+  background: #ebe6e6;
+}
+
+/* 🔹 NAV SUPERIOR */
+nav {
+  height: 60px; /* altura fija */
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-weight: bold;
+}
+
+/* 🔹 GRID PRINCIPAL (tres columnas) */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  flex: 1;             /* se expande lo que falte */
+  padding: 20px;
+  box-sizing: border-box;
+  background: #000000; /* asegúrate que el fondo blanco llegue hasta abajo */
+}
+
+/* 🔹 CONTENIDO CENTRAL */
+.main-content {
+  display: flex;
+  flex-direction: column; /* Canciones en vertical */
+  gap: 20px;
+}
+
+/* 🔹 LOGO (opcional) */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  height: 12px;
+  padding: 1.1em;
+  color: #00ffae;
+  font-weight: bold;
+  content: above left url('/logo.png');
 }
 
+/* Animación de logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -31,12 +69,4 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

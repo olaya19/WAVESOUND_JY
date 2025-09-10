@@ -1,8 +1,12 @@
-
 import Home from "./pages/Home";
+// import Login from "./pages/Login"; // si tienes Login también
 
 function App() {
-  return <Home />;
+  return (
+    <div className="app">
+      <Home />
+    </div>
+  );
 }
 
-export default App ;
+export default App;

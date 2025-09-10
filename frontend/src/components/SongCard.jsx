@@ -1,15 +1,37 @@
 import "./SongCard.css";
 
-function SongCard({ titulo, duracion, likes, imagen }) {
+function SongCard({ usuario, titulo, duracion, likes, descripcion }) {
   return (
     <div className="song-card">
-      <img src={imagen} alt={titulo} />
-      <div className="song-info">
-        <h4>{titulo}</h4>
-        <p>{duracion}</p>
-        <div className="song-actions">
-          <button>▶</button>
-          <span>❤️ {likes}</span>
+      <div className="card-header">
+        <span>👤 {usuario}</span>
+        <div className="actions">
+          <button>➕</button>
+          <button>❤️ {likes}</button>
+        </div>
+      </div>
+
+      <div className="card-body">
+        <div className="player-imagen">
+          <div className="player-boton">
+            <button>▶</button>
+          </div>
+        </div>
+
+        <div className="info">
+          <div className="song-title">
+            {titulo} <span className="artist">{usuario}</span>
+          </div>
+
+          {/* Primero descripción */}
+          <p className="desc">{descripcion}</p>
+
+          {/* Luego las olas */}
+          <div className="waveform">
+            {Array.from({ length: 52 }).map((_, i) => (
+              <div key={i} className="bar"></div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -17,3 +39,4 @@ function SongCard({ titulo, duracion, likes, imagen }) {
 }
 
 export default SongCard;
+

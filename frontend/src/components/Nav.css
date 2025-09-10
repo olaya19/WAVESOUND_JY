@@ -1,0 +1,43 @@
+.navbar {
+  background: #3b0a45;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  color: #00ffae;
+}
+
+.search {
+  flex: 1;
+  margin: 0 20px;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+
+.icons span {
+  margin-left: 15px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+/* Efecto al pasar el mouse */
+.icons span:hover {
+  border: 2px solid #41dc97;   /* bordesito */
+  background: #19486e;         /* relleno */
+}
+
+/* Estilo cuando está activo (seleccionado) */
+.icons span.active {
+  border: 2px solid #41dc97;
+  background: #19486e;
+}
