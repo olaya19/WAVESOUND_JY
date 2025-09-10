@@ -1,5 +1,5 @@
 /* 🔹 Reset básico para ocupar toda la pantalla */
-html, body, #root {
+html, body,#root {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -20,18 +20,18 @@ html, body, #root {
 
 /* 🔹 NAV SUPERIOR */
 nav {
-  height: 60px; /* altura fija */
+  height: 6px; /* altura fija */
   background: #2a2a2a;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px;
   font-weight: bold;
 }
 
 /* 🔹 GRID PRINCIPAL (tres columnas) */
 .main-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 27rem 1fr 1fr;
   gap: 20px;
   flex: 1;             /* se expande lo que falte */
   padding: 20px;
@@ -43,7 +43,7 @@ nav {
 .main-content {
   display: flex;
   flex-direction: column; /* Canciones en vertical */
-  gap: 20px;
+  gap: 10px;
 }
 
 /* 🔹 LOGO (opcional) */
@@ -52,7 +52,9 @@ nav {
   padding: 1.1em;
   color: #00ffae;
   font-weight: bold;
+  font-size: 30px;
   content: above left url('/logo.png');
+  justify-content: center;
 }
 
 /* Animación de logo */

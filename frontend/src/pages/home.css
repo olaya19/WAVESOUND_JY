@@ -1,7 +1,7 @@
 
 .app-container {
-  width: 800px ;
-  height: 800px;
+  width: 200px ;
+  height: 100px;
   background: #0d0d0d;
   flex-direction: column;
   display: grid;
@@ -9,7 +9,7 @@
 
 .main-layout {
   display: grid;
-  grid-template-columns: 250px 800px 1fr 250px;
-  gap: 200px;
+  grid-template-columns: 250px 800px 1px 25px;
+  gap: 200000000px;
   padding: 200px;
 }

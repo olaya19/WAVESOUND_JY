@@ -2,37 +2,33 @@ import { useState } from "react";
 import "./Nav.css";
 
 function Nav() {
-  const [active, setActive] = useState("home"); // valor inicial
+  const [active, setActive] = useState("home");
 
   return (
     <nav className="navbar">
-      <div className="logo">WaveSound 🎵</div>
+      <div className="logo">
+        WaveSound <i className="fa-solid fa-music"></i>
+      </div>
+
       <input className="search" type="text" placeholder="Buscar..." />
+
       <div className="icons">
-        <span
-          className={active === "home" ? "active" : ""}
+        <i
+          className={`fa-solid fa-house ${active === "home" ? "active" : ""}`}
           onClick={() => setActive("home")}
-        >
-          🏠
-        </span>
-        <span
-          className={active === "profile" ? "active" : ""}
+        ></i>
+        <i
+          className={`fa-solid fa-user ${active === "profile" ? "active" : ""}`}
           onClick={() => setActive("profile")}
-        >
-          👤
-        </span>
-        <span
-          className={active === "shield" ? "active" : ""}
+        ></i>
+        <i
+          className={`fa-solid fa-shield ${active === "shield" ? "active" : ""}`}
           onClick={() => setActive("shield")}
-        >
-          🛡️
-        </span>
-        <span
-          className={active === "menu" ? "active" : ""}
+        ></i>
+        <i
+          className={`fa-solid fa-bars ${active === "menu" ? "active" : ""}`}
           onClick={() => setActive("menu")}
-        >
-          ☰
-        </span>
+        ></i>
       </div>
     </nav>
   );

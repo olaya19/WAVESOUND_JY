@@ -6,7 +6,6 @@
   border-radius: 12px;
   padding: 10px;
   margin-bottom: 20px;
-  
 }
 
 .card-header {
@@ -32,6 +31,7 @@
 .card-body {
   display: flex;
   gap: 20px;
+
 }
 
 .player-imagen{
@@ -103,7 +103,7 @@
     height: 40px;
   }
   80% {
-    border-radius: 25px;
+    border-radius:25px;
   }
 }
 

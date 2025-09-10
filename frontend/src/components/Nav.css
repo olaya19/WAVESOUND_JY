@@ -18,26 +18,32 @@
   flex: 1;
   margin: 0 20px;
   padding: 8px;
+  font-weight: 800px;
   border-radius: 8px;
   border: none;
+  background-color: #000000;
 }
 
-.icons span {
+.icons i {
   margin-left: 15px;
   cursor: pointer;
   padding: 6px;
   border-radius: 20px;
-  transition: 0.3s;
+  transition: 0.1ms;
+  font-size: 18px; /* 👈 opcional, para que se vean más grandes */
+  color: white;    /* 👈 color base */
 }
 
-/* Efecto al pasar el mouse */
-.icons span:hover {
-  border: 2px solid #41dc97;   /* bordesito */
-  background: #19486e;         /* relleno */
-}
-
-/* Estilo cuando está activo (seleccionado) */
-.icons span.active {
+/* Hover */
+.icons i:hover {
   border: 2px solid #41dc97;
   background: #19486e;
+  color: #41dc97; /* 👈 que cambie el colorcito */
+}
+
+/* Activo */
+.icons i.active {
+  border: 2px solid #41dc97;
+  background: #19486e;
+  color: #41dc97;
 }
