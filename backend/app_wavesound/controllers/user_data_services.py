@@ -17,7 +17,7 @@ def registrar_usuario(db: Session, datos_usuario: UsuarioCreate) -> UsuarioOut:
     nuevo_usuario = Usuarios(
         nombre_usuario=datos_usuario.nombre_usuario,
         email=datos_usuario.email,
-        telefono=datos_usuario.telefono,
+        nickname=datos_usuario.nickname,
         contraseña=hash_contraseña(datos_usuario.contraseña),
         id_rol=datos_usuario.id_rol
     )

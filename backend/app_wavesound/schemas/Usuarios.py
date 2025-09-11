@@ -7,8 +7,7 @@ class UsuarioBase(BaseModel):
     nombre_usuario: str             
     nickname: str                   
     email: EmailStr
-    telefono: Optional[str] = None
-
+    
 class UsuarioCreate(UsuarioBase):
     contraseña: str
     id_rol: int

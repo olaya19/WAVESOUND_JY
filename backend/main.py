@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app_wavesound.db.database import get_db
 from passlib.context import CryptContext
+from sqlalchemy import or_
 
 
 
@@ -24,8 +25,8 @@ app = FastAPI(
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ---------- Endpoints de Usuarios ----------
-@app.post("/usuarios/", response_model=UsuarioOut, status_code=201)
-def crear_usuario(user_data: UsuarioCreate, db: Session = Depends(get_db)):
+@app.post("/register/", response_model=UsuarioOut, status_code=201)
+def registrer_usuario(user_data: UsuarioCreate, db: Session = Depends(get_db)):
     """Crear un nuevo usuario en la plataforma."""
     try:
         return registrar_usuario(db=db, datos_usuario=user_data)
@@ -35,11 +36,22 @@ def crear_usuario(user_data: UsuarioCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @app.post("/login/")
-def login(email: str, contraseña: str, db: Session = Depends(get_db)):
-    user = db.query(Usuarios).filter(Usuarios.email == email).first()
+def login(email_constraseña: str, contraseña: str, db: Session = Depends(get_db)):
+    user = db.query(Usuarios).filter(
+        or_(
+            Usuarios.email == email_constraseña,
+            Usuarios.nombre_usuario == email_constraseña
+        )
+    ).first()
+
     if not user or not pwd_context.verify(contraseña, user.contraseña):
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
-    return {"id_usuario": user.id_usuario, "nombre_usuario": user.nombre_usuario, "rol": user.id_rol}
+
+    return {
+        "id_usuario": user.id_usuario,
+        "nombre_usuario": user.nombre_usuario,
+        "rol": user.id_rol
+    }
 
 @app.get("/usuarios/", response_model=list[UsuarioOut])
 def listar_usuarios(db: Session = Depends(get_db)):
