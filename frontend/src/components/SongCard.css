@@ -1,5 +1,5 @@
 .song-card {
-  height: 200px;
+  height: 250px;
   width: 700px;
   background: #19486e;
   border: 3px solid gold;
@@ -8,35 +8,118 @@
   margin-bottom: 20px;
 }
 
+/* HEADER */
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: rgba(17, 17, 17, 0.8); /* más ligero aún */
   font-weight: bold;
   font-size: 18px;
-  background-color: #3b0a45;
+  padding: 6px 10px;
+  border-radius: 8px;
   margin-bottom: 10px;
+  color: #fff;
+}
+
+/* USER INFO */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-circle {
+  width: 35px;
+  height: 35px;
+  border: 2px solid #00ffae;
+  background-color: #3b0a45;
+  color: #00ffae;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.user-circle:hover {
+  transform: scale(1.1);
+  background-color: #00ffae;
+  color: #19486e;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* CONTENEDOR DE BOTONES */
+.actions {
+  display: flex;
+  flex-direction: row; /* 👈 los pone en fila */
+  align-items: center;
+  gap: 20px; /* 👈 espacio entre botones */
 }
 
 .actions button {
-  height: 28px;
-  margin-left: 15px;
-  background: #111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 35px;
+  padding: 0 15px; /* ajusté padding para que queden proporcionados */
+  background: #3b0a45;
   color: #ffffff;
-  border: 2px solid #00ffae;
+  border: 3px solid #00ffae;
   border-radius: 20px;
   cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease-in-out;
+  font-weight: 600;
+  justify-content: center;
 }
 
+
+.actions button:hover {
+  transform: scale(1.1);
+  background: #00ffae;
+  color: #111;
+}
+
+.playlist-btn {
+  border-color: #ffd700;
+}
+
+.playlist-btn:hover {
+  background: #ffd700;
+  color: #111;
+}
+
+.like-btn {
+  border-color: #ff4b5c;
+}
+
+.like-btn:hover {
+  background: #ff4b5c;
+  color: white;
+}
+
+/* CUERPO */
 .card-body {
   display: flex;
+  height: 170px;
   gap: 20px;
-
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(59, 10, 69, 0.6); /* tono translúcido */
 }
 
-.player-imagen{
-  width: 150px;
-  height: 140px;
+.player-imagen {
+  width: 160px;
+  height: 164px;
+  border: 4px solid #020202;
   background: #999;
   display: flex;
   justify-content: center;
@@ -44,17 +127,34 @@
   font-size: 28px;
   border-radius: 6px;
 }
-.player-boton{
-  width: 500px;
-  height: 50px;
+
+.player-boton {
+  width: 50px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 10px;
-  background-color: blueviolet;
-  border-radius: 10px;
+  background-color: #3b0a45;
+  border-radius: 20px;
+  border: 3px solid #00ffae;
 }
 
+.play-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.play-btn:hover {
+  transform: scale(1.2);
+  color: #00ffae;
+}
+
+/* INFO */
 .info {
   flex: 1;
   display: flex;
@@ -65,6 +165,7 @@
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 5px;
+  color: white;
 }
 
 .artist {
@@ -74,41 +175,47 @@
   font-size: 15px;
 }
 
-.waveform {
-  display: flex;
-  gap: 3px;
-  margin-top: auto;
-  align-items: flex-end; /* 👈 Barras se alinean abajo */
-}
-
-.bar {
-  width: 6px;
-  height: 10px; /* altura mínima */
-  background: #00ffae;
-  animation: bounce 1s infinite;
-  transform-origin: bottom; /* 👈 animación crece hacia arriba */
-}
-
-.bar:nth-child(even) {
-  animation-delay: 2.1s;
-  justify-content: center;
-  align-items: center;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    height: 10px;
-  }
-  60% {
-    height: 40px;
-  }
-  80% {
-    border-radius:25px;
-  }
-}
-
 .desc {
   font-size: 14px;
   color: #fdfdfd;
   font-weight: 400;
 }
+
+/* WAVEFORM */
+.waveform {
+  display: flex;
+  gap: 3px;
+  margin-top: auto;
+  align-items: flex-end;
+}
+
+/* Barras sin movimiento por defecto */
+.bar {
+  width: 6px;
+  height: 50px;
+  border-radius: 5px;
+  background: #00ffae;
+  transform-origin: bottom;
+}
+
+/* Solo se animan si el waveform tiene la clase .active */
+.waveform.active .bar {
+  animation: bounce 1s infinite;
+}
+
+.waveform.active .bar:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    height: 50px;
+  }
+  60% {
+    height: 20px;
+  }
+  80% {
+    border-radius: 25px;
+  }
+}
+

@@ -1,20 +1,43 @@
+import { useState } from "react";
+import { FaUser, FaPlus, FaHeart, FaPlay, FaPause } from "react-icons/fa";
 import "./SongCard.css";
 
 function SongCard({ usuario, titulo, duracion, likes, descripcion }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleUserClick = () => {
+    window.location.href = `/perfil/${usuario}`; // redirige al perfil
+  };
+
+  const handlePlayClick = () => {
+    setIsPlaying(!isPlaying); // alterna entre play/pause
+  };
+
   return (
     <div className="song-card">
       <div className="card-header">
-        <span>👤 {usuario}</span>
+        <div className="user-info">
+          <div className="user-circle" onClick={handleUserClick}>
+            <FaUser />
+          </div>
+          <span className="username">{usuario}</span>
+        </div>
         <div className="actions">
-          <button>➕</button>
-          <button>❤️ {likes}</button>
+          <button className="playlist-btn">
+            <FaPlus /> Playlist
+          </button>
+          <button className="like-btn">
+            <FaHeart /> {likes}
+          </button>
         </div>
       </div>
 
       <div className="card-body">
         <div className="player-imagen">
           <div className="player-boton">
-            <button>▶</button>
+            <button className="play-btn" onClick={handlePlayClick}>
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </button>
           </div>
         </div>
 
@@ -23,11 +46,11 @@ function SongCard({ usuario, titulo, duracion, likes, descripcion }) {
             {titulo} <span className="artist">{usuario}</span>
           </div>
 
-          {/* Primero descripción */}
+          {/* Descripción primero */}
           <p className="desc">{descripcion}</p>
 
-          {/* Luego las olas */}
-          <div className="waveform">
+          {/* Waveform dinámico */}
+          <div className={`waveform ${isPlaying ? "active" : ""}`}>
             {Array.from({ length: 52 }).map((_, i) => (
               <div key={i} className="bar"></div>
             ))}

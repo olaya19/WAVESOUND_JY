@@ -31,7 +31,7 @@ nav {
 /* 🔹 GRID PRINCIPAL (tres columnas) */
 .main-layout {
   display: grid;
-  grid-template-columns: 27rem 1fr 1fr;
+  grid-template-columns: 21rem 1fr 1fr;
   gap: 20px;
   flex: 1;             /* se expande lo que falte */
   padding: 20px;
