@@ -17,21 +17,31 @@ function Nav() {
           className={`fa-solid fa-house ${active === "home" ? "active" : ""}`}
           onClick={() => setActive("home")}
         ></i>
+
         <i
           className={`fa-solid fa-user ${active === "profile" ? "active" : ""}`}
           onClick={() => setActive("profile")}
         ></i>
+
         <i
           className={`fa-solid fa-shield ${active === "shield" ? "active" : ""}`}
           onClick={() => setActive("shield")}
         ></i>
+
         <i
           className={`fa-solid fa-bars ${active === "menu" ? "active" : ""}`}
           onClick={() => setActive("menu")}
         ></i>
+
+        <i
+        className={`fa-solid fa-unlock ${active === "login" ? "active" : ""}`}
+        onClick={() => (window.location.href = "/Login")}
+        />
+
       </div>
     </nav>
   );
 }
 
 export default Nav;
+

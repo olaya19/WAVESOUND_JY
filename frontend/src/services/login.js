@@ -1,39 +1,45 @@
-
-
 const loginUsernameInput = document.getElementById("username");
 const loginPasswordInput = document.getElementById("password");
 
 const loginForm = document.getElementById("loginForm");
-loginForm?.addEventListener("submit", (e) => {
+loginForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = loginUsernameInput.value.trim();
     const password = loginPasswordInput.value.trim();
 
     if (!username || !password) {
-        alert ("Por favor, completa usuario y contraseña.");
+        alert("Por favor, completa usuario y contraseña.");
         return;
     }
 
+    try {
+        const response = await fetch("http://127.0.0.1:8000/login", { // 👉 Ajusta la URL según tu API
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username, password: password })
+        });
 
-  // -------------  ORIGINAL ---------------------------
-    
-    const user = findUser(username, password);
+        const data = await response.json();
 
-        if (!user) {
-            alert("Usuario o contraseña incorrectos");
+        if (!response.ok) {
+            showError(data.detail || "Usuario o contraseña incorrectos");
             return;
         }
 
-        setLoggedUser(user);
+        // Guardamos el usuario en localStorage (o el token si tu API lo devuelve)
+        localStorage.setItem("loggedUser", JSON.stringify(data));
 
         // Redirigir según el rol
-        if (user.role === "admin") {
+        if (data.role === "admin") {
             window.location.href = "admin.html";
         } else {
             window.location.href = "principal.html";
         }
-   //---------------------------------------------------
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Error de conexión con el servidor.");
+    }
 });
 
 function showError(msg) {

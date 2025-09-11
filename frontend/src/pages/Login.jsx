@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../pages/login.css";
-import bgImage from "../public/"; {/*ya se pone la imagen ahorita */}
+import bgImage from "../assets/descarga.jpeg";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -46,7 +47,7 @@ const Login = () => {
 
           <div className="links">
             <a href="#">¿Olvidaste tu contraseña?</a>
-            <a href="/register">¿No tienes cuenta? Regístrate</a>
+            <a href="/Register">¿No tienes cuenta? Regístrate</a>
           </div>
 
           <button type="submit">INICIAR SESIÓN</button>

@@ -1,13 +1,24 @@
-import Home from "./pages/Home";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-// import Login from "./pages/Login"; // si tienes Login también
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
-    <div className="app">
-      <Home />
-    </div>
+    <Router>
+      <Routes>
+        {/* Página principal */}
+        <Route path="/" element={<Home />} />
+
+        {/* Iniciar sesión */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Registrarse */}
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
