@@ -101,3 +101,11 @@ button:hover {
   background: #23608f;   /* Un tono un poco más claro al pasar el mouse */
   transform: scale(1.05);
 }
+
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  display: block;
+}

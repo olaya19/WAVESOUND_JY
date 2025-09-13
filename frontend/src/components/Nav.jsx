@@ -15,8 +15,8 @@ function Nav() {
       <div className="icons">
         <i
           className={`fa-solid fa-house ${active === "home" ? "active" : ""}`}
-          onClick={() => setActive("home")}
-        ></i>
+          onClick={() => (window.location.href = "/Home")}
+        />
 
         <i
           className={`fa-solid fa-user ${active === "profile" ? "active" : ""}`}

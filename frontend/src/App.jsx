@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+
 function App() {
   return (
     <Router>
@@ -17,7 +18,10 @@ function App() {
 
         {/* Registrarse */}
         <Route path="/register" element={<Register />} />
+
       </Routes>
+
+
     </Router>
   );
 }

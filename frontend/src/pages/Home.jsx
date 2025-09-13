@@ -2,6 +2,7 @@ import Nav from "../components/Nav";
 import SideLeft from "../components/SideLeft";
 import SideRight from "../components/SideRight";
 import SongCard from "../components/SongCard";
+
 import "../App.css";
 
 function App() {
