@@ -1,5 +1,5 @@
 from ..db.database import BASE
-from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -25,6 +25,7 @@ class Usuarios(BASE):
     canciones = relationship("Canciones", back_populates="usuario")
     albumes = relationship("Albumes", back_populates="usuario")
     listas = relationship("Listas_Reproducciones", back_populates="usuario")
+    favoritos = relationship("Favoritos", back_populates="usuario")
 
 # Perfiles 
 
@@ -66,7 +67,7 @@ class Albumes(BASE):
     descripcion = Column(String(500))
     portada = Column(String(255))
     fecha_lanzamiento = Column(Date)
-    precio = Column(DECIMAL(10, 2))
+    
 
     usuario = relationship("Usuarios", back_populates="albumes")
     canciones = relationship("Canciones", back_populates="album")
@@ -88,6 +89,7 @@ class Canciones(BASE):
     derechos = relationship("Derechos_Autor", back_populates="cancion")
     permisos = relationship("Permisos_Reproduccion", back_populates="cancion")
     listas = relationship("Lista_Canciones", back_populates="cancion")
+    favoritos = relationship("Favoritos", back_populates="cancion")
 
 
 
@@ -109,15 +111,15 @@ class Derechos_Autor(BASE):
     id_registro = Column(Integer, primary_key=True)
     id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
     nombre_autor = Column(String(40))
-    porcentaje_royalties = Column(DECIMAL(5, 2))
     fecha_acuerdo = Column(Date)
     documento_legal = Column(String(1000))
-    activo = Column(Boolean, default=True)
     id_usuario_autor = Column(Integer, ForeignKey("usuarios.id_usuario"))
 
     documentos = relationship("Documentos_Derechos_Autor", back_populates="derecho_autor")
     cancion = relationship("Canciones", back_populates="derechos")
+
 # Documentos De Derechos De Autor
+
 class Documentos_Derechos_Autor(BASE):
     __tablename__ = "documentos_derechos_autor"
     id_documento = Column(Integer, primary_key=True, autoincrement=True)
@@ -165,3 +167,17 @@ class Permisos_Reproduccion(BASE):
     activo = Column(Boolean)
 
     cancion = relationship("Canciones", back_populates="permisos")
+
+class Favoritos(BASE):
+    __tablename__ = "favoritos"
+    id_favorito = Column(Integer, primary_key=True, autoincrement=True)
+    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
+    fecha_agregado = Column(DateTime)
+
+    # Evita duplicados (un usuario no puede darle like 2 veces a la misma canción)
+    __table_args__ = (UniqueConstraint("id_cancion", "id_usuario", name="uix_cancion_usuario"),)
+
+    # Relaciones
+    usuario = relationship("Usuarios", back_populates="favoritos")
+    cancion = relationship("Canciones", back_populates="favoritos")    
