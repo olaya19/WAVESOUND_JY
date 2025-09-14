@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app_wavesound.routes import usuarios  # importa tus routers
+from app_wavesound.routes import usuarios,canciones  # importa tus routers
 
 app = FastAPI(
     title="WaveSound API",
@@ -10,4 +10,4 @@ app = FastAPI(
 
 # --------- Montar Routers ---------
 app.include_router(usuarios.router)
- 
+app.include_router(canciones.router)

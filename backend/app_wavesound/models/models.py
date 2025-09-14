@@ -2,6 +2,7 @@ from ..db.database import BASE
 from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from datetime import datetime
 
 # Roles 
 class Roles(BASE):
@@ -75,13 +76,19 @@ class Albumes(BASE):
 # Canciones
 class Canciones(BASE):
     __tablename__ = "canciones"
-    id_cancion = Column(Integer, primary_key=True)
-    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
-    titulo = Column(String(50), nullable=False)
-    descripcion = Column(String(200))
-    id_genero = Column(Integer, ForeignKey("genero.id_genero"))
-    id_album = Column(Integer, ForeignKey("albumes.id_album"))
 
+    id_cancion = Column(Integer, primary_key=True, index=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    titulo = Column(String(100), nullable=False, index=True)
+    descripcion = Column(String(255), nullable=True)
+    duracion = Column(Integer, nullable=True)  # en segundos
+    archivo_url = Column(String(255), nullable=False)  # ruta al archivo de audio
+    portada_url = Column(String(255), nullable=True)  # opcional: imagen del álbum/canción
+    id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=False)
+    id_album = Column(Integer, ForeignKey("albumes.id_album"), nullable=True)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow)
+
+    # Relaciones
     usuario = relationship("Usuarios", back_populates="canciones")
     genero = relationship("Genero", back_populates="canciones")
     album = relationship("Albumes", back_populates="canciones")
@@ -90,7 +97,6 @@ class Canciones(BASE):
     permisos = relationship("Permisos_Reproduccion", back_populates="cancion")
     listas = relationship("Lista_Canciones", back_populates="cancion")
     favoritos = relationship("Favoritos", back_populates="cancion")
-
 
 
 # Reproducciones 
