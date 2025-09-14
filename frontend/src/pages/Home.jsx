@@ -6,6 +6,9 @@ import SongCard from "../components/SongCard";
 import "../App.css";
 
 function Home() {
+  // Obtenemos usuario logeado desde localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
   const canciones = [
     {
       usuario: "Mike Cross",
@@ -31,6 +34,8 @@ function Home() {
         <SideLeft />
 
         <main className="main-content">
+          <h3>Bienvenido, {user.nombre_usuario || "Invitado"}</h3>
+
           {canciones.map((c, i) => (
             <SongCard key={i} {...c} />
           ))}
@@ -43,3 +48,6 @@ function Home() {
 }
 
 export default Home;
+
+
+

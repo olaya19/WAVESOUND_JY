@@ -1,11 +1,10 @@
 import axios from "axios";
 
 // --------------------- REGISTER ---------------------
-const REGISTER_URL = "http://127.0.0.1:8000/register/";
+const REGISTER_URL = "http://127.0.0.1:8000/usuarios/register";
 
 export const registerUsuario = async (datos) => {
   try {
-    // Aquí mandamos JSON
     const res = await axios.post(REGISTER_URL, datos, {
       headers: {
         "Content-Type": "application/json",
@@ -19,14 +18,13 @@ export const registerUsuario = async (datos) => {
 };
 
 // --------------------- LOGIN ---------------------
-const LOGIN_URL = "http://127.0.0.1:8000/login/";
+const LOGIN_URL = "http://127.0.0.1:8000/usuarios/login";
 
-export const loginUsuario = async ({ email_constraseña, contraseña }) => {
+export const loginUsuario = async ({ username, password }) => {
   try {
-    // Aquí mandamos como form-data
     const formData = new URLSearchParams();
-    formData.append("email_constraseña", email_constraseña);
-    formData.append("contraseña", contraseña);
+    formData.append("username", username);
+    formData.append("password", password);
 
     const res = await axios.post(LOGIN_URL, formData, {
       headers: {
@@ -34,9 +32,26 @@ export const loginUsuario = async ({ email_constraseña, contraseña }) => {
       },
     });
 
-    return res.data; // { id_usuario, nombre_usuario, rol }
+    return res.data; // { access_token, token_type }
   } catch (error) {
     console.error("❌ Error en loginUsuario:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// --------------------- LOGOUT ---------------------
+const LOGOUT_URL = "http://127.0.0.1:8000/usuarios/logout";
+
+export const logoutUsuario = async (token) => {
+  try {
+    const res = await axios.post(LOGOUT_URL, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("❌ Error en logoutUsuario:", error.response?.data || error.message);
     throw error;
   }
 };

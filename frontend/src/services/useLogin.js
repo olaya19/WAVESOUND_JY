@@ -1,4 +1,3 @@
-// src/services/useLogin.js
 import { useState } from "react";
 import { loginUsuario } from "./authService";
 
@@ -10,7 +9,7 @@ export function useLogin() {
 
   const validate = () => {
     let valid = true;
-    let errs = {};
+    const errs = {};
 
     if (!username.trim()) {
       errs.username = "Este campo es obligatorio";
@@ -30,13 +29,20 @@ export function useLogin() {
 
     setLoading(true);
     try {
-      // 👇 Ajuste importante: el backend espera "email_constraseña" y "contraseña"
-      const datos = { email_constraseña: username, contraseña: password };
-      const user = await loginUsuario(datos);
+      const datos = { username, password };
+      const res = await loginUsuario(datos);
 
-      // Guardamos el usuario en localStorage
-      localStorage.setItem("user", JSON.stringify(user));
-      return user;
+      // Guardamos token y datos del usuario en localStorage
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          nombre_usuario: res.nombre_usuario,
+          id_rol: res.id_rol,
+          token: res.access_token,
+        })
+      );
+
+      return res;
     } catch (err) {
       setErrors({ api: err.response?.data?.detail || "Error de conexión" });
       return null;
@@ -55,3 +61,4 @@ export function useLogin() {
     handleLogin,
   };
 }
+

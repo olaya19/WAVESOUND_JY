@@ -17,17 +17,9 @@ const Login = () => {
   } = useLogin();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  const user = await handleLogin();
-  if (user) {
-    const rol = parseInt(user.rol); // 👈 conviertes a número
-
-    if (rol === 3) navigate("/Home");           // Oyente
-    else if (rol === 2) navigate("/Home");  // Productor
-    else if (rol === 1) navigate("/Home");    // Artista
-};
-
-
+    e.preventDefault();
+    const res = await handleLogin();
+    if (res) navigate("/Home"); // Navega solo si login exitoso
   };
 
   return (

@@ -27,7 +27,13 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
     
     token = create_access_token(data={"sub": str(user.id_usuario)})
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+    "access_token": token,
+    "token_type": "bearer",
+    "nombre_usuario": user.nombre_usuario,
+    "id_rol": user.id_rol
+    }
+
 
 @router.post("/logout")
 def cerrar_sesion(response = Depends(logout)):
