@@ -1,7 +1,8 @@
 from ..db.database import BASE
-from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from datetime import datetime
 
 # Roles 
 class Roles(BASE):
@@ -25,6 +26,7 @@ class Usuarios(BASE):
     canciones = relationship("Canciones", back_populates="usuario")
     albumes = relationship("Albumes", back_populates="usuario")
     listas = relationship("Listas_Reproducciones", back_populates="usuario")
+    favoritos = relationship("Favoritos", back_populates="usuario")
 
 # Perfiles 
 
@@ -66,7 +68,7 @@ class Albumes(BASE):
     descripcion = Column(String(500))
     portada = Column(String(255))
     fecha_lanzamiento = Column(Date)
-    precio = Column(DECIMAL(10, 2))
+    
 
     usuario = relationship("Usuarios", back_populates="albumes")
     canciones = relationship("Canciones", back_populates="album")
@@ -74,13 +76,19 @@ class Albumes(BASE):
 # Canciones
 class Canciones(BASE):
     __tablename__ = "canciones"
-    id_cancion = Column(Integer, primary_key=True)
-    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
-    titulo = Column(String(50), nullable=False)
-    descripcion = Column(String(200))
-    id_genero = Column(Integer, ForeignKey("genero.id_genero"))
-    id_album = Column(Integer, ForeignKey("albumes.id_album"))
 
+    id_cancion = Column(Integer, primary_key=True, index=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    titulo = Column(String(100), nullable=False, index=True)
+    descripcion = Column(String(255), nullable=True)
+    duracion = Column(Integer, nullable=True)  # en segundos
+    archivo_url = Column(String(255), nullable=False)  # ruta al archivo de audio
+    portada_url = Column(String(255), nullable=True)  # opcional: imagen del álbum/canción
+    id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=False)
+    id_album = Column(Integer, ForeignKey("albumes.id_album"), nullable=True)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow)
+
+    # Relaciones
     usuario = relationship("Usuarios", back_populates="canciones")
     genero = relationship("Genero", back_populates="canciones")
     album = relationship("Albumes", back_populates="canciones")
@@ -88,7 +96,7 @@ class Canciones(BASE):
     derechos = relationship("Derechos_Autor", back_populates="cancion")
     permisos = relationship("Permisos_Reproduccion", back_populates="cancion")
     listas = relationship("Lista_Canciones", back_populates="cancion")
-
+    favoritos = relationship("Favoritos", back_populates="cancion")
 
 
 # Reproducciones 
@@ -109,15 +117,15 @@ class Derechos_Autor(BASE):
     id_registro = Column(Integer, primary_key=True)
     id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
     nombre_autor = Column(String(40))
-    porcentaje_royalties = Column(DECIMAL(5, 2))
     fecha_acuerdo = Column(Date)
     documento_legal = Column(String(1000))
-    activo = Column(Boolean, default=True)
     id_usuario_autor = Column(Integer, ForeignKey("usuarios.id_usuario"))
 
     documentos = relationship("Documentos_Derechos_Autor", back_populates="derecho_autor")
     cancion = relationship("Canciones", back_populates="derechos")
+
 # Documentos De Derechos De Autor
+
 class Documentos_Derechos_Autor(BASE):
     __tablename__ = "documentos_derechos_autor"
     id_documento = Column(Integer, primary_key=True, autoincrement=True)
@@ -165,3 +173,17 @@ class Permisos_Reproduccion(BASE):
     activo = Column(Boolean)
 
     cancion = relationship("Canciones", back_populates="permisos")
+
+class Favoritos(BASE):
+    __tablename__ = "favoritos"
+    id_favorito = Column(Integer, primary_key=True, autoincrement=True)
+    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
+    fecha_agregado = Column(DateTime)
+
+    # Evita duplicados (un usuario no puede darle like 2 veces a la misma canción)
+    __table_args__ = (UniqueConstraint("id_cancion", "id_usuario", name="uix_cancion_usuario"),)
+
+    # Relaciones
+    usuario = relationship("Usuarios", back_populates="favoritos")
+    cancion = relationship("Canciones", back_populates="favoritos")    
