@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 import "../pages/login.css";
 import bgImage from "../assets/descarga.jpeg";
-
+import { useLogin } from "../services/useLogin";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const {
+    username,
+    setUsername,
+    password,
+    setPassword,
+    errors,
+    loading,
+    handleLogin,
+  } = useLogin();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const user = await handleLogin();
+  if (user) {
+    const rol = parseInt(user.rol); // 👈 conviertes a número
 
-    // Aquí va la lógica de login
-    console.log("Usuario:", username);
-    console.log("Contraseña:", password);
+    if (rol === 3) navigate("/Home");           // Oyente
+    else if (rol === 2) navigate("/Home");  // Productor
+    else if (rol === 1) navigate("/Home");    // Artista
+};
+
+
   };
 
   return (
     <div>
-      {/* Imagen de fondo */}
       <img src={bgImage} className="bg-img" alt="Fondo" />
-
       <div className="login-container">
         <div className="avatar">
           <img
@@ -33,9 +46,10 @@ const Login = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Usuario"
+            placeholder="Usuario o Email"
             required
           />
+          {errors.username && <small className="error-text">{errors.username}</small>}
 
           <input
             type="password"
@@ -44,13 +58,18 @@ const Login = () => {
             placeholder="Contraseña"
             required
           />
+          {errors.password && <small className="error-text">{errors.password}</small>}
+
+          {errors.api && <small className="error-text">{errors.api}</small>}
 
           <div className="links">
             <a href="#">¿Olvidaste tu contraseña?</a>
             <a href="/Register">¿No tienes cuenta? Regístrate</a>
           </div>
 
-          <button type="submit">INICIAR SESIÓN</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Cargando..." : "INICIAR SESIÓN"}
+          </button>
         </form>
       </div>
     </div>
@@ -58,3 +77,4 @@ const Login = () => {
 };
 
 export default Login;
+

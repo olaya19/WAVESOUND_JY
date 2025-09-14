@@ -11,13 +11,13 @@ function App() {
     <Router>
       <Routes>
         {/* Página principal */}
-        <Route path="/" element={<Home />} />
+        <Route path="/Home" element={<Home />} />
 
         {/* Iniciar sesión */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/Login" element={<Login />} />
 
         {/* Registrarse */}
-        <Route path="/register" element={<Register />} />
+        <Route path="/Register" element={<Register />} />
 
       </Routes>
 

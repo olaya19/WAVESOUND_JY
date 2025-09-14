@@ -5,7 +5,7 @@ import SongCard from "../components/SongCard";
 
 import "../App.css";
 
-function App() {
+function Home() {
   const canciones = [
     {
       usuario: "Mike Cross",
@@ -42,4 +42,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;

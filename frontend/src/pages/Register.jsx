@@ -5,7 +5,7 @@ import { useRegister } from "../services/useRegister";
 import { registerUsuario } from "../services/authService";
 
 const Register = () => {
-  const { formData, errors, handleChange, validateForm } = useRegister();
+  const { formData, errors, handleChange, validateForm, getApiPayload } = useRegister();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,18 +16,18 @@ const Register = () => {
     }
 
     try {
-      console.log("📤 Enviando datos a la API:", formData);
+      // Convertimos al formato que FastAPI espera
+      const payload = getApiPayload();
+      console.log("📤 Enviando datos a la API:", payload);
 
-      const respuesta = await registerUsuario(formData);
+      const respuesta = await registerUsuario(payload);
 
       console.log("✅ Usuario registrado:", respuesta);
       alert("Usuario registrado con éxito 🎉");
 
-      // Aquí podrías redirigir al login si quieres:
-      // navigate("/login");
-
+      // navigate("/login"); // Descomentar si quieres redirigir después de registrar
     } catch (error) {
-      alert("Error al registrar usuario. Ver consola.");
+      alert("Error al registrar usuario. Revisa la consola.");
       console.error("❌ Error en registro:", error);
     }
   };
@@ -37,33 +37,33 @@ const Register = () => {
       <div className="register-container">
         <h2>Crear Cuenta</h2>
         <form onSubmit={handleSubmit}>
-          {/* Nombre */}
+          {/* Nombre real */}
           <div className="input-box">
             <span className="icon-circle"><FaUser /></span>
             <input
               type="text"
-              id="name"
-              value={formData.name}
+              id="username"
+              value={formData.username}
               onChange={handleChange}
               placeholder="Nombre"
               required
             />
           </div>
-          {errors.name && <small className="error-text">{errors.name}</small>}
+          {errors.username && <small className="error-text">{errors.username}</small>}
 
-          {/* Usuario */}
+          {/* Nickname */}
           <div className="input-box">
             <span className="icon-circle"><FaCrown /></span>
             <input
               type="text"
-              id="user"
-              value={formData.user}
+              id="nickname"
+              value={formData.nickname}
               onChange={handleChange}
               placeholder="Usuario"
               required
             />
           </div>
-          {errors.user && <small className="error-text">{errors.user}</small>}
+          {errors.nickname && <small className="error-text">{errors.nickname}</small>}
 
           {/* Correo */}
           <div className="input-box">
@@ -89,9 +89,9 @@ const Register = () => {
               required
             >
               <option value="">Seleccionar Rol</option>
-              <option value="productor">Productor</option>
-              <option value="oyente">Oyente</option>
-              <option value="artista">Artista</option>
+              <option value="1">Artista</option>
+              <option value="2">Productor</option>
+              <option value="3">Oyente</option>
             </select>
           </div>
           {errors.role && <small className="error-text">{errors.role}</small>}
