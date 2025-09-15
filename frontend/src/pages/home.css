@@ -1,15 +1,41 @@
-
-.app-container {
-  width: 200px ;
-  height: 100px;
-  background: #0d0d0d;
+/* Contenido central */
+.main-content {
+  display: flex;
   flex-direction: column;
-  display: grid;
+  align-items: center;
+  gap: 10px; /* 👈 reducimos la separación general */
 }
 
-.main-layout {
-  display: grid;
-  grid-template-columns: 250px 800px 1px 25px;
-  gap: 200000000px;
-  padding: 200px;
+/* Sección de bienvenida */
+.welcome-section {
+  width: 100%;
+  max-width: 720px;
+  text-align: left;
+  margin-bottom: 5px; /* 👈 menos espacio debajo del título */
 }
+
+.welcome-section h3 {
+  font-size: 22px;
+  font-weight: bold;
+  color: gold;
+  margin: 0; /* 👈 eliminamos margen por defecto del h3 */
+}
+
+/* Feed de canciones */
+.songs-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px; /* 👈 menos espacio entre cards */
+  width: 100%;
+}
+
+.songs-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;          /* 👈 aquí controlas el espacio entre cards */
+  align-items: start; /* 👈 alinea todas arriba */
+  padding: 1rem;      /* opcional, para que no se pegue a los bordes */
+}
+
+

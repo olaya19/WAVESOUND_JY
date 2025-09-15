@@ -4,6 +4,7 @@ import SideRight from "../components/SideRight";
 import SongCard from "../components/SongCard";
 
 import "../App.css";
+import "./home.css"; // asegúrate que este archivo exista
 
 function Home() {
   // Obtenemos usuario logeado desde localStorage
@@ -11,36 +12,50 @@ function Home() {
 
   const canciones = [
     {
-      usuario: "Mike Cross",
-      titulo: "Mar de Emociones",
-      duracion: "1:50",
-      likes: 10,
-      descripcion: "Nueva canción de pepito perez .......",
+      usuario: "Artista Demo",
+      titulo: "Acoustic Breeze",
+      duracion: "2:37",
+      likes: 25,
+      descripcion: "Una canción acústica suave para relajarse.",
+      archivo_url:
+        "https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3",
+      portada_url: "https://picsum.photos/200/200?random=1",
     },
     {
-      usuario: "Mike Cross",
-      titulo: "Mar de Emociones",
-      duracion: "1:50",
-      likes: 10,
-      descripcion: "Nueva canción de pepito perez .......",
+      usuario: "Artista Demo",
+      titulo: "Sunny",
+      duracion: "2:20",
+      likes: 40,
+      descripcion: "Melodía alegre con toques de jazz y pop.",
+      archivo_url: "https://www.bensound.com/bensound-music/bensound-sunny.mp3",
+      portada_url: "https://picsum.photos/200/200?random=2",
     },
   ];
 
   return (
     <div className="app-container">
+      {/* NAV siempre arriba */}
       <Nav />
 
       <div className="main-layout">
+        {/* Sidebar Izquierda */}
         <SideLeft />
 
+        {/* Contenido principal */}
         <main className="main-content">
-          <h3>Bienvenido, {user.nombre_usuario || "Invitado"}</h3>
+          <div className="welcome-section">
+            <h3>Bienvenido, {user.nombre_usuario || "Invitado"}</h3>
+          </div>
 
-          {canciones.map((c, i) => (
-            <SongCard key={i} {...c} />
-          ))}
+          <div className="songs-feed">
+            {canciones.map((c, i) => (
+              <SongCard key={i} {...c} />
+            ))}
+          </div>
         </main>
 
+
+        {/* Sidebar Derecha */}
         <SideRight />
       </div>
     </div>

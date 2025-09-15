@@ -1,74 +1,33 @@
-/* 🔹 Reset básico para ocupar toda la pantalla */
-html, body,#root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: #000000;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: white;
-}
-
 /* Contenedor general */
 .app-container {
   display: flex;
-  flex-direction: column; /* nav arriba, luego grid */
-  min-height: 100%;       /* ocupa toda la altura disponible */
+  flex-direction: column; /* nav arriba */
+  min-height: 100vh;
   width: 100%;
-  background: #ebe6e6;
+  background: #0d0d0d;
 }
 
-/* 🔹 NAV SUPERIOR */
-nav {
-  height: 6px; /* altura fija */
-  background: #2a2a2a;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  font-weight: bold;
-}
-
-/* 🔹 GRID PRINCIPAL (tres columnas) */
+/* GRID PRINCIPAL */
 .main-layout {
   display: grid;
-  grid-template-columns: 21rem 1fr 1fr;
+  grid-template-columns: 250px 1fr 250px; /* Izquierda - Centro - Derecha */
   gap: 20px;
-  flex: 1;             /* se expande lo que falte */
+  flex: 1;
   padding: 20px;
   box-sizing: border-box;
-  background: #000000; /* asegúrate que el fondo blanco llegue hasta abajo */
+  align-items: flex-start; /* todo alineado arriba */
 }
 
-/* 🔹 CONTENIDO CENTRAL */
-.main-content {
-  display: flex;
-  flex-direction: column; /* Canciones en vertical */
-  gap: 10px;
-}
 
-/* 🔹 LOGO (opcional) */
-.logo {
-  height: 12px;
-  padding: 1.1em;
-  color: #00ffae;
-  font-weight: bold;
-  font-size: 30px;
-  content: above left url('/logo.png');
-  justify-content: center;
-}
-
-/* Animación de logo */
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* Responsivo */
+@media (max-width: 1024px) {
+  .main-layout {
+    grid-template-columns: 200px 1fr; /* sidebar der oculto */
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 768px) {
+  .main-layout {
+    grid-template-columns: 1fr; /* solo contenido */
   }
 }

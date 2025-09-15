@@ -1,12 +1,13 @@
 .song-card {
-  height: 270px;
-  width: 700px;
+  width: 100%;            /* antes estaba fijo en 700px */
+  max-width: 720px;       /* 👈 límite máximo */
   background: #19486e;
   border: 3px solid gold;
   border-radius: 12px;
   padding: 10px;
   margin-bottom: 20px;
 }
+
 
 /* HEADER */
 .card-header {
@@ -117,27 +118,34 @@
 }
 
 .player-imagen {
+  position: relative; /* 👈 necesario para centrar el botón dentro */
   width: 160px;
   height: 164px;
   border: 4px solid #020202;
-  background: #999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 28px;
+  border-radius: 6px;
+  overflow: hidden; /* 👈 recorta lo que sobresalga */
+}
+
+/* La portada */
+.player-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 👈 ajusta la imagen al espacio */
   border-radius: 6px;
 }
 
+/* Botón centrado */
 .player-boton {
-  width: 50px;
-  height: 40px;
+  position: absolute; /* 👈 se centra dentro del contenedor */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 55px;
+  height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 10px;
-  background-color: #3b0a45;
-  border-radius: 20px;
-  border: 3px solid #00ffae;
+  cursor: pointer;
 }
 
 .play-btn {
@@ -145,14 +153,15 @@
   border: none;
   cursor: pointer;
   color: white;
-  font-size: 18px;
+  font-size: 22px;
   transition: transform 0.2s ease-in-out;
 }
 
 .play-btn:hover {
-  transform: scale(1.2);
+  transform: scale(1.3);
   color: #00ffae;
 }
+
 
 /* INFO */
 .info {
