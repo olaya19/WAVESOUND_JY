@@ -62,7 +62,7 @@ function Home() {
                 descripcion={c.descripcion || "Sin descripción"}
                 archivo_url={c.archivo_url} // 🔗 Dropbox directo (terminado en ?dl=1)
                 portada_url={
-                  c.portada_url || "https://picsum.photos/200/200?random=99"
+                  c.portada_url || ""
                 }
               />
             ))}
