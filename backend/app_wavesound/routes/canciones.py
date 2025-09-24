@@ -19,12 +19,19 @@ def crear(cancion: CancionCreate, db: Session = Depends(get_db), usuario_id: int
 def listar(db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     return canciones_services.obtener_canciones(db)
 
+
+@router.get("/public", response_model=List[CancionOut])
+def listar_publico(db: Session = Depends(get_db)):
+    # 👈 Sin token, devuelve todas las canciones disponibles
+    return canciones_services.obtener_canciones(db)
+
 @router.get("/{id_cancion}", response_model=CancionOut)
 def obtener(id_cancion: int, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     cancion = canciones_services.obtener_cancion(db, id_cancion)
     if not cancion:
         raise HTTPException(status_code=404, detail="Canción no encontrada")
     return cancion
+
 
 @router.put("/{id_cancion}", response_model=CancionOut)
 def actualizar(id_cancion: int, datos: CancionBase, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):

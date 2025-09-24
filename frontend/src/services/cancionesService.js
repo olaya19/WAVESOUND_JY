@@ -17,3 +17,15 @@ export const getCanciones = async () => {
     return [];
   }
 };
+
+// 🔹 Traer todas las canciones sin login
+export const getCancionesPublic = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/public`);
+    return res.data;
+  } catch (error) {
+    console.error("❌ Error al traer canciones públicas:", error);
+    return [];
+  }
+};
+

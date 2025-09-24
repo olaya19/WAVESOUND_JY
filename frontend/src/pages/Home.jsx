@@ -1,36 +1,33 @@
+import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import SideLeft from "../components/SideLeft";
 import SideRight from "../components/SideRight";
 import SongCard from "../components/SongCard";
+import { getCancionesPublic } from "../services/cancionesService"; // ✅ Nuevo servicio público
 
 import "../App.css";
 import "./home.css"; // asegúrate que este archivo exista
 
 function Home() {
-  // Obtenemos usuario logeado desde localStorage
+  // Usuario logueado (si existe)
   const user = JSON.parse(localStorage.getItem("user")) || {};
 
-  const canciones = [
-    {
-      usuario: "Artista Demo",
-      titulo: "Acoustic Breeze",
-      duracion: "2:37",
-      likes: 25,
-      descripcion: "Una canción acústica suave para relajarse.",
-      archivo_url:
-        "https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3",
-      portada_url: "https://picsum.photos/200/200?random=1",
-    },
-    {
-      usuario: "Artista Demo",
-      titulo: "Sunny",
-      duracion: "2:20",
-      likes: 40,
-      descripcion: "Melodía alegre con toques de jazz y pop.",
-      archivo_url: "https://www.bensound.com/bensound-music/bensound-sunny.mp3",
-      portada_url: "https://picsum.photos/200/200?random=2",
-    },
-  ];
+  // Estado para las canciones del backend
+  const [canciones, setCanciones] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Llamar al endpoint público
+    getCancionesPublic()
+      .then((data) => {
+        setCanciones(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("❌ Error al cargar canciones:", err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="app-container">
@@ -48,12 +45,29 @@ function Home() {
           </div>
 
           <div className="songs-feed">
-            {canciones.map((c, i) => (
-              <SongCard key={i} {...c} />
+            {loading && <p>Cargando canciones...</p>}
+
+            {!loading && canciones.length === 0 && (
+              <p>No hay canciones disponibles por ahora 🎧</p>
+            )}
+
+            {/* ✅ Canciones reales del backend */}
+            {canciones.map((c) => (
+              <SongCard
+                key={c.id_cancion}
+                usuario={c.id_usuario || "Artista"}
+                titulo={c.titulo}
+                duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
+                likes={c.likes || 0} // si luego agregas likes
+                descripcion={c.descripcion || "Sin descripción"}
+                archivo_url={c.archivo_url} // 🔗 Dropbox directo (terminado en ?dl=1)
+                portada_url={
+                  c.portada_url || "https://picsum.photos/200/200?random=99"
+                }
+              />
             ))}
           </div>
         </main>
-
 
         {/* Sidebar Derecha */}
         <SideRight />
