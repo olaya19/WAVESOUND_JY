@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Importa para navegación
 import "./Nav.css";
 
 function Nav() {
   const [active, setActive] = useState("home");
+  const navigate = useNavigate(); // ✅ Hook para redirigir
 
   // 🔹 Obtener usuario del localStorage
   const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -10,7 +12,7 @@ function Nav() {
 
   return (
     <nav className="navbar">
-      <div className="logo">
+      <div className="logo" onClick={() => navigate("/Home")}>
         WaveSound <i className="fa-solid fa-music"></i>
       </div>
 
@@ -20,34 +22,43 @@ function Nav() {
         {/* Home */}
         <i
           className={`fa-solid fa-house ${active === "home" ? "active" : ""}`}
-          onClick={() => (window.location.href = "/Home")}
+          onClick={() => {
+            setActive("home");
+            navigate("/Home");
+          }}
         />
 
         {/* Perfil */}
         <i
           className={`fa-solid fa-user ${active === "profile" ? "active" : ""}`}
-          onClick={() => setActive("profile")}
-        ></i>
+          onClick={() => {
+            setActive("profile");
+            navigate("/Profile"); // ✅ Ir al componente de perfil
+          }}
+        />
 
         {/* Derechos de Autor solo para Artista o Productor */}
         {(rol === 1 || rol === 2) && (
           <i
             className={`fa-solid fa-shield ${active === "shield" ? "active" : ""}`}
-            onClick={() => setActive("shield")}
-          ></i>
+            onClick={() => {
+              setActive("shield");
+              navigate("/WorkRegister");
+            }}
+          />
         )}
 
         {/* Menú */}
         <i
           className={`fa-solid fa-bars ${active === "menu" ? "active" : ""}`}
           onClick={() => setActive("menu")}
-        ></i>
+        />
 
         {/* Login / Logout */}
         {!user.id_rol ? (
           <i
             className={`fa-solid fa-unlock ${active === "login" ? "active" : ""}`}
-            onClick={() => (window.location.href = "/Login")}
+            onClick={() => navigate("/Login")}
           />
         ) : (
           <i
@@ -55,9 +66,9 @@ function Nav() {
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("token");
-              window.location.href = "/Login";
+              navigate("/Login");
             }}
-          ></i>
+          />
         )}
       </div>
 
@@ -72,5 +83,4 @@ function Nav() {
 }
 
 export default Nav;
-
 
