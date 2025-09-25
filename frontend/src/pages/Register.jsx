@@ -4,30 +4,23 @@ import { FaUser, FaCrown, FaAt, FaUsers, FaLock } from "react-icons/fa";
 import { useRegister } from "../services/useRegister";
 import { registerUsuario } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import bgImage from "../assets/FONDO.jpeg"; // 🎯 Fondo importado
 
 const Register = () => {
-  const navigate = useNavigate(); // 👈 Hook para redirigir
+  const navigate = useNavigate();
   const { formData, errors, handleChange, validateForm, getApiPayload } = useRegister();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       alert("Revisa los errores en el formulario");
       return;
     }
-
     try {
-      // Convertimos al formato que FastAPI espera
       const payload = getApiPayload();
-      console.log("📤 Enviando datos a la API:", payload);
-
       const respuesta = await registerUsuario(payload);
-
-      console.log("✅ Usuario registrado:", respuesta);
       alert("Usuario registrado con éxito 🎉");
-
-      navigate("/Login"); // 👈 Redirige automáticamente al login
+      navigate("/Login");
     } catch (error) {
       alert("Error al registrar usuario. Revisa la consola.");
       console.error("❌ Error en registro:", error);
@@ -35,7 +28,10 @@ const Register = () => {
   };
 
   return (
-    <div className="register-wrapper">
+    <div
+      className="register-wrapper"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="register-container">
         <h2>Crear Cuenta</h2>
         <form onSubmit={handleSubmit}>
@@ -121,5 +117,3 @@ const Register = () => {
 };
 
 export default Register;
-
-

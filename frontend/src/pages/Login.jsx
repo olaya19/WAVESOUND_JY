@@ -1,8 +1,9 @@
 import React from "react";
 import "../pages/login.css";
-import bgImage from "../assets/descarga.jpeg";
 import { useLogin } from "../services/useLogin";
 import { useNavigate } from "react-router-dom";
+import bgImage from "../assets/FONDO.jpeg";
+import discoImg from "../assets/disco3.png"; // 🌍 tu bola disco
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,18 +20,18 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await handleLogin();
-    if (res) navigate("/Home"); // Navega solo si login exitoso
+    if (res) navigate("/Home");
   };
 
   return (
-    <div>
-      <img src={bgImage} className="bg-img" alt="Fondo" />
+    <div
+      className="login-page"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="login-container">
-        <div className="avatar">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-            alt="User Icon"
-          />
+        {/* 🌍 Bola disco giratoria tipo planeta */}
+        <div className="vinyl-wrapper">
+          <img src={discoImg} className="planet-spin" alt="Disco Bola" />
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -69,4 +70,3 @@ const Login = () => {
 };
 
 export default Login;
-
