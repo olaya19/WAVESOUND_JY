@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import Nav from "../components/Nav";
 import SideLeft from "../components/SideLeft";
 import SideRight from "../components/SideRight";
 import SongCard from "../components/SongCard";
-import Profile from "./Profile"; 
-import WorkRegister from "./WorkRegister";
 import { getCancionesPublic } from "../services/cancionesService"; // ✅ Nuevo servicio público
 
 import "../App.css";
@@ -33,8 +30,7 @@ function Home() {
 
   return (
     <div className="app-container">
-      {/* NAV siempre arriba */}
-      <Nav />
+      {/* ✅ Ya no ponemos <Nav /> aquí, porque lo maneja Layout en App.jsx */}
 
       <div className="main-layout">
         {/* Sidebar Izquierda */}
@@ -63,9 +59,7 @@ function Home() {
                 likes={c.likes || 0} // si luego agregas likes
                 descripcion={c.descripcion || "Sin descripción"}
                 archivo_url={c.archivo_url} // 🔗 Dropbox directo (terminado en ?dl=1)
-                portada_url={
-                  c.portada_url || ""
-                }
+                portada_url={c.portada_url || ""}
               />
             ))}
           </div>
@@ -79,6 +73,7 @@ function Home() {
 }
 
 export default Home;
+
 
 
 

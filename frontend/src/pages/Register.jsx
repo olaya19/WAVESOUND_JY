@@ -22,7 +22,7 @@ const Register = () => {
       alert("Usuario registrado con éxito 🎉");
       navigate("/Login");
     } catch (error) {
-      alert("Error al registrar usuario. Revisa la consola.");
+      alert("Error al registrar usuario. Intenta de nuevo.");
       console.error("❌ Error en registro:", error);
     }
   };

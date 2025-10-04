@@ -1,0 +1,57 @@
+.album-form {
+  background: #f9fafb;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.album-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #111827;
+}
+
+.album-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.album-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #374151;
+}
+
+.album-form input,
+.album-form textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  transition: border 0.2s ease;
+}
+
+.album-form input:focus,
+.album-form textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.album-form button {
+  background: #16a34a;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.album-form button:hover {
+  background: #166534;
+}

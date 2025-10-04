@@ -1,12 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"; 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import Nav from "./components/Nav";      // 🔹 Navbar
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile"; // 🔹 NUEVO
-import WorkRegister from "./pages/WorkRegister";
+import Profile from "./pages/Profile";   // 🔹 Perfil
+import Upload from "./pages/Upload";     // 🔹 Falta importar Upload
+import AdminPanel from "./pages/AdminPanel"; // 🔹 Panel Admin
 
 // ✅ Componente para mostrar/ocultar Nav según la ruta
 function Layout({ children }) {
@@ -37,13 +38,14 @@ function App() {
           {/* Registrarse */}
           <Route path="/Register" element={<Register />} />
 
+          {/* Subir música */}
+          <Route path="/Upload" element={<Upload />} />
+
+          {/* Panel Administrador */}
+          <Route path="/AdminPanel" element={<AdminPanel />} />
+
           {/* Redirección default */}
           <Route path="*" element={<Home />} />
-
-          {/* Redirección Registrar Obra */}
-          <Route path="*" element={<WorkRegister/>} />
-
-
         </Routes>
       </Layout>
     </Router>
@@ -51,4 +53,5 @@ function App() {
 }
 
 export default App;
+
 

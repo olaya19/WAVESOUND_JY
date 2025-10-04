@@ -1,27 +1,70 @@
-.profile-container {
-  padding: 20px;
+.profile-page {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 1rem;
+  padding: 1rem;
+  color: white;
+}
+
+/* Card izquierda */
+.profile-left {
+  background: #2b0a3d;
+  border: 2px solid #00ffcc;
+  border-radius: 10px;
+  padding: 1rem;
   text-align: center;
 }
 
-.profile-card {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  color: #fff;
-  display: inline-block;
-  min-width: 250px;
+.profile-avatar {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: #00ffcc;
 }
 
-.logout-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: #ff4d4d;
+.follow-btn {
+  background: gold;
   border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
   border-radius: 8px;
-  color: #fff;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
-.logout-btn:hover {
-  background: #e60000;
+.stats p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+/* Centro */
+.profile-center {
+  background: #184063;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.bio {
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.profile-info p {
+  margin: 0.3rem 0;
+}
+
+/* Derecha */
+.profile-right {
+  background: #2b0a3d;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.songs-section, .albums-section {
+  margin-bottom: 1rem;
+}
+
+.songs-section h3,
+.albums-section h3 {
+  margin-bottom: 0.5rem;
+  color: #00ffcc;
 }

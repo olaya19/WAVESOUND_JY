@@ -1,14 +1,21 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Importa para navegación
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Nav.css";
 
 function Nav() {
-  const [active, setActive] = useState("home");
-  const navigate = useNavigate(); // ✅ Hook para redirigir
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // 🔹 Obtener usuario del localStorage
   const user = JSON.parse(localStorage.getItem("user")) || {};
-  const rol = user.id_rol; // 1 = Artista, 2 = Productor, 3 = Oyente
+  const rol = user.id_rol; // 1 = Artista, 2 = Productor, 3 = Oyente, 4 = Admin
+
+  // 🔹 Detectar ruta activa
+  const currentPath = location.pathname.toLowerCase();
+
+  // 🚨 Si es administrador, no mostrar Nav
+  if (rol === 4) {
+    return null;
+  }
 
   return (
     <nav className="navbar">
@@ -21,43 +28,35 @@ function Nav() {
       <div className="icons">
         {/* Home */}
         <i
-          className={`fa-solid fa-house ${active === "home" ? "active" : ""}`}
-          onClick={() => {
-            setActive("home");
-            navigate("/Home");
-          }}
+          className={`fa-solid fa-house ${currentPath === "/home" ? "active" : ""}`}
+          onClick={() => navigate("/Home")}
         />
 
         {/* Perfil */}
         <i
-          className={`fa-solid fa-user ${active === "profile" ? "active" : ""}`}
-          onClick={() => {
-            setActive("profile");
-            navigate("/Profile"); // ✅ Ir al componente de perfil
-          }}
+          className={`fa-solid fa-user ${currentPath === "/profile" ? "active" : ""}`}
+          onClick={() => navigate("/Profile")}
         />
 
-        {/* Derechos de Autor solo para Artista o Productor */}
-        {(rol === 1 || rol === 2) && (
+        {/* Subir música - solo Artistas */}
+        {rol === 1 && (
           <i
-            className={`fa-solid fa-shield ${active === "shield" ? "active" : ""}`}
-            onClick={() => {
-              setActive("shield");
-              navigate("/WorkRegister");
-            }}
+            className={`fa-solid fa-upload ${currentPath === "/upload" ? "active" : ""}`}
+            onClick={() => navigate("/Upload")}
+            title="Subir música"
           />
         )}
 
         {/* Menú */}
         <i
-          className={`fa-solid fa-bars ${active === "menu" ? "active" : ""}`}
-          onClick={() => setActive("menu")}
+          className={`fa-solid fa-bars ${currentPath === "/menu" ? "active" : ""}`}
+          onClick={() => navigate("/Menu")}
         />
 
         {/* Login / Logout */}
         {!user.id_rol ? (
           <i
-            className={`fa-solid fa-unlock ${active === "login" ? "active" : ""}`}
+            className={`fa-solid fa-unlock ${currentPath === "/login" ? "active" : ""}`}
             onClick={() => navigate("/Login")}
           />
         ) : (
@@ -83,4 +82,5 @@ function Nav() {
 }
 
 export default Nav;
+
 

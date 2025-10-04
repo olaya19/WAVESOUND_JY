@@ -20,7 +20,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await handleLogin();
-    if (res) navigate("/Home");
+
+    if (res) {
+      switch (res.id_rol) {
+        case 1: // Artista
+        case 2: // Productor
+        case 3: // Oyente
+          navigate("/Home");
+          break;
+        case 4: // Admin
+          navigate("/AdminPanel");
+          break;
+        default:
+          navigate("/Home");
+          break;
+      }
+    }
   };
 
   return (
