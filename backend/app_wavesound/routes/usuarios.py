@@ -25,13 +25,17 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     if not user:
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
-    
+
+    # 🔐 Generar token con el ID del usuario
     token = create_access_token(data={"sub": str(user.id_usuario)})
+
+    # ✅ Devolver también el ID para el frontend
     return {
-    "access_token": token,
-    "token_type": "bearer",
-    "nombre_usuario": user.nombre_usuario,
-    "id_rol": user.id_rol
+        "access_token": token,
+        "token_type": "bearer",
+        "id_usuario": user.id_usuario,  # 👈 AÑADIDO
+        "nombre_usuario": user.nombre_usuario,
+        "id_rol": user.id_rol
     }
 
 

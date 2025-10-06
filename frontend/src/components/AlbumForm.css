@@ -1,19 +1,27 @@
+/* 🎵 Contenedor principal */
 .album-form {
-  background: #f9fafb;
+  background: #0c0c0c; /* Fondo oscuro */
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
   margin-top: 2rem;
   text-align: left;
+  color: #ffffff;
+  border: 1px solid #3b0a57;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
+/* 🎶 Título */
 .album-form h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
   font-weight: bold;
-  color: #111827;
+  color: #00ff99;
+  text-shadow: 0 0 6px #00ff99;
+  letter-spacing: 0.5px;
 }
 
+/* 🧩 Grupos del formulario */
 .album-form .form-group {
   margin-bottom: 1.2rem;
 }
@@ -22,36 +30,78 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.3rem;
-  color: #374151;
+  color: #e5e7eb;
 }
 
+/* ✏️ Inputs y textareas */
 .album-form input,
 .album-form textarea {
   width: 100%;
-  padding: 0.7rem;
-  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  border: 1px solid #19486e;
   border-radius: 0.5rem;
   font-size: 0.95rem;
-  transition: border 0.2s ease;
+  background-color: #111111;
+  color: #ffffff;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* ✨ Enfoque */
 .album-form input:focus,
 .album-form textarea:focus {
-  border-color: #2563eb;
+  border-color: #00ff99;
+  box-shadow: 0 0 6px #00ff99;
   outline: none;
 }
 
+/* 📁 Inputs de archivo */
+.album-form input[type="file"] {
+  background-color: #111111;
+  border: 1px dashed #3b0a57;
+  padding: 0.7rem;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.album-form input[type="file"]:hover {
+  border-color: #00ff99;
+}
+
+/* 🔘 Botón de envío */
 .album-form button {
-  background: #16a34a;
+  background: linear-gradient(90deg, #3b0a57, #19486e);
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.6rem;
   border: none;
   border-radius: 0.75rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .album-form button:hover {
-  background: #166534;
+  background: linear-gradient(90deg, #00ff99, #19486e);
+  color: #0c0c0c;
+  transform: scale(1.03);
+  box-shadow: 0 0 10px #00ff99;
 }
+
+/* 💡 Placeholder */
+.album-form input::placeholder,
+.album-form textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* 🌫️ Animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
