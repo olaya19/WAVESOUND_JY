@@ -1,20 +1,26 @@
 .song-card {
-  width: 100%;            /* antes estaba fijo en 700px */
-  max-width: 720px;       /* 👈 límite máximo */
-  background: #19486e;
-  border: 3px solid gold;
-  border-radius: 12px;
-  padding: 10px;
+  width: 100%;
+  max-width: 720px;
+  background: rgba(25, 10, 40, 0.65);
+  border: 1px solid rgba(0, 255, 174, 0.3);
+  border-radius: 14px;
+  padding: 1rem;
   margin-bottom: 20px;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
 }
 
+.song-card:hover {
+  border-color: var(--verde);
+  box-shadow: 0 0 20px rgba(0, 255, 174, 0.4);
+}
 
 /* HEADER */
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(17, 17, 17, 0.8); /* más ligero aún */
+  background-color: rgba(17, 17, 17, 0.8);
   font-weight: bold;
   font-size: 18px;
   padding: 6px 10px;
@@ -33,9 +39,9 @@
 .user-circle {
   width: 35px;
   height: 35px;
-  border: 2px solid #00ffae;
+  border: 2px solid var(--verde);
   background-color: #3b0a45;
-  color: #00ffae;
+  color: var(--verde);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -47,8 +53,8 @@
 
 .user-circle:hover {
   transform: scale(1.1);
-  background-color: #00ffae;
-  color: #19486e;
+  background-color: var(--verde);
+  color: var(--azul);
 }
 
 .username {
@@ -57,12 +63,11 @@
   color: #ffffff;
 }
 
-/* CONTENEDOR DE BOTONES */
+/* BOTONES */
 .actions {
   display: flex;
-  flex-direction: row; /* 👈 los pone en fila */
   align-items: center;
-  gap: 20px; /* 👈 espacio entre botones */
+  gap: 20px;
 }
 
 .actions button {
@@ -70,29 +75,26 @@
   align-items: center;
   gap: 6px;
   height: 35px;
-  padding: 0 15px; /* ajusté padding para que queden proporcionados */
+  padding: 0 15px;
   background: #3b0a45;
   color: #ffffff;
-  border: 3px solid #00ffae;
+  border: 3px solid var(--verde);
   border-radius: 20px;
   cursor: pointer;
   font-size: 13px;
   transition: all 0.2s ease-in-out;
   font-weight: 600;
-  justify-content: center;
 }
-
 
 .actions button:hover {
   transform: scale(1.1);
-  background: #00ffae;
+  background: var(--verde);
   color: #111;
 }
 
 .playlist-btn {
   border-color: #ffd700;
 }
-
 .playlist-btn:hover {
   background: #ffd700;
   color: #111;
@@ -101,7 +103,6 @@
 .like-btn {
   border-color: #ff4b5c;
 }
-
 .like-btn:hover {
   background: #ff4b5c;
   color: white;
@@ -114,38 +115,30 @@
   gap: 20px;
   padding: 10px;
   border-radius: 8px;
-  background-color: rgba(59, 10, 69, 0.6); /* tono translúcido */
+  background-color: rgba(59, 10, 69, 0.6);
 }
 
 .player-imagen {
-  position: relative; /* 👈 necesario para centrar el botón dentro */
+  position: relative;
   width: 160px;
   height: 164px;
   border: 4px solid #020202;
   border-radius: 6px;
-  overflow: hidden; /* 👈 recorta lo que sobresalga */
+  overflow: hidden;
 }
 
-/* La portada */
 .player-imagen img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 👈 ajusta la imagen al espacio */
+  object-fit: cover;
   border-radius: 6px;
 }
 
-/* Botón centrado */
 .player-boton {
-  position: absolute; /* 👈 se centra dentro del contenedor */
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 55px;
-  height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
 
 .play-btn {
@@ -156,12 +149,10 @@
   font-size: 22px;
   transition: transform 0.2s ease-in-out;
 }
-
 .play-btn:hover {
   transform: scale(1.3);
-  color: #00ffae;
+  color: var(--verde);
 }
-
 
 /* INFO */
 .info {
@@ -190,7 +181,7 @@
   font-weight: 400;
 }
 
-/* WAVEFORM */
+/* ONDITAS 🔥 */
 .waveform {
   display: flex;
   gap: 3px;
@@ -198,20 +189,17 @@
   align-items: flex-end;
 }
 
-/* Barras sin movimiento por defecto */
 .bar {
   width: 6px;
   height: 50px;
   border-radius: 5px;
-  background: #00ffae;
+  background: var(--verde);
   transform-origin: bottom;
 }
 
-/* Solo se animan si el waveform tiene la clase .active */
 .waveform.active .bar {
   animation: bounce 1s infinite;
 }
-
 .waveform.active .bar:nth-child(even) {
   animation-delay: 0.1s;
 }
@@ -227,4 +215,3 @@
     border-radius: 25px;
   }
 }
-
