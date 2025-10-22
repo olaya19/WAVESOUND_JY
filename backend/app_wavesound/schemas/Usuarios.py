@@ -1,6 +1,6 @@
 # schemas/usuarios.py
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 from .Roles import RolOut
 
 class UsuarioBase(BaseModel):
@@ -21,6 +21,27 @@ class UsuarioOut(UsuarioBase):
     
 class LoginUsuario(BaseModel):
     username: str   # Puede ser email o nickname
-    password: str    
+    password: str   
+
+class CancionPerfilOut(BaseModel):
+    id: int
+    titulo: str
+    descripcion: Optional[str]
+    genero: Optional[str]
+    album: Optional[str]
+    reproducciones: int
+
+class AlbumPerfilOut(BaseModel):
+    id: int
+    titulo: str
+
+class PerfilUsuarioOut(BaseModel):
+    id_usuario: int
+    nombre_usuario: str
+    nickname: str
+    email: str
+    albumes: List[AlbumPerfilOut]
+    canciones: List[CancionPerfilOut]
+    total_reproducciones: int
 
     model_config = {"from_attributes": True}
