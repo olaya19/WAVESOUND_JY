@@ -1,27 +1,15 @@
-:root {
-  --negro: #000000;
-  --morado: #38115c;
-  --azul: #19486e;
-  --verde: #00ffae;
-  --amarillo: #f3c11b;
-  --texto: #ffffff;
-  --vidrio: rgba(20, 5, 35, 0.55);
-}
-
-/* 🔹 Configuración global */
 html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  font-family: "League Spartan", sans-serif;
-  color: var(--texto);
-  background: linear-gradient(135deg, #000 10%, #38115c 50%, #19486e 100%);
-  background-attachment: fixed;
+  font-family: 'League Spartan', sans-serif;
+  color: white;
   overflow-x: hidden;
+  background: none; /* 🚫 eliminamos el negro base */
 }
 
-* {
-  box-sizing: border-box;
-  scroll-behavior: smooth;
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
 }

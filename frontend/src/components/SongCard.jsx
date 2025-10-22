@@ -4,7 +4,7 @@ import "./SongCard.css";
 
 function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_url }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null); // 🎵 referencia al audio
+  const audioRef = useRef(null);
 
   const handleUserClick = () => {
     window.location.href = `/perfil/${usuario}`;
@@ -28,6 +28,7 @@ function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_ur
           </div>
           <span className="username">{usuario}</span>
         </div>
+
         <div className="actions">
           <button className="playlist-btn">
             <FaPlus /> Playlist
@@ -40,9 +41,7 @@ function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_ur
 
       <div className="card-body">
         <div className="player-imagen">
-          {/* 📌 Portada real */}
           <img src={portada_url} alt={titulo} className="cover-img" />
-
           <div className="player-boton">
             <button className="play-btn" onClick={handlePlayClick}>
               {isPlaying ? <FaPause /> : <FaPlay />}
@@ -56,7 +55,7 @@ function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_ur
           </div>
           <p className="desc">{descripcion}</p>
 
-          <div className={`waveform $ isPlaying ? "active" : ""}`}>
+          <div className={`waveform ${isPlaying ? "active" : ""}`}>
             {Array.from({ length: 52 }).map((_, i) => (
               <div key={i} className="bar"></div>
             ))}
@@ -64,11 +63,9 @@ function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_ur
         </div>
       </div>
 
-      {/* 🎶 Reproductor real */}
       <audio ref={audioRef} src={archivo_url} />
     </div>
   );
 }
 
 export default SongCard;
-

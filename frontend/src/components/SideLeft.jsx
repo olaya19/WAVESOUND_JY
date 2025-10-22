@@ -2,7 +2,7 @@ import "./SideLeft.css";
 
 function SideLeft() {
   const goToProfile = (username) => {
-    alert(`Ir al perfil de ${username}`); 
+    alert(`Ir al perfil de ${username}`);
     // 🚀 Aquí luego lo reemplazas con tu navegación real
     // ej: window.location.href = `/perfil/${username}`;
   };

@@ -1,6 +1,5 @@
 import "./SideRight.css";
 
-
 function SideRight() {
   return (
     <aside className="sidebar-right">
@@ -14,4 +13,3 @@ function SideRight() {
 }
 
 export default SideRight;
-
