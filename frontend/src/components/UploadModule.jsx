@@ -17,28 +17,29 @@ function UploadModule({ rolUsuario }) {
   }
 
   return (
-    <div className="upload-module">
-      <h1>Subir contenido</h1>
-      <div className="upload-options">
-        <button
-          className={`upload-btn ${opcion === "cancion" ? "active" : ""}`}
-          onClick={() => setOpcion("cancion")}
-        >
-          Registrar Canción
-        </button>
-        <button
-          className={`upload-btn ${opcion === "album" ? "active" : ""}`}
-          onClick={() => setOpcion("album")}
-        >
-          Registrar Álbum
-        </button>
-      </div>
+    <div className="upload-wrapper">
+      <div className="upload-module">
+        <h1>Subir contenido</h1>
+        <div className="upload-options">
+          <button
+            className={`upload-btn ${opcion === "cancion" ? "active" : ""}`}
+            onClick={() => setOpcion("cancion")}
+          >
+            Registrar Canción
+          </button>
+          <button
+            className={`upload-btn ${opcion === "album" ? "active" : ""}`}
+            onClick={() => setOpcion("album")}
+          >
+            Registrar Álbum
+          </button>
+        </div>
 
-      {opcion === "cancion" && <SongForm />}
-      {opcion === "album" && <AlbumForm />}
+        {opcion === "cancion" && <SongForm />}
+        {opcion === "album" && <AlbumForm />}
+      </div>
     </div>
   );
 }
 
 export default UploadModule;
-

@@ -7,6 +7,7 @@ export function useLogin() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // 🔹 Validación básica
   const validate = () => {
     let valid = true;
     const errs = {};
@@ -24,6 +25,7 @@ export function useLogin() {
     return valid;
   };
 
+  // 🔹 Función principal de login
   const handleLogin = async () => {
     if (!validate()) return null;
 
@@ -32,18 +34,19 @@ export function useLogin() {
       const datos = { username, password };
       const res = await loginUsuario(datos);
 
-      // Guardamos token y datos del usuario en localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          nombre_usuario: res.nombre_usuario,
-          id_rol: res.id_rol,
-          token: res.access_token,
-        })
-      );
+      // 📦 Guardamos toda la información relevante en localStorage
+      const userData = {
+        id_usuario: res.id_usuario,      // <-- lo que devuelve el backend
+        nombre_usuario: res.nombre_usuario,
+        id_rol: res.id_rol,
+        token: res.access_token,
+      };
 
-      return res;
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      return res; // retornamos todo por si lo necesita el componente
     } catch (err) {
+      console.error("❌ Error en login:", err);
       setErrors({ api: err.response?.data?.detail || "Error de conexión" });
       return null;
     } finally {

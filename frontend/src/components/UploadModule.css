@@ -1,45 +1,119 @@
-/* Contenedor principal */
+/* 🎵 Fondo general centrado vertical y horizontal */
+body {
+  background: #050505;
+  min-height: 100vh;
+  display: grid;
+  place-items: center; /* Centrado perfecto */
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+}
+
+.upload-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* altura total de la pantalla */
+  background: #050505; /* fondo general */
+}
+/* 🎵 Contenedor principal */
 .upload-module {
-  background: white;
-  padding: 2rem;
+  background: #0c0c0c;
+  padding: 2.5rem 2rem;
   border-radius: 1rem;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   text-align: center;
+  width: 90%;
   max-width: 500px;
-  width: 100%;
+  border: 1px solid #3b0a57;
+  color: #ffffff;
+  animation: fadeIn 0.6s ease-out;
+}
+/* Wrapper centrado vertical y horizontal */
+
+
+/* ✨ Animación de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Mensaje de acceso denegado */
-.upload-module-denied {
-  color: #b91c1c;
+/* 🎤 Título */
+.upload-module h1 {
+  font-size: 1.8rem;
+  color: #00ff99;
   font-weight: bold;
-  font-size: 1.2rem;
+  margin-bottom: 1.8rem;
+  text-shadow: 0 0 8px #00ff99;
+  letter-spacing: 0.8px;
 }
 
-/* Botones de selección */
+/* 🚫 Mensaje de acceso denegado */
+.upload-module-denied {
+  background: rgba(185, 28, 28, 0.1);
+  color: #ff4c4c;
+  border: 1px solid #3b0a57;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* 🎚️ Botones de selección */
 .upload-options {
   display: flex;
-  gap: 1rem;
   justify-content: center;
-  margin-top: 1.5rem;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* Permite bajar a columna en móvil */
 }
 
+/* 🟢 Botones */
 .upload-btn {
-  padding: 0.8rem 1.5rem;
-  border: none;
+  padding: 0.9rem 1.7rem;
+  border: 1px solid #19486e;
   border-radius: 0.75rem;
   font-weight: bold;
   cursor: pointer;
-  background: #e5e7eb;
-  transition: background 0.3s ease, transform 0.2s ease;
+  background: #111111;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  letter-spacing: 0.4px;
+  min-width: 150px;
 }
 
+/* 🟩 Hover suave */
 .upload-btn:hover {
-  background: #d1d5db;
+  border-color: #00ff99;
+  color: #00ff99;
+  box-shadow: 0 0 10px rgba(0, 255, 153, 0.4);
   transform: translateY(-2px);
 }
 
+/* 🎚️ Botón activo */
 .upload-btn.active {
-  background: #2563eb;
-  color: white;
+  background: linear-gradient(90deg, #3b0a57, #19486e);
+  color: #00ff99;
+  box-shadow: 0 0 12px rgba(0, 255, 153, 0.6);
+  transform: scale(1.05);
+}
+
+/* 📱 Responsivo */
+@media (max-width: 450px) {
+  .upload-options {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .upload-btn {
+    width: 100%;
+  }
 }

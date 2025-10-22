@@ -1,17 +1,23 @@
+SongForm.css   
+
 .song-form {
-  background: #f9fafb;
+  background: #0c0c0c; /* Fondo negro elegante */
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
   margin-top: 2rem;
   text-align: left;
+  color: #ffffff;
+  border: 1px solid #3b0a57; /* toque púrpura */
 }
 
 .song-form h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
   font-weight: bold;
-  color: #111827;
+  color: #00ff99; /* Verde neón */
+  text-shadow: 0 0 6px #00ff99;
+  letter-spacing: 0.5px;
 }
 
 .song-form .form-group {
@@ -21,37 +27,74 @@
 .song-form label {
   display: block;
   font-weight: 600;
-  margin-bottom: 0.3rem;
-  color: #374151;
+  margin-bottom: 0.4rem;
+  color: #e5e7eb;
 }
 
 .song-form input,
-.song-form textarea {
+.song-form textarea,
+.song-form select {
   width: 100%;
-  padding: 0.7rem;
-  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  border: 1px solid #19486e;
   border-radius: 0.5rem;
   font-size: 0.95rem;
-  transition: border 0.2s ease;
+  background-color: #111111;
+  color: #ffffff;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* 🔹 Enfoque */
 .song-form input:focus,
-.song-form textarea:focus {
-  border-color: #2563eb;
+.song-form textarea:focus,
+.song-form select:focus {
+  border-color: #00ff99;
+  box-shadow: 0 0 6px #00ff99;
   outline: none;
 }
 
+/* 🔹 Select estilizado */
+.song-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 20 20'><path d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem;
+  cursor: pointer;
+}
+
+/* 🔹 Botón con gradiente moderno */
 .song-form button {
-  background: #2563eb;
+  background: linear-gradient(90deg, #3b0a57, #19486e);
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.6rem;
   border: none;
   border-radius: 0.75rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .song-form button:hover {
-  background: #1e40af;
+  background: linear-gradient(90deg, #00ff99, #19486e);
+  color: #0c0c0c;
+  transform: scale(1.03);
+  box-shadow: 0 0 10px #00ff99;
+}
+
+/* 🔹 Placeholder y archivos */
+.song-form input::placeholder {
+  color: #9ca3af;
+}
+
+.song-form input[type="file"] {
+  background-color: #111111;
+  border: 1px dashed #3b0a57;
+  padding: 0.7rem;
+  cursor: pointer;
+}
+
+.song-form input[type="file"]:hover {
+  border-color: #00ff99;
 }

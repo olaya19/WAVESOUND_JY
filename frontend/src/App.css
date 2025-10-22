@@ -1,33 +1,33 @@
-/* Contenedor general */
 .app-container {
   display: flex;
-  flex-direction: column; /* nav arriba */
+  flex-direction: column;
   min-height: 100vh;
   width: 100%;
-  background: #0d0d0d;
+  background: linear-gradient(135deg, #000 10%, #38115c 50%, #19486e 100%);
+  background-attachment: fixed;
+  color: var(--texto);
 }
 
-/* GRID PRINCIPAL */
+/* 🔹 Estructura del layout */
 .main-layout {
   display: grid;
-  grid-template-columns: 250px 1fr 250px; /* Izquierda - Centro - Derecha */
-  gap: 20px;
+  grid-template-columns: 270px 1fr 270px;
+  gap: 25px;
   flex: 1;
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
-  align-items: flex-start; /* todo alineado arriba */
+  align-items: flex-start;
 }
 
-
-/* Responsivo */
 @media (max-width: 1024px) {
   .main-layout {
-    grid-template-columns: 200px 1fr; /* sidebar der oculto */
+    grid-template-columns: 220px 1fr;
   }
 }
 
 @media (max-width: 768px) {
   .main-layout {
-    grid-template-columns: 1fr; /* solo contenido */
+    grid-template-columns: 1fr;
+    padding: 15px;
   }
 }

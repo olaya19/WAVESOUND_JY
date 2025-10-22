@@ -1,44 +1,48 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Nav.css";
+import logo from "../assets/LOGO1.1.jpeg";
 
 function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 🔹 Obtener usuario del localStorage
   const user = JSON.parse(localStorage.getItem("user")) || {};
-  const rol = user.id_rol; // 1 = Artista, 2 = Productor, 3 = Oyente, 4 = Admin
-
-  // 🔹 Detectar ruta activa
+  const rol = user.id_rol;
   const currentPath = location.pathname.toLowerCase();
 
-  // 🚨 Si es administrador, no mostrar Nav
-  if (rol === 4) {
-    return null;
-  }
+  if (rol === 4) return null;
 
   return (
     <nav className="navbar">
-      <div className="logo" onClick={() => navigate("/Home")}>
-        WaveSound <i className="fa-solid fa-music"></i>
+      {/* Logo + nombre */}
+      <div className="logo-container" onClick={() => navigate("/Home")}>
+        <img src={logo} alt="WaveSound Logo" className="logo-img" />
+        <h1 className="logo-text">WaveSound</h1>
       </div>
 
-      <input className="search" type="text" placeholder="Buscar..." />
+      {/* Buscador */}
+      <div className="search-container">
+        <input
+          className="search"
+          type="text"
+          placeholder="Buscar artistas, canciones..."
+        />
+      </div>
 
+      {/* Íconos */}
       <div className="icons">
-        {/* Home */}
         <i
           className={`fa-solid fa-house ${currentPath === "/home" ? "active" : ""}`}
           onClick={() => navigate("/Home")}
+          title="Inicio"
         />
 
-        {/* Perfil */}
         <i
           className={`fa-solid fa-user ${currentPath === "/profile" ? "active" : ""}`}
           onClick={() => navigate("/Profile")}
+          title="Perfil"
         />
 
-        {/* Subir música - solo Artistas */}
         {rol === 1 && (
           <i
             className={`fa-solid fa-upload ${currentPath === "/upload" ? "active" : ""}`}
@@ -47,21 +51,22 @@ function Nav() {
           />
         )}
 
-        {/* Menú */}
         <i
           className={`fa-solid fa-bars ${currentPath === "/menu" ? "active" : ""}`}
           onClick={() => navigate("/Menu")}
+          title="Menú"
         />
 
-        {/* Login / Logout */}
         {!user.id_rol ? (
           <i
             className={`fa-solid fa-unlock ${currentPath === "/login" ? "active" : ""}`}
             onClick={() => navigate("/Login")}
+            title="Iniciar sesión"
           />
         ) : (
           <i
             className="fa-solid fa-right-from-bracket"
+            title="Cerrar sesión"
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("token");
@@ -71,10 +76,11 @@ function Nav() {
         )}
       </div>
 
-      {/* Mostrar usuario logeado */}
+      {/* Usuario */}
       {user.nombre_usuario && (
         <div className="user-info">
-          Hola, <strong>{user.nombre_usuario}</strong>
+          <span>Hola, </span>
+          <strong>{user.nombre_usuario}</strong>
         </div>
       )}
     </nav>
@@ -82,5 +88,3 @@ function Nav() {
 }
 
 export default Nav;
-
-

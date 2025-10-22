@@ -56,7 +56,7 @@ function SongCard({ usuario, titulo, descripcion, likes, portada_url, archivo_ur
           </div>
           <p className="desc">{descripcion}</p>
 
-          <div className={`waveform ${isPlaying ? "active" : ""}`}>
+          <div className={`waveform $ isPlaying ? "active" : ""}`}>
             {Array.from({ length: 52 }).map((_, i) => (
               <div key={i} className="bar"></div>
             ))}

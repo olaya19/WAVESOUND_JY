@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Montserrat:wght@400;500;600&display=swap');
+
+/* 🌍 Fuente base global */
+body {
+  font-family: 'League Spartan', sans-serif;
+  font-size: 17px; /* ✅ Texto base más visible */
+  line-height: 1.7; /* ✅ Espaciado cómodo */
+  color: #fff;
+  letter-spacing: 0.2px;
+}
+
+/* 🟣 Títulos principales (marca, secciones grandes) */
+h1, h2, h3, h4, h5, h6,
+.titulo-principal {
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* 🔹 Subtítulos o encabezados medios */
+.subtitulo {
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* 📄 Textos generales y contenido */
+p, span, small, .texto, .descripcion {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* 🧱 Botones, links, labels, inputs */
+button, a, label, input, textarea {
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* 🔠 Clases utilitarias por si las necesitas */
+.font-spartan {
+  font-family: 'League Spartan', sans-serif !important;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif !important;
+}
+.text-bold {
+  font-weight: 700 !important;
+}
