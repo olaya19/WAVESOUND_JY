@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app_wavesound.db.database import get_db
-from app_wavesound.schemas.Usuarios import UsuarioCreate, UsuarioOut
+from app_wavesound.schemas.Usuarios import UsuarioCreate, UsuarioOut, PerfilUsuarioOut
 from app_wavesound.controllers.user_data_services import registrar_usuario, obtener_usuarios, autenticar_usuario
-from app_wavesound.routes.auth import create_access_token, logout
+from app_wavesound.routes.auth import create_access_token, logout, get_current_user
+from app_wavesound.controllers.perfil_service import obtener_perfil_completo
 from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
@@ -49,3 +50,22 @@ def cerrar_sesion(response = Depends(logout)):
 @router.get("/", response_model=list[UsuarioOut])
 def listar_usuarios(db: Session = Depends(get_db)):
     return obtener_usuarios(db)
+
+# -----------------------
+# Perfil Usuario
+# -----------------------
+@router.get("/perfil", response_model=PerfilUsuarioOut)
+def obtener_perfil(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Devuelve el perfil completo del usuario autenticado, con sus canciones,
+    álbumes y estadísticas.
+    """
+    perfil = obtener_perfil_completo(db, current_user)
+    if not perfil:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return perfil
+
+
