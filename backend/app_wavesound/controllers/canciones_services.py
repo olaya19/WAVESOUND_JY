@@ -15,6 +15,10 @@ def obtener_canciones(db: Session):
 def obtener_cancion(db: Session, id_cancion: int):
     return db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
 
+def obtener_canciones_por_usuario(db: Session, id_usuario: int):
+    return db.query(Canciones).filter(Canciones.id_usuario == id_usuario).all()
+
+
 def actualizar_cancion(db: Session, id_cancion: int, datos: CancionBase):
     cancion = obtener_cancion(db, id_cancion)
     if not cancion:

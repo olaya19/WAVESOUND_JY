@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/canciones/"; 
+const API_URL = "http://127.0.0.1:8000/canciones/";
 
 export const getCanciones = async () => {
   try {
@@ -54,3 +54,21 @@ export const postCancion = async (formData) => {
     throw error;
   }
 };
+
+export const getCancionesByUser = async (id_usuario) => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.token;
+
+    const res = await axios.get(`http://127.0.0.1:8000/canciones/usuario/${id_usuario}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("🎧 Canciones del backend (solo del usuario):", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("❌ Error al traer canciones del usuario:", error.response?.data || error.message);
+    return [];
+  }
+};
+

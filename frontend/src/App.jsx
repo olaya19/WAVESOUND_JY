@@ -6,8 +6,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";   // 🔹 Perfil
-import Upload from "./pages/Upload";     // 🔹 Falta importar Upload
+import Upload from "./pages/Upload";     // 🔹 Subir música
 import AdminPanel from "./pages/AdminPanel"; // 🔹 Panel Admin
+import Menu from "./pages/Menu";         // 🔹 Nuevo componente Menu
 
 // ✅ Componente para mostrar/ocultar Nav según la ruta
 function Layout({ children }) {
@@ -31,6 +32,9 @@ function App() {
 
           {/* Perfil */}
           <Route path="/Profile" element={<Profile />} />
+
+          {/* Menú */}
+          <Route path="/Menu" element={<Menu />} />
 
           {/* Iniciar sesión */}
           <Route path="/Login" element={<Login />} />

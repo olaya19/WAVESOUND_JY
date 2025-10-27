@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SongCard from "../components/SongCard";
+import SideLeft from "../components/SideLeft"; // 🔹 Importamos el SideLeft real
 import { getCancionesPublic } from "../services/cancionesService";
 import "./home.css";
 
@@ -22,22 +23,8 @@ function Home() {
 
   return (
     <div className="home-container">
-      {/* 🟣 SIDEBAR IZQUIERDA */}
-      <aside className="sidebar-left">
-        <h3>Artistas a seguir</h3>
-        <ul>
-          <li>🎤 Martista</li>
-          <li>🎶 Lucita</li>
-          <li>🎧 Luker</li>
-        </ul>
-
-        <h3>Productores a seguir</h3>
-        <ul>
-          <li>🎛️ Martista</li>
-          <li>🎚️ Lucita</li>
-          <li>🎵 Luker</li>
-        </ul>
-      </aside>
+      {/* 🟣 SIDEBAR IZQUIERDA REAL */}
+      <SideLeft />
 
       {/* 🟢 CONTENIDO CENTRAL */}
       <main className="feed">
@@ -54,7 +41,8 @@ function Home() {
           {canciones.map((c) => (
             <SongCard
               key={c.id_cancion}
-              usuario={c.id_usuario || "Artista"}
+              usuario={c.usuario?.nombre_usuario || "Artista"} // 🔹 ahora muestra nombre real
+              rol={c.usuario?.rol?.nombre || "Artista"} // 🔹 opcional, si quieres usar el rol
               titulo={c.titulo}
               duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
               likes={c.likes || 0}
@@ -82,8 +70,3 @@ function Home() {
 }
 
 export default Home;
-
-
-
-
-

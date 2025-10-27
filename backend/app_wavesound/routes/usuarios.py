@@ -52,6 +52,15 @@ def listar_usuarios(db: Session = Depends(get_db)):
     return obtener_usuarios(db)
 
 # -----------------------
+# Listado de usuarios por rol
+# -----------------------
+@router.get("/rol/{rol_id}", response_model=list[UsuarioOut])
+def listar_usuarios_por_rol(rol_id: int, db: Session = Depends(get_db)):
+    usuarios = db.query(UsuarioOut).filter_by(id_rol=rol_id).all()
+    return usuarios
+
+
+# -----------------------
 # Perfil Usuario
 # -----------------------
 @router.get("/perfil", response_model=PerfilUsuarioOut)
@@ -67,5 +76,7 @@ def obtener_perfil(
     if not perfil:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return perfil
+
+
 
 
