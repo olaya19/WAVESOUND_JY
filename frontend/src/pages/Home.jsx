@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SongCard from "../components/SongCard";
-import SideLeft from "../components/SideLeft"; // 🔹 Importamos el SideLeft real
+import SideLeft from "../components/SideLeft";
 import { getCancionesPublic } from "../services/cancionesService";
 import "./home.css";
 
@@ -9,9 +9,26 @@ function Home() {
   const [canciones, setCanciones] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 función para traducir id_rol a texto legible
+  const getRolName = (idRol) => {
+    switch (idRol) {
+      case 1:
+        return "Artista";
+      case 2:
+        return "Productor";
+      case 3:
+        return "Oyente";
+      case 4:
+        return "Admin";
+      default:
+        return "Invitado";
+    }
+  };
+
   useEffect(() => {
     getCancionesPublic()
       .then((data) => {
+        console.log("🎵 Canciones recibidas:", data);
         setCanciones(data);
         setLoading(false);
       })
@@ -23,10 +40,10 @@ function Home() {
 
   return (
     <div className="home-container">
-      {/* 🟣 SIDEBAR IZQUIERDA REAL */}
+      {/* 🟣 Sidebar izquierda */}
       <SideLeft />
 
-      {/* 🟢 CONTENIDO CENTRAL */}
+      {/* 🟢 Contenido principal */}
       <main className="feed">
         <div className="welcome-section">
           <h2>Bienvenido, {user.nombre_usuario || "Invitado"}</h2>
@@ -38,23 +55,25 @@ function Home() {
             <p>No hay canciones disponibles por ahora 🎧</p>
           )}
 
-          {canciones.map((c) => (
-            <SongCard
-              key={c.id_cancion}
-              usuario={c.usuario?.nombre_usuario || "Artista"} // 🔹 ahora muestra nombre real
-              rol={c.usuario?.rol?.nombre || "Artista"} // 🔹 opcional, si quieres usar el rol
-              titulo={c.titulo}
-              duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
-              likes={c.likes || 0}
-              descripcion={c.descripcion || "Sin descripción"}
-              archivo_url={c.archivo_url}
-              portada_url={c.portada_url || ""}
-            />
-          ))}
+          {/* 🔹 Mostramos cada canción con los datos del artista real */}
+          {!loading &&
+            canciones.map((c) => (
+              <SongCard
+                key={c.id_cancion}
+                usuario={c.usuario?.nombre_usuario || "Desconocido"}
+                rol={getRolName(c.usuario?.id_rol)}
+                titulo={c.titulo}
+                duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
+                likes={c.likes || 0}
+                descripcion={c.descripcion || "Sin descripción"}
+                archivo_url={c.archivo_url}
+                portada_url={c.portada_url || ""}
+              />
+            ))}
         </div>
       </main>
 
-      {/* 🟡 SIDEBAR DERECHA */}
+      {/* 🟡 Sidebar derecha */}
       <aside className="sidebar-right">
         <h3>La Música Es Vida</h3>
         <p>📢 Novedad: Sube tu primera canción y compártela</p>

@@ -137,7 +137,7 @@ class Documentos_Derechos_Autor(BASE):
     vigente = Column(Boolean, default=True)
 
     derecho_autor = relationship("Derechos_Autor", back_populates="documentos")
-      
+    
 
 # Listas de reproducción
 
