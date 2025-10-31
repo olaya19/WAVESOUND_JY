@@ -1,88 +1,96 @@
-# WaveSound: Plataforma de Música y Gestión de Derechos de Autor
+# 🎵 WaveSound: Plataforma de Música y Gestión de Derechos de Autor
 
-¡Bienvenido al proyecto WaveSound!  
-Este repositorio contiene el código fuente para una aplicación web que combina música en streaming, tienda online y gestión de derechos de autor.  
-La arquitectura del proyecto está diseñada bajo un esquema **API REST** para garantizar escalabilidad, mantenibilidad y separación clara entre frontend, backend y base de datos.
+Este repositorio contiene el código fuente de una plataforma web que integra streaming musical, interracion social y gestión de derechos de autor.
+El sistema sigue una arquitectura API REST con separación de responsabilidades entre frontend, backend y base de datos, lo que garantiza escalabilidad, mantenibilidad y modularidad.
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📂 Estructura General del Proyecto
+
 WAVESOUND_JY/
 │
-├── backend/ # Backend en Python (Flask)
-│ ├── app-wavesound/ # Código principal del backend
-│ │ ├── controllers/ # Lógica de negocio
-│ │ ├── db/ # Configuración y conexión a la BD
-│ │ ├── models/ # Modelos de la base de datos (ORM)
-│ │ ├── routes/ # Rutas de la API REST
-│ │ └── schemas/ # Validaciones y serialización de datos
-│ ├── main.py # Punto de entrada del servidor Flask
-│ └── requirements.txt # Dependencias de Python
+├── backend/                     # Servidor backend en Python (FastAPI)
+│   ├── app_wavesound/           # Núcleo principal del backend
+│   │   ├── controllers/         # Controladores: lógica de negocio de cada módulo
+│   │   ├── db/                  # Conexión y configuración de la base de datos
+│   │   ├── models/              # Modelos ORM (estructuras de las tablas)
+│   │   ├── routes/              # Endpoints y rutas de la API REST
+│   │   ├── schemas/             # Validaciones y serialización de datos (Pydantic)
+│   │   └── __init__.py          # Inicialización del paquete
+│   │
+│   ├── mi_entorno/              # Configuraciones del entorno local o de desarrollo
+│   ├── tests/                   # Pruebas unitarias y de integración
+│   ├── create_tables.py         # Script para crear tablas en la base de datos
+│   ├── main.py                  # Punto de entrada del servidor
+│   └── requirements.txt         # Dependencias y librerías necesarias del backend
 │
-├── database/ # Scripts SQL y archivos de base de datos
-│ └── .gitkeep # Mantiene carpeta vacía en el repositorio
+├── database/                    # Archivos SQL y de administración de la base de datos
+│   └── .gitkeep                 # Mantiene la carpeta en el repositorio
 │
-├── documentancion/ # Documentación interna del proyecto
-│ ├── Git_Workflow.md # Flujo de trabajo con Git
-│ └── Guia_Estandares.md # Estándares de código y buenas prácticas
+├── documentancion/              # Documentación técnica y guías del proyecto
+│   ├── Git_Workflow.md          # Flujo de trabajo con Git y ramas
+│   ├── Guia_Estandares.md       # Convenciones y estándares de código
+│   └── otros_archivos.md        # Diagramas, manuales o especificaciones técnicas
 │
-├── frontend/ # Frontend en React + Vite
-│ ├── public/ # Archivos estáticos públicos
-│ │ └── vite.svg
-│ ├── src/ # Código fuente React
-│ │ ├── assets/ # Imágenes y recursos
-│ │ ├── App.css # Estilos del componente raíz
-│ │ ├── App.jsx # Componente raíz
-│ │ ├── index.css # Estilos globales
-│ │ └── main.jsx # Punto de entrada de la app
-│ ├── eslint.config.js # Configuración de ESLint
-│ ├── index.html # HTML base
-│ ├── package.json # Dependencias y scripts de frontend
-│ ├── package-lock.json # Bloqueo de dependencias
-│ └── vite.config.js # Configuración de Vite
+├── frontend/                    # Interfaz del usuario (React + Vite)
+│   ├── public/                  # Archivos públicos estáticos
+│   ├── src/                     # Código fuente principal del frontend
+│   │   ├── assets/              # Imágenes, íconos y recursos estáticos
+│   │   ├── components/          # Componentes reutilizables de la interfaz
+│   │   ├── ESTILOS/             # Archivos CSS personalizados del proyecto
+│   │   ├── pages/               # Páginas principales (Login, Home, Perfil, etc.)
+│   │   ├── services/            # Conexiones con la API backend (fetch/axios)
+│   │   ├── App.jsx              # Componente raíz del frontend
+│   │   ├── main.jsx             # Punto de entrada de la aplicación
+│   │   ├── App.css              # Estilos del componente principal
+│   │   └── index.css            # Estilos globales
+│   │
+│   ├── eslint.config.js         # Reglas y convenciones de estilo de código
+│   ├── index.html               # Archivo base de la app web
+│   ├── package.json             # Dependencias y scripts de npm
+│   ├── package-lock.json        # Bloqueo de dependencias instaladas
+│   └── vite.config.js           # Configuración del entorno Vite
 │
-└── README.md # Este archivo (guía principal del proyecto)
-
-
+└── README.md                    # Documentación principal del proyecto
 
 ---
 
-## 🛠 Descripción de Componentes
+## 🧠 Descripción de Módulos
 
-### **backend/**
-Servidor en **Python con Flask**. Contiene la API REST que conecta con la base de datos y expone los datos al frontend.
+### **🖥️ Backend**
+Desarrollado en Python con FastAPI, bajo una arquitectura REST y modular que facilita la escalabilidad y el mantenimiento.
 
-- **routes/**: Endpoints de la API.
-- **controllers/**: Lógica de negocio que procesa datos.
-- **models/**: Modelos de la base de datos (ORM).
-- **schemas/**: Validaciones y serialización de datos.
-- **db/**: Configuración de conexión a la base de datos.
-- **main.py**: Arranque del servidor Flask.
-- **requirements.txt**: Lista de dependencias de Python.
-
+- **controllers**: Contiene la lógica de negocio y procesamiento de datos.
+- **db**: Configuración y conexión con la base de datos.
+- **models**: Modelos ORM que representan las tablas y relaciones.
+- **routes**: Endpoints REST que comunican el frontend con el backend.
+- **schemas**: Validación y serialización de datos mediante Pydantic.
+- **tests**: Scripts para pruebas automatizadas.
+- **main.py**: Punto de entrada del servidor FastAPI.
+- **requirements.txt**: Dependencias principales (FastAPI, SQLAlchemy, Pydantic, FPDF, etc).
 ---
 
-### **frontend/**
-Aplicación en **React + Vite** que consume la API del backend.
+### **🎨 Frontend**
+Construido con React + Vite, responsable de la interfaz gráfica y la interacción del usuario con la plataforma.
 
-- **assets/**: Recursos gráficos y estáticos.
-- **App.jsx**: Componente principal de React.
-- **main.jsx**: Punto de entrada de la aplicación.
-- **index.css / App.css**: Estilos globales y del componente raíz.
-- **public/**: Archivos estáticos visibles públicamente.
-
+- **components**: Elementos reutilizables (botones, menús, formularios, etc.).
+- **pages**: Páginas principales de la aplicación (Inicio, Perfil, Derechos de Autor, Subida de Canciones, etc.).
+- **services**: Comunicación con la API del backend usando Axios o Fetch.
+- **ESTILOS**: Hojas CSS personalizadas para el diseño visual.
+- **assets**: Imágenes, íconos y recursos estáticos.
+- **App.jsx / main.jsx**: Estructura base y punto de inicio de la app.
 ---
 
-### **database/**
-Scripts SQL para crear y poblar la base de datos.
+### **🗄️ Database**
+Contiene los scripts SQL para la creación, relaciones y carga inicial de la base de datos que soporta los módulos de usuarios, música, derechos de autor e interacción social.
 
 - **schema.sql**: Definición de tablas, relaciones e índices.
 - **seeds.sql**: Datos iniciales para pruebas.
 
 ---
 
-### **documentancion/**
-Documentación interna del proyecto: guías, flujos de trabajo, estándares y diagramas.
+### **📘 Documentancion**
+Incluye la documentación técnica del proyecto, guías internas, estándares de código y flujo de trabajo colaborativo con Git.
 
 ---
 
