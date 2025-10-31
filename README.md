@@ -1,4 +1,4 @@
-# 🎵 WaveSound: Plataforma de Música y Gestión de Derechos de Autor
+# 🎵🌊 WaveSound: Plataforma de Música y Gestión de Derechos de Autor
 
 Este repositorio contiene el código fuente de una plataforma web que integra streaming musical, interracion social y gestión de derechos de autor.
 El sistema sigue una arquitectura API REST con separación de responsabilidades entre frontend, backend y base de datos, lo que garantiza escalabilidad, mantenibilidad y modularidad.
