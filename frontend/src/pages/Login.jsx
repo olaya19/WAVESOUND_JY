@@ -1,5 +1,5 @@
 import React from "react";
-import "../pages/login.css";
+import "../pages/Login.css";
 import { useLogin } from "../services/useLogin";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/FONDO.jpeg";

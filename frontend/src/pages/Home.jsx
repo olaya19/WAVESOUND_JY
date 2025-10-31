@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SongCard from "../components/SongCard";
 import SideLeft from "../components/SideLeft";
 import { getCancionesPublic } from "../services/cancionesService";
-import "./home.css";
+import "./Home.css";
 
 function Home() {
   const user = JSON.parse(localStorage.getItem("user")) || {};

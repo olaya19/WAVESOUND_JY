@@ -12,7 +12,7 @@ import {
   FaClock,
   FaShieldAlt,
 } from "react-icons/fa";
-import "./admin.css";
+import "./Admin.css";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
