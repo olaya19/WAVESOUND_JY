@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app_wavesound.routes import usuarios, canciones, perfiles
+from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -24,3 +24,4 @@ app.add_middleware(
 app.include_router(usuarios.router)
 app.include_router(perfiles.router)
 app.include_router(canciones.router)
+app.include_router(reproducciones.router)

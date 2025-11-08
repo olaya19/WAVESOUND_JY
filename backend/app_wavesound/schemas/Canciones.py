@@ -1,33 +1,53 @@
-from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel
-from .Usuarios import UsuarioOut  # 👈 importa el esquema del usuario
+from typing import Optional, List
+from datetime import datetime
 
-# ------------------------
-# Base de la canción
-# ------------------------
+# --- Sub-esquemas relacionados ---
+
+class GeneroOut(BaseModel):
+    id_genero: int
+    nombre: str
+
+    model_config = {"from_attributes": True}
+
+
+class AlbumOut(BaseModel):
+    id_album: int
+    titulo: str
+    año_lanzamiento: Optional[int]
+
+    model_config = {"from_attributes": True}
+
+
+class UsuarioColabOut(BaseModel):
+    id_usuario: int
+    nombre_usuario: str
+    nickname: str
+
+    model_config = {"from_attributes": True}
+
+
+# --- Schema principal de canciones ---
+
 class CancionBase(BaseModel):
     titulo: str
     descripcion: Optional[str] = None
-    duracion: Optional[str] = None
-    likes: Optional[int] = 0
-    archivo_url: Optional[str] = None
-    portada_url: Optional[str] = None
-    id_usuario: Optional[int] = None
+    duracion_segundos: Optional[int] = None
+    url_archivo: Optional[str] = None
+    portada: Optional[str] = None
 
-# ------------------------
-# Crear canción
-# ------------------------
+
 class CancionCreate(CancionBase):
-    pass
+    id_genero: Optional[int]
+    id_album: Optional[int]
 
-# ------------------------
-# Mostrar canción con usuario y rol
-# ------------------------
+
 class CancionOut(CancionBase):
     id_cancion: int
-    fecha_creacion: Optional[datetime] = None
-    usuario: Optional[UsuarioOut] = None  # 👈 relación con el usuario que la subió
+    genero: Optional[GeneroOut]
+    album: Optional[AlbumOut]
+    reproducciones: int = 0
+    colaboradores: List[UsuarioColabOut] = []
+    fecha_publicacion: Optional[datetime]
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}

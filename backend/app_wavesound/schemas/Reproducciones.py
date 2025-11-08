@@ -1,16 +1,17 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 class ReproduccionBase(BaseModel):
-    id_cancion: int
     id_usuario: int
+    id_cancion: int
+    fecha_reproduccion: Optional[datetime] = None
 
 class ReproduccionCreate(ReproduccionBase):
-    fecha_reproduccion: datetime
+    pass
 
 class ReproduccionOut(ReproduccionBase):
     id_reproduccion: int
     fecha_reproduccion: datetime
 
-    class Config:
-        model_config = {"from_attributes": True}
+    model_config = {"from_attributes": True}

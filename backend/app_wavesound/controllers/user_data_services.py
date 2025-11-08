@@ -3,6 +3,8 @@ from fastapi import HTTPException
 from passlib.context import CryptContext  # type: ignore
 from app_wavesound.models.models import Usuarios 
 from app_wavesound.schemas.Usuarios import UsuarioCreate, UsuarioOut
+from sqlalchemy import func
+from app_wavesound.models.models import Reproducciones, Canciones
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -57,3 +59,19 @@ def autenticar_usuario(db: Session, username: str, password: str):
         return None
 
     return usuario
+
+
+def obtener_perfil_usuario(db: Session, id_usuario: int):
+    total_reproducciones = (
+        db.query(func.count(Reproducciones.id_reproduccion))
+        .join(Canciones, Canciones.id_cancion == Reproducciones.id_cancion)
+        .filter(Canciones.id_usuario == id_usuario)
+        .scalar()
+    )
+
+    # Aquí ya devuelves el perfil con el total de reproducciones
+    return {
+        "id_usuario": id_usuario,
+        "nombre_usuario": "nombre_ejemplo",
+        "total_reproducciones": total_reproducciones
+    }
