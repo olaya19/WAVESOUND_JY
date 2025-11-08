@@ -1,19 +1,20 @@
-# controllers/favoritos_services.py
 from sqlalchemy.orm import Session
 from app_wavesound.models.models import Favoritos
-from app_wavesound.schemas.favoritos import FavoritoCreate, FavoritoOut
+from app_wavesound.schemas.Favorito import FavoritoCreate, FavoritoOut
 from datetime import datetime
 
 def agregar_favorito(db: Session, datos: FavoritoCreate) -> FavoritoOut:
     # Verificar si ya existe el favorito
     existente = db.query(Favoritos).filter(
+
         Favoritos.id_usuario == datos.id_usuario,
+
         Favoritos.id_cancion == datos.id_cancion
+        
     ).first()
     
     if existente:
         return FavoritoOut.model_validate(existente)
-
     nuevo_fav = Favoritos(
         id_cancion=datos.id_cancion,
         id_usuario=datos.id_usuario,
@@ -28,25 +29,3 @@ def obtener_favoritos(db: Session, id_usuario: int) -> list[FavoritoOut]:
     favoritos = db.query(Favoritos).filter(Favoritos.id_usuario == id_usuario).all()
     return [FavoritoOut.model_validate(f) for f in favoritos]
 
-
-# controllers/reproducciones_services.py
-from sqlalchemy.orm import Session
-from app_wavesound.models.models import Reproducciones
-from app_wavesound.schemas.reproducciones import ReproduccionCreate, ReproduccionOut
-from datetime import datetime
-
-def registrar_reproduccion(db: Session, datos: ReproduccionCreate) -> ReproduccionOut:
-    nueva_rep = Reproducciones(
-        id_cancion=datos.id_cancion,
-        id_usuario=datos.id_usuario,
-        fecha_reproduccion=datos.fecha_reproduccion or datetime.utcnow()
-    )
-    db.add(nueva_rep)
-    db.commit()
-    db.refresh(nueva_rep)
-    return ReproduccionOut.model_validate(nueva_rep)
-
-
-def obtener_reproducciones(db: Session) -> list[ReproduccionOut]:
-    reproducciones = db.query(Reproducciones).all()
-    return [ReproduccionOut.model_validate(r) for r in reproducciones]
