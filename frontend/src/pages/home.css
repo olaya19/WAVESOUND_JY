@@ -1,78 +1,176 @@
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  min-height: 100vh;
-  background: rgba(10, 0, 20, 0.25);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  margin: 10px auto;
-  box-shadow: 0 0 40px rgba(0, 255, 174, 0.05);
-  width: 100%;
-}
-
-.welcome-section {
-  width: 100%;
-  max-width: 950px;
-  text-align: left;
-  margin-bottom: 1.8rem;
-  padding: 0 1rem;
-}
-
-.welcome-section h3 {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--verde);
-  text-shadow: 0 0 10px #00ffae80;
-  letter-spacing: 0.8px;
-  margin: 0;
-  animation: fadeSlideIn 0.8s ease;
-}
-
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 🎵 Contenedor de canciones */
-.songs-feed {
+/* 🏠 CONTENEDOR PRINCIPAL */
+.home-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 1100px;
-  padding: 0 1rem 3rem;
+  grid-template-columns: 20% 55% 20%;
+  gap: 20px;
+  padding: 25px;
+  background: linear-gradient(160deg, #000000 60%, #1b0047 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+
+/* 🟣 SIDEBARS (IZQ y DER) */
+.sidebar-left, .sidebar-right {
+  background: rgba(25, 72, 110, 0.45);
+  border: 2px solid rgba(243, 193, 27, 0.8);
+  border-radius: 16px;
+  padding: 18px;
+  height: fit-content;
+  align-self: start;
+  box-shadow: 0 0 14px rgba(243, 193, 27, 0.15);
+  backdrop-filter: blur(5px);
   transition: all 0.3s ease;
 }
 
-@media (max-width: 992px) {
-  .welcome-section h3 {
-    font-size: 24px;
-  }
+.sidebar-left:hover, .sidebar-right:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 18px rgba(65, 220, 151, 0.3);
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    padding: 1.5rem 0.8rem;
-  }
-  .songs-feed {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
+/* 🟢 FEED CENTRAL */
+.feed {
+  background: linear-gradient(145deg, #1b0047 0%, #10243f 100%);
+  border: 2px solid #F3C11B;
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 480px) {
-  .welcome-section h3 {
-    font-size: 20px;
-    text-align: center;
-  }
-  .songs-feed {
-    grid-template-columns: 1fr;
-  }
+.feed:hover {
+  box-shadow: 0 0 25px rgba(65, 220, 151, 0.25);
+}
+
+/* 💬 SECCIÓN DE BIENVENIDA */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 15px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 14px 0;
+  border: 1px solid rgba(65, 220, 151, 0.4);
+  box-shadow: 0 0 10px rgba(65, 220, 151, 0.15);
+}
+
+.welcome-section h2 {
+  color: #41DC97;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(65, 220, 151, 0.3);
+}
+
+/* 🎧 SONG FEED */
+.songs-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* 🟡 SIDEBAR DERECHA */
+.sidebar-right h3 {
+  color: #F3C11B;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(243, 193, 27, 0.3);
+  padding-bottom: 4px;
+}
+
+.sidebar-right p {
+  font-size: 14px;
+  color: #e0e0e0;
+  margin: 8px 0;
+}
+
+/* 💚 BOTÓN DE SUBIR (ESTILO LOGIN) */
+.upload-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #00ff99, #19486E);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: "Spartan", sans-serif;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 12px rgba(0, 255, 150, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 0 18px rgba(0, 255, 150, 0.45);
+  background: linear-gradient(90deg, #00ffaa, #206f9f);
+}
+
+.upload-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 8px rgba(0, 255, 150, 0.3);
+}
+
+/* ⭐ SECCIONES EXTRA */
+.extras {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(243, 193, 27, 0.3);
+}
+
+.extras p {
+  margin: 5px 0;
+  color: #41DC97;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.extras p:hover {
+  color: #F3C11B;
+  cursor: pointer;
+}
+
+/* 🧠 SIDEBAR IZQUIERDA */
+.sidebar-left h3 {
+  color: #41DC97;
+  border-bottom: 1px solid rgba(65, 220, 151, 0.3);
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.sidebar-left ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.sidebar-left li {
+  color: #e0e0e0;
+  font-size: 14px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-left li:hover {
+  color: #F3C11B;
+  transform: translateX(3px);
+}
+
+/* 🌙 SCROLL MODERNO */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F3C11B, #41DC97);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
 }

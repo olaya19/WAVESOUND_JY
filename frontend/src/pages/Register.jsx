@@ -1,5 +1,5 @@
 import React from "react";
-import "./register.css";
+import "./Register.css";
 import { FaUser, FaCrown, FaAt, FaUsers, FaLock } from "react-icons/fa";
 import { useRegister } from "../services/useRegister";
 import { registerUsuario } from "../services/authService";

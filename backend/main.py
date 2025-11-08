@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app_wavesound.routes import usuarios,canciones,perfiles  # importa tus routers
+from app_wavesound.routes import usuarios, canciones, perfiles
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -9,25 +9,18 @@ app = FastAPI(
     debug=True
 )
 
-origins = [
-    "http://localhost:5173",  # frontend
-    "http://127.0.0.1:5173",
-]
-
+# 🔓 Permitir acceso desde cualquier origen (solo en desarrollo)
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # o ["*"] para permitir todos
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-
-# --------- Montar Routers ---------
+# ✅ Montamos routers sin duplicar prefijos
 app.include_router(usuarios.router)
 app.include_router(perfiles.router)
 app.include_router(canciones.router)
-
-

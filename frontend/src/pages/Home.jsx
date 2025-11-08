@@ -1,24 +1,34 @@
 import { useEffect, useState } from "react";
-import SideLeft from "../components/SideLeft";
-import SideRight from "../components/SideRight";
 import SongCard from "../components/SongCard";
-import { getCancionesPublic } from "../services/cancionesService"; // ✅ Nuevo servicio público
-
-import "../App.css";
-import "./home.css"; // asegúrate que este archivo exista
+import SideLeft from "../components/SideLeft";
+import { getCancionesPublic } from "../services/cancionesService";
+import "./Home.css";
 
 function Home() {
-  // Usuario logueado (si existe)
   const user = JSON.parse(localStorage.getItem("user")) || {};
-
-  // Estado para las canciones del backend
   const [canciones, setCanciones] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 función para traducir id_rol a texto legible
+  const getRolName = (idRol) => {
+    switch (idRol) {
+      case 1:
+        return "Artista";
+      case 2:
+        return "Productor";
+      case 3:
+        return "Oyente";
+      case 4:
+        return "Admin";
+      default:
+        return "Invitado";
+    }
+  };
+
   useEffect(() => {
-    // Llamar al endpoint público
     getCancionesPublic()
       .then((data) => {
+        console.log("🎵 Canciones recibidas:", data);
         setCanciones(data);
         setLoading(false);
       })
@@ -29,51 +39,53 @@ function Home() {
   }, []);
 
   return (
-    <div className="app-container">
-      {/* ✅ Ya no ponemos <Nav /> aquí, porque lo maneja Layout en App.jsx */}
+    <div className="home-container">
+      {/* 🟣 Sidebar izquierda */}
+      <SideLeft />
 
-      <div className="main-layout">
-        {/* Sidebar Izquierda */}
-        <SideLeft />
+      {/* 🟢 Contenido principal */}
+      <main className="feed">
+        <div className="welcome-section">
+          <h2>Bienvenido, {user.nombre_usuario || "Invitado"}</h2>
+        </div>
 
-        {/* Contenido principal */}
-        <main className="main-content">
-          <div className="welcome-section">
-            <h3>Bienvenido, {user.nombre_usuario || "Invitado"}</h3>
-          </div>
+        <div className="songs-feed">
+          {loading && <p>Cargando canciones...</p>}
+          {!loading && canciones.length === 0 && (
+            <p>No hay canciones disponibles por ahora 🎧</p>
+          )}
 
-          <div className="songs-feed">
-            {loading && <p>Cargando canciones...</p>}
-
-            {!loading && canciones.length === 0 && (
-              <p>No hay canciones disponibles por ahora 🎧</p>
-            )}
-
-            {/* ✅ Canciones reales del backend */}
-            {canciones.map((c) => (
+          {/* 🔹 Mostramos cada canción con los datos del artista real */}
+          {!loading &&
+            canciones.map((c) => (
               <SongCard
                 key={c.id_cancion}
-                usuario={c.id_usuario || "Artista"}
+                usuario={c.usuario?.nombre_usuario || "Desconocido"}
+                rol={getRolName(c.usuario?.id_rol)}
                 titulo={c.titulo}
                 duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
-                likes={c.likes || 0} // si luego agregas likes
+                likes={c.likes || 0}
                 descripcion={c.descripcion || "Sin descripción"}
-                archivo_url={c.archivo_url} // 🔗 Dropbox directo (terminado en ?dl=1)
+                archivo_url={c.archivo_url}
                 portada_url={c.portada_url || ""}
               />
             ))}
-          </div>
-        </main>
+        </div>
+      </main>
 
-        {/* Sidebar Derecha */}
-        <SideRight />
-      </div>
+      {/* 🟡 Sidebar derecha */}
+      <aside className="sidebar-right">
+        <h3>La Música Es Vida</h3>
+        <p>📢 Novedad: Sube tu primera canción y compártela</p>
+        <button className="upload-btn">Subir Tema</button>
+
+        <div className="extras">
+          <p>⭐ Tus playlist</p>
+          <p>💜 Tus Me Gusta</p>
+        </div>
+      </aside>
     </div>
   );
 }
 
 export default Home;
-
-
-
-

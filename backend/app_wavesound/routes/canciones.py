@@ -1,47 +1,68 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-
 from app_wavesound.db.database import get_db
 from app_wavesound.schemas.Canciones import CancionCreate, CancionOut, CancionBase
 from app_wavesound.controllers import canciones_services
-from app_wavesound.routes.auth import get_current_user  # 🔒 Protección con token
+from app_wavesound.routes.auth import get_current_user
 
 router = APIRouter(prefix="/canciones", tags=["Canciones"])
 
+# -----------------------
+# Crear canción
+# -----------------------
 @router.post("/", response_model=CancionOut)
-def crear(cancion: CancionCreate, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
-    # 👇 aseguramos que el usuario autenticado sea quien sube la canción
+def crear_cancion(cancion: CancionCreate, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     cancion.id_usuario = usuario_id
     return canciones_services.crear_cancion(db, cancion)
 
+# -----------------------
+# Listar todas las canciones (autenticado)
+# -----------------------
 @router.get("/", response_model=List[CancionOut])
-def listar(db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
+def listar_canciones(db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     return canciones_services.obtener_canciones(db)
 
-
+# -----------------------
+# Listar canciones públicas (sin token)
+# -----------------------
 @router.get("/public", response_model=List[CancionOut])
-def listar_publico(db: Session = Depends(get_db)):
-    # 👈 Sin token, devuelve todas las canciones disponibles
-    return canciones_services.obtener_canciones(db)
+def listar_publicas(db: Session = Depends(get_db)):
+    return canciones_services.obtener_canciones_publicas(db)
 
+
+# -----------------------
+# Listar canciones por usuario
+# -----------------------
+@router.get("/usuario/{id_usuario}", response_model=List[CancionOut])
+def listar_por_usuario(id_usuario: int, db: Session = Depends(get_db)):
+    return canciones_services.obtener_canciones_por_usuario(db, id_usuario)
+
+# -----------------------
+# Obtener canción por ID
+# -----------------------
 @router.get("/{id_cancion}", response_model=CancionOut)
-def obtener(id_cancion: int, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
+def obtener_cancion(id_cancion: int, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     cancion = canciones_services.obtener_cancion(db, id_cancion)
     if not cancion:
         raise HTTPException(status_code=404, detail="Canción no encontrada")
     return cancion
 
-
+# -----------------------
+# Actualizar canción
+# -----------------------
 @router.put("/{id_cancion}", response_model=CancionOut)
-def actualizar(id_cancion: int, datos: CancionBase, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
+def actualizar_cancion(id_cancion: int, datos: CancionBase, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     cancion = canciones_services.actualizar_cancion(db, id_cancion, datos)
     if not cancion:
         raise HTTPException(status_code=404, detail="Canción no encontrada")
     return cancion
 
+# -----------------------
+# Eliminar canción
+# -----------------------
 @router.delete("/{id_cancion}")
-def eliminar(id_cancion: int, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
+def eliminar_cancion(id_cancion: int, db: Session = Depends(get_db), usuario_id: int = Depends(get_current_user)):
     cancion = canciones_services.eliminar_cancion(db, id_cancion)
     if not cancion:
         raise HTTPException(status_code=404, detail="Canción no encontrada")
