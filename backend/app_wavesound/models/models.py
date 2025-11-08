@@ -82,8 +82,8 @@ class Canciones(BASE):
     titulo = Column(String(100), nullable=False, index=True)
     descripcion = Column(String(255), nullable=True)
     duracion = Column(Integer, nullable=True)  # en segundos
-    archivo_url = Column(String(255), nullable=False)  # ruta al archivo de audio
-    portada_url = Column(String(255), nullable=True)  # opcional: imagen del álbum/canción
+    archivo_url = Column(String(255), nullable=False)
+    portada_url = Column(String(255), nullable=True)
     id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=False)
     id_album = Column(Integer, ForeignKey("albumes.id_album"), nullable=True)
     fecha_creacion = Column(DateTime, default=datetime.utcnow)
