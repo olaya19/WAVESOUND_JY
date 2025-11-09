@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 class CancionBase(BaseModel):
     titulo: str
@@ -12,7 +12,7 @@ class CancionBase(BaseModel):
     id_album: Optional[int] = None
 
 class CancionCreate(CancionBase):
-    id_usuario: int
+    id_usuario: Optional[int] = None
 
 class CancionOut(CancionBase):
     id_cancion: int

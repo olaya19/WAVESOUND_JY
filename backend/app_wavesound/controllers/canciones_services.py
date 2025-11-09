@@ -1,26 +1,16 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app_wavesound.models.models import Canciones, Reproducciones
-from app_wavesound.schemas.Canciones import CancionCreate, CancionOut
+from app_wavesound.schemas.Canciones import CancionCreate, CancionBase
 from datetime import datetime
 
 # Crear canción
-def crear_cancion(db: Session, datos: CancionCreate) -> CancionOut:
-    nueva = Canciones(
-        id_usuario=datos.id_usuario,
-        titulo=datos.titulo,
-        descripcion=datos.descripcion,
-        duracion=datos.duracion,
-        archivo_url=datos.archivo_url,
-        portada_url=datos.portada_url,
-        id_genero=datos.id_genero,
-        id_album=datos.id_album,
-        fecha_creacion=datetime.utcnow()
-    )
-    db.add(nueva)
+def crear_cancion(db: Session, cancion_data: CancionCreate):
+    nueva_cancion = Canciones(**cancion_data.dict())
+    db.add(nueva_cancion)
     db.commit()
-    db.refresh(nueva)
-    return CancionOut.model_validate(nueva)
+    db.refresh(nueva_cancion)
+    return nueva_cancion
 
 
 # Obtener todas las canciones
@@ -28,41 +18,53 @@ def obtener_canciones(db: Session):
     canciones = db.query(Canciones).all()
     resultado = []
     for c in canciones:
-        total_reps = db.query(func.count(Reproducciones.id_reproduccion))\
-            .filter(Reproducciones.id_cancion == c.id_cancion)\
-            .scalar() or 0
+        total = db.query(func.count(Reproducciones.id_reproduccion))\
+                  .filter(Reproducciones.id_cancion == c.id_cancion).scalar()
         resultado.append({
-            "id_cancion": c.id_cancion,
-            "titulo": c.titulo,
-            "descripcion": c.descripcion,
-            "archivo_url": c.archivo_url,
-            "portada_url": c.portada_url,
-            "total_reproducciones": total_reps
+            **c.__dict__,
+            "total_reproducciones": total or 0
         })
     return resultado
 
 
+# Obtener canciones públicas
+def obtener_canciones_publicas(db: Session):
+    return obtener_canciones(db)
+
+
+# Obtener canciones por usuario
+def obtener_canciones_por_usuario(db: Session, id_usuario: int):
+    return db.query(Canciones).filter(Canciones.id_usuario == id_usuario).all()
+
+
 # Obtener canción por ID
 def obtener_cancion(db: Session, id_cancion: int):
+    return db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
+
+
+# Actualizar canción
+def actualizar_cancion(db: Session, id_cancion: int, datos: CancionBase):
     cancion = db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
     if not cancion:
         return None
-
-    total_reps = db.query(func.count(Reproducciones.id_reproduccion))\
-        .filter(Reproducciones.id_cancion == id_cancion)\
-        .scalar() or 0
-
-    return {
-        "id_cancion": cancion.id_cancion,
-        "titulo": cancion.titulo,
-        "descripcion": cancion.descripcion,
-        "archivo_url": cancion.archivo_url,
-        "portada_url": cancion.portada_url,
-        "total_reproducciones": total_reps
-    }
+    for key, value in datos.dict(exclude_unset=True).items():
+        setattr(cancion, key, value)
+    db.commit()
+    db.refresh(cancion)
+    return cancion
 
 
-# Registrar reproducción (cada vez que se escucha una canción)
+# Eliminar canción
+def eliminar_cancion(db: Session, id_cancion: int):
+    cancion = db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
+    if not cancion:
+        return None
+    db.delete(cancion)
+    db.commit()
+    return cancion
+
+
+# Registrar reproducción
 def registrar_reproduccion(db: Session, id_cancion: int, id_usuario: int):
     nueva_rep = Reproducciones(
         id_cancion=id_cancion,
@@ -71,28 +73,26 @@ def registrar_reproduccion(db: Session, id_cancion: int, id_usuario: int):
     )
     db.add(nueva_rep)
     db.commit()
-    db.refresh(nueva_rep)
-    return {"mensaje": "Reproducción registrada"}
+    return nueva_rep
 
 
-# Obtener canciones más reproducidas
+# Obtener total de reproducciones
+def obtener_total_reproducciones(db: Session, id_cancion: int):
+    return db.query(func.count(Reproducciones.id_reproduccion))\
+             .filter(Reproducciones.id_cancion == id_cancion).scalar()
+
+
+# Obtener top canciones (más reproducidas)
 def obtener_top_canciones(db: Session, limite: int = 10):
-    top = (
-        db.query(Canciones, func.count(Reproducciones.id_reproduccion).label("total_reproducciones"))
-        .join(Reproducciones, Reproducciones.id_cancion == Canciones.id_cancion)
+    resultado = (
+        db.query(
+            Canciones.titulo,
+            func.count(Reproducciones.id_reproduccion).label("total_reproducciones")
+        )
+        .join(Reproducciones, Canciones.id_cancion == Reproducciones.id_cancion)
         .group_by(Canciones.id_cancion)
         .order_by(func.count(Reproducciones.id_reproduccion).desc())
         .limit(limite)
         .all()
     )
-
-    return [
-        {
-            "id_cancion": c.id_cancion,
-            "titulo": c.titulo,
-            "archivo_url": c.archivo_url,
-            "portada_url": c.portada_url,
-            "total_reproducciones": total
-        }
-        for c, total in top
-    ]
+    return [{"titulo": r.titulo, "total_reproducciones": r.total_reproducciones} for r in resultado]
