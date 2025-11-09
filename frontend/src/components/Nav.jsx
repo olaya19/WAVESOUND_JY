@@ -10,17 +10,21 @@ function Nav() {
   const rol = user.id_rol;
   const currentPath = location.pathname.toLowerCase();
 
-  if (rol === 4) return null;
+  // 🔒 Ocultar Nav en Login y Register
+  if (currentPath === "/login" || currentPath === "/register") {
+    return null;
+  }
+
+  // 🔒 Ocultar Nav en panel de administrador
+  if (rol === 1) return null; // si tu admin es id_rol 1, ajusta según corresponda
 
   return (
     <nav className="navbar">
-      {/* Logo + nombre */}
       <div className="logo-container" onClick={() => navigate("/Home")}>
         <img src={logo} alt="WaveSound Logo" className="logo-img" />
         <h1 className="logo-text">WaveSound</h1>
       </div>
 
-      {/* Buscador */}
       <div className="search-container">
         <input
           className="search"
@@ -29,7 +33,6 @@ function Nav() {
         />
       </div>
 
-      {/* Íconos */}
       <div className="icons">
         <i
           className={`fa-solid fa-house ${currentPath === "/home" ? "active" : ""}`}
@@ -43,7 +46,7 @@ function Nav() {
           title="Perfil"
         />
 
-        {rol === 1 && (
+        {rol === 3 && (
           <i
             className={`fa-solid fa-upload ${currentPath === "/upload" ? "active" : ""}`}
             onClick={() => navigate("/Upload")}
@@ -76,7 +79,6 @@ function Nav() {
         )}
       </div>
 
-      {/* Usuario */}
       {user.nombre_usuario && (
         <div className="user-info">
           <span>Hola, </span>
@@ -88,3 +90,4 @@ function Nav() {
 }
 
 export default Nav;
+

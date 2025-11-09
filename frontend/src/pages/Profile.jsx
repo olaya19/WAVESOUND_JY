@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SongCard from "../components/SongCard";
 import { getCancionesByUser } from "../services/cancionesService";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./Profile.css";
 
 function Profile() {
@@ -9,7 +10,6 @@ function Profile() {
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [canciones, setCanciones] = useState([]);
 
-  // 🔹 Traer canciones reales del usuario
   useEffect(() => {
     const fetchCanciones = async () => {
       if (!user?.id_usuario) return;
@@ -20,11 +20,29 @@ function Profile() {
     fetchCanciones();
   }, [user?.id_usuario]);
 
+  // 🔹 Si no está logueado
   if (!user.id_rol) {
+    const handleLoginRedirect = () => {
+      Swal.fire({
+        icon: "info",
+        title: "Inicia sesión para continuar",
+        text: "Debes iniciar sesión para acceder a tu perfil.",
+        confirmButtonText: "Ir al login",
+        confirmButtonColor: "#6e00ff",
+        background: "#121212",
+        color: "#fff",
+      }).then(() => {
+        navigate("/login");
+        window.location.reload(); // 🔹 Esto fuerza que se recargue y desaparezca el Nav
+      });
+    };
+
     return (
-      <div className="profile-container">
+      <div className="profile-container not-logged">
         <h2>No has iniciado sesión</h2>
-        <button onClick={() => navigate("/login")}>Iniciar Sesión</button>
+        <button className="login-btn" onClick={handleLoginRedirect}>
+          Iniciar Sesión
+        </button>
       </div>
     );
   }
@@ -32,7 +50,6 @@ function Profile() {
   return (
     <div className="profile-page">
       {/* ...tu diseño de perfil igual... */}
-
       <aside className="profile-right">
         <div className="songs-section">
           <h3>🎵 Canciones del artista</h3>
@@ -59,4 +76,5 @@ function Profile() {
 }
 
 export default Profile;
+
 

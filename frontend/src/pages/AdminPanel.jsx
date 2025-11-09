@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FaUsers,
-  FaMusic,
-  FaFileAlt,
-  FaSignOutAlt,
-  FaHome,
-  FaUserCheck,
-  FaUserTimes,
-  FaStar,
-  FaClock,
-  FaShieldAlt,
+  FaUsers, FaMusic, FaFileAlt, FaSignOutAlt, FaHome,
+  FaUserCheck, FaUserTimes, FaStar, FaClock, FaShieldAlt,
 } from "react-icons/fa";
+import Swal from "sweetalert2";
 import "./Admin.css";
 
 const AdminPanel = () => {
@@ -19,17 +12,51 @@ const AdminPanel = () => {
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [activeTab, setActiveTab] = useState("usuarios");
 
+  const darkSwal = (options) => {
+    Swal.fire({
+      background: "#2b0a3d",
+      color: "#fff",
+      confirmButtonColor: "#00ffcc",
+      cancelButtonColor: "#d33",
+      ...options,
+    });
+  };
+
   useEffect(() => {
-    if (user.id_rol !== 4) navigate("/Home"); // Solo admins
+    if (user.id_rol !== 1) {
+      darkSwal({
+        icon: "warning",
+        title: "Acceso denegado",
+        text: "Solo los administradores pueden acceder a este panel.",
+        confirmButtonText: "Ir al inicio",
+      }).then(() => navigate("/Home"));
+    }
   }, [navigate, user.id_rol]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/Login");
+    darkSwal({
+      title: "¿Cerrar sesión?",
+      text: "Tu sesión será cerrada.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, salir",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        navigate("/Login");
+        darkSwal({
+          icon: "success",
+          title: "Sesión cerrada",
+          text: "Has salido del sistema correctamente.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
   };
 
-  // Estadísticas con íconos y colores dinámicos
   const stats = {
     usuarios: [
       { title: "Total Usuarios", value: 1200, icon: <FaUsers />, color: "#41DC97" },
@@ -50,7 +77,6 @@ const AdminPanel = () => {
 
   return (
     <div className="admin-container">
-      {/* Sidebar */}
       <aside className="admin-sidebar">
         <div className="sidebar-header">
           <h2>WaveSound Admin</h2>
@@ -84,7 +110,6 @@ const AdminPanel = () => {
         </button>
       </aside>
 
-      {/* Contenido principal */}
       <main className="admin-main">
         <h1>
           {activeTab === "usuarios"
@@ -125,4 +150,5 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+
 

@@ -6,7 +6,7 @@ import "./UploadModule.css";
 function UploadModule({ rolUsuario }) {
   const [opcion, setOpcion] = useState("");
 
-  if (rolUsuario !== 1) {
+  if (rolUsuario !== 3) {
     return (
       <div className="upload-module">
         <p className="upload-module-denied">
