@@ -20,7 +20,7 @@ function Menu() {
         </div>
 
         {/* Solo artistas/productores pueden gestionar canciones */}
-        {(rol === 1 || rol === 2) && (
+        {(rol === 3 || rol === 4) && (
           <div className="menu-card" onClick={() => navigate("/mis-canciones")}>
             <h3>🎵 Mis Canciones</h3>
             <p>Ver, editar o eliminar las canciones que has subido.</p>

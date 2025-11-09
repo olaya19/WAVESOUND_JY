@@ -50,30 +50,99 @@
   text-shadow: 0 0 10px #00ff99;
 }
 
-/* 🔹 Inputs */
-form input {
-  display: block;
+/* Inputs con iconos dentro */
+.input-box {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.icon-circle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00ff99;
+}
+
+.input-box input {
   width: 100%;
-  padding: 10px 12px;
-  margin: 16px 0;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 150, 0.4);
+  padding: 10px 12px 10px 40px; /* espacio para icono */
   border-radius: 10px;
+  border: 2px solid rgba(0,255,150,0.4);
+  background: rgba(255,255,255,0.05);
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   outline: none;
-  font-family: "Spartan", sans-serif;
+}
+
+/* Contraseña con icono ver/ocultar */
+.password-box .eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00ff99;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background: linear-gradient(
+    90deg,
+    #4285F4 0%,
+    #DB4437 25%,
+    #F4B400 50%,
+    #0F9D58 75%,
+    #4285F4 100%
+  );
+  background-size: 200% auto; /* Para animar gradiente */
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
-form input:focus {
-  border-color: #00ff99;
-  box-shadow: 0 0 8px rgba(0, 255, 150, 0.5);
+.google-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-position: right center; /* Mueve el gradiente */
 }
 
-form input::placeholder {
-  color: #bfbfbf;
+/* Brillo animado */
+.google-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+  transition: all 0.7s ease;
 }
+
+.google-btn:hover::after {
+  left: 125%;
+}
+
+/* Icono G */
+.google-btn svg {
+  margin-right: 8px;
+  background: white;
+  border-radius: 50%;
+  padding: 2px;
+}
+
 
 /* 🔗 Links */
 .links {
