@@ -35,3 +35,7 @@ def listar_favoritos(
     usuario_actual = Depends(get_current_user)
 ):
     return favoritos_services.listar_favoritos_usuario(db, usuario_actual.id_usuario)
+
+@router.get("/likes/{id_cancion}")
+def get_likes_cancion(id_cancion: int, db: Session = Depends(get_db), usuario_actual = Depends(get_current_user)):
+    return favoritos_services.obtener_likes_cancion(db, id_cancion, usuario_actual.id_usuario)

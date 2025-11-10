@@ -3,6 +3,7 @@ from app_wavesound.models.models import Favoritos, Canciones
 from app_wavesound.schemas.Favorito import FavoritoCreate, FavoritoOut
 from fastapi import HTTPException
 from datetime import datetime
+from sqlalchemy import func
 
 def agregar_favorito(db: Session, id_usuario: int, favorito_data: FavoritoCreate) -> FavoritoOut:
     # Verificar si la canción existe
@@ -30,7 +31,6 @@ def agregar_favorito(db: Session, id_usuario: int, favorito_data: FavoritoCreate
     db.refresh(nuevo_favorito)
     return FavoritoOut.model_validate(nuevo_favorito)
 
-
 def eliminar_favorito(db: Session, id_usuario: int, id_cancion: int):
     favorito = db.query(Favoritos).filter(
         Favoritos.id_usuario == id_usuario,
@@ -48,3 +48,18 @@ def eliminar_favorito(db: Session, id_usuario: int, id_cancion: int):
 def listar_favoritos_usuario(db: Session, id_usuario: int):
     favoritos = db.query(Favoritos).filter(Favoritos.id_usuario == id_usuario).all()
     return [FavoritoOut.model_validate(f) for f in favoritos]
+
+
+def obtener_likes_cancion(db: Session, id_cancion: int, id_usuario: int):
+    # Total de likes
+    total_likes = db.query(func.count(Favoritos.id_favorito)).filter(
+        Favoritos.id_cancion == id_cancion
+    ).scalar()
+
+    # Si el usuario ya dio like
+    mi_favorito = db.query(Favoritos).filter(
+        Favoritos.id_cancion == id_cancion,
+        Favoritos.id_usuario == id_usuario
+    ).first() is not None
+
+    return {"total_likes": total_likes, "mi_favorito": mi_favorito}

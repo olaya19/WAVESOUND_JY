@@ -1,27 +1,31 @@
 import { useState, useRef, useEffect } from "react";
 import { FaUser, FaPlus, FaHeart, FaPlay, FaPause } from "react-icons/fa";
-import { agregarFavorito, eliminarFavorito, obtenerFavoritos } from "../services/favoritosService";
+import { agregarFavorito, eliminarFavorito } from "../services/favoritosService";
 import "./SongCard.css";
 
-function SongCard({ id_cancion, usuario, rol, titulo, descripcion, likes, portada_url, archivo_url }) {
+function SongCard({ id_cancion, usuario, rol, titulo, descripcion, portada_url, archivo_url }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFavorito, setIsFavorito] = useState(false);
-  const [likesCount, setLikesCount] = useState(likes || 0);
+  const [likesCount, setLikesCount] = useState(0);
   const audioRef = useRef(null);
 
-  // 🔹 Revisar si la canción ya está en favoritos al montar el componente
+  // 🔹 Traer likes totales y si el usuario ya dio like
   useEffect(() => {
-    const checkFavorito = async () => {
+    const fetchLikes = async () => {
       try {
-        if (!id_cancion) return console.warn("ID de canción no definido");
-        const favoritos = await obtenerFavoritos();
-        const existe = favoritos.some(f => f.id_cancion === id_cancion);
-        setIsFavorito(existe);
+        if (!id_cancion) return;
+
+        const res = await fetch(`http://127.0.0.1:8000/favoritos/likes/${id_cancion}`, {
+          headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+        });
+        const data = await res.json();
+        setLikesCount(data.total_likes);
+        setIsFavorito(data.mi_favorito);
       } catch (err) {
-        console.error("Error al obtener favoritos:", err);
+        console.error("Error al obtener likes:", err);
       }
     };
-    checkFavorito();
+    fetchLikes();
   }, [id_cancion]);
 
   // 🔹 Manejo de reproducción
@@ -29,30 +33,33 @@ function SongCard({ id_cancion, usuario, rol, titulo, descripcion, likes, portad
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
+    if (isPlaying) audio.pause();
+    else audio.play();
+
     setIsPlaying(!isPlaying);
   };
 
   // 🔹 Manejo de favoritos
   const toggleFavorito = async () => {
     try {
-      if (!id_cancion) return console.warn("ID de canción no definido");
+      if (!id_cancion) return;
 
       if (!isFavorito) {
         await agregarFavorito(id_cancion);
-        setIsFavorito(true);
-        setLikesCount(prev => Math.max(prev + 1, 0));
       } else {
         await eliminarFavorito(id_cancion);
-        setIsFavorito(false);
-        setLikesCount(prev => Math.max(prev - 1, 0));
       }
+
+      // 🔹 Actualizar contador de likes después de cambiar favorito
+      const likesRes = await fetch(`http://127.0.0.1:8000/favoritos/likes/${id_cancion}`, {
+        headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+      });
+      const likesData = await likesRes.json();
+      setLikesCount(likesData.total_likes);
+      setIsFavorito(likesData.mi_favorito);
+
     } catch (err) {
-      console.error("Error favoritos:", err);
+      console.error("Error toggle favorito:", err);
       alert(err.message || "Ocurrió un error, inténtalo de nuevo.");
     }
   };
@@ -89,8 +96,12 @@ function SongCard({ id_cancion, usuario, rol, titulo, descripcion, likes, portad
 
       <div className="card-body">
         <div className="player-imagen">
-          <img src={portada_url || "/default-cover.jpg"} alt={titulo} className="cover-img"
-              onError={(e) => (e.target.src = "/default-cover.jpg")} />
+          <img
+            src={portada_url || "/default-cover.jpg"}
+            alt={titulo}
+            className="cover-img"
+            onError={(e) => (e.target.src = "/default-cover.jpg")}
+          />
           <div className="player-boton">
             <button className="play-btn" onClick={handlePlayClick}>
               {isPlaying ? <FaPause /> : <FaPlay />}
@@ -113,5 +124,6 @@ function SongCard({ id_cancion, usuario, rol, titulo, descripcion, likes, portad
 }
 
 export default SongCard;
+
 
 
