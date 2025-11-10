@@ -7,11 +7,15 @@ class PerfilBase(BaseModel):
     foto_perfil: Optional[str] = None
     genero_musical: Optional[str] = None
 
+    model_config = {"from_attributes": True}  # 👈 Esto permite mapear desde SQLAlchemy ORM
+
+
 class PerfilCreate(PerfilBase):
     id_usuario: int
 
+
 class PerfilOut(PerfilBase):
     id_perfil: int
+    id_usuario: Optional[int] = None  # 👈 útil si quieres devolver el ID del usuario
 
-    class Config:
-        model_config = {"from_attributes": True}
+    model_config = {"from_attributes": True}

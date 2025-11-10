@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones, favorito
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
     title="WaveSound API",
@@ -8,6 +9,7 @@ app = FastAPI(
     version="1.0.0",
     debug=True
 )
+app.mount("/static", StaticFiles(directory="app_wavesound/static"), name="static")
 
 # 🔓 Permitir acceso desde cualquier origen (solo en desarrollo)
 origins = ["*"]

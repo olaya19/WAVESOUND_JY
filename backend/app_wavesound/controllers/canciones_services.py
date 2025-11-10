@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app_wavesound.models.models import Canciones, Reproducciones
+from app_wavesound.models.models import Canciones, Reproducciones, Perfiles
 from app_wavesound.schemas.Canciones import CancionCreate, CancionBase
 from datetime import datetime
 
@@ -45,6 +45,9 @@ def obtener_cancion(db: Session, id_cancion: int):
 # Actualizar canción
 def actualizar_cancion(db: Session, id_cancion: int, datos: CancionBase):
     cancion = db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
+    if hasattr(id_usuario, "id"):
+        id_usuario = id_usuario.id
+        perfil = db.query(Perfiles).filter(Perfiles.id_usuario == id_usuario).first()
     if not cancion:
         return None
     for key, value in datos.dict(exclude_unset=True).items():
