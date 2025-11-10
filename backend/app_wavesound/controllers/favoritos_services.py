@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app_wavesound.models.models import Favoritos, Canciones
 from app_wavesound.schemas.Favorito import FavoritoCreate, FavoritoOut
 from fastapi import HTTPException
+from datetime import datetime
 
 def agregar_favorito(db: Session, id_usuario: int, favorito_data: FavoritoCreate) -> FavoritoOut:
     # Verificar si la canción existe
@@ -19,9 +20,11 @@ def agregar_favorito(db: Session, id_usuario: int, favorito_data: FavoritoCreate
         raise HTTPException(status_code=400, detail="La canción ya está en tus favoritos")
 
     nuevo_favorito = Favoritos(
-        id_usuario=id_usuario,
-        id_cancion=favorito_data.id_cancion
+    id_usuario=id_usuario,
+    id_cancion=favorito_data.id_cancion,
+    fecha_agregado=datetime.now()  # <-- asigna la fecha aquí
     )
+
     db.add(nuevo_favorito)
     db.commit()
     db.refresh(nuevo_favorito)

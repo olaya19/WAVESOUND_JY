@@ -12,7 +12,7 @@ function Home() {
   const [canciones, setCanciones] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Traducción de roles actualizada
+  // ✅ Traducción de roles
   const getRolName = (idRol) => {
     switch (idRol) {
       case 1:
@@ -139,6 +139,7 @@ function Home() {
             canciones.map((c) => (
               <SongCard
                 key={c.id_cancion}
+                id_cancion={c.id_cancion}  // <-- ahora sí se pasa
                 usuario={c.usuario?.nombre_usuario || "Desconocido"}
                 rol={getRolName(c.usuario?.id_rol)}
                 titulo={c.titulo}
@@ -183,4 +184,5 @@ function Home() {
 }
 
 export default Home;
+
 
