@@ -43,6 +43,7 @@ export function useLogin() {
       };
 
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", res.access_token); // ✅ token directo
 
       return res; // retornamos todo por si lo necesita el componente
     } catch (err) {

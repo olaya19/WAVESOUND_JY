@@ -5,18 +5,19 @@ import logo from "../assets/LOGO1.1.jpeg";
 function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const currentPath = location.pathname.toLowerCase();
 
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const rol = user.id_rol;
-  const currentPath = location.pathname.toLowerCase();
 
-  // 🔒 Ocultar Nav en Login y Register
-  if (currentPath === "/login" || currentPath === "/register") {
-    return null;
-  }
+  // Ocultar Nav en Login y Register
+  if (currentPath === "/login" || currentPath === "/register") return null;
 
-  // 🔒 Ocultar Nav en panel de administrador
-  if (rol === 1) return null; // si tu admin es id_rol 1, ajusta según corresponda
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/Login");
+  };
 
   return (
     <nav className="navbar">
@@ -46,11 +47,21 @@ function Nav() {
           title="Perfil"
         />
 
-        {rol === 3 && (
+        {/* Subir música: Artista, Productor, Admin */}
+        {(rol === 1 || rol === 3 || rol === 4) && (
           <i
             className={`fa-solid fa-upload ${currentPath === "/upload" ? "active" : ""}`}
             onClick={() => navigate("/Upload")}
             title="Subir música"
+          />
+        )}
+
+        {/* Derechos de Autor: Artista, Productor, Admin */}
+        {(rol === 1 || rol === 3 || rol === 4) && (
+          <i
+            className={`fa-solid fa-file-alt ${currentPath === "/derechos" ? "active" : ""}`}
+            onClick={() => navigate("/Derechos")}
+            title="Derechos de Autor"
           />
         )}
 
@@ -70,11 +81,7 @@ function Nav() {
           <i
             className="fa-solid fa-right-from-bracket"
             title="Cerrar sesión"
-            onClick={() => {
-              localStorage.removeItem("user");
-              localStorage.removeItem("token");
-              navigate("/Login");
-            }}
+            onClick={handleLogout}
           />
         )}
       </div>

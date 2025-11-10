@@ -13,10 +13,11 @@ def crear_perfil(perfil_data: PerfilCreate, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=PerfilOut)
 def obtener_mi_perfil(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    perfil = perfil_service.obtener_perfil(db, current_user)
+    perfil = perfil_service.obtener_perfil(db, current_user.id_usuario)  # 👈 cambio aquí
     if not perfil:
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     return perfil
+
 
 @router.put("/editar", response_model=PerfilOut)
 def editar_perfil(

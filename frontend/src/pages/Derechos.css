@@ -1,0 +1,52 @@
+.derechos-container {
+  padding: 2rem;
+  color: white;
+}
+
+.derechos-container h1 {
+  margin-bottom: 0.5rem;
+  color: #00ffcc;
+}
+
+.derechos-container p {
+  margin-bottom: 1.5rem;
+  color: #aaa;
+}
+
+.derechos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1b1b1b;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.derechos-table th,
+.derechos-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+
+.derechos-table th {
+  background-color: #2b0a3d;
+  color: #00ffcc;
+}
+
+.derechos-table tr:hover {
+  background-color: #2b0a3d;
+}
+
+.cert-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #00ffcc;
+  color: #1b1b1b;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cert-btn:hover {
+  background-color: #33ffd6;
+}

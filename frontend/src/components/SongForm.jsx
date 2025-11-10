@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { postCancion } from "../services/cancionesService";
+import Swal from "sweetalert2"; // 🔹 Importar SweetAlert2
 import "./SongForm.css";
 
 function SongForm() {
@@ -25,7 +26,16 @@ function SongForm() {
 
     try {
       const response = await postCancion(formData);
-      alert("✅ Canción subida correctamente");
+
+      // 🔹 SweetAlert2 de éxito
+      Swal.fire({
+        icon: "success",
+        title: "¡Canción subida con éxito!",
+        text: `La canción "${formData.titulo}" se ha registrado correctamente.`,
+        showConfirmButton: true,
+        confirmButtonColor: "#3085d6",
+      });
+
       console.log("Nueva canción:", response);
 
       // 🔹 Limpiar formulario
@@ -39,7 +49,15 @@ function SongForm() {
       });
     } catch (err) {
       console.error("❌ Error al subir canción:", err);
-      alert("Error al subir la canción. Ver consola.");
+
+      // 🔹 SweetAlert2 de error
+      Swal.fire({
+        icon: "error",
+        title: "Error al subir la canción",
+        text: "Revisa la consola para más detalles.",
+        showConfirmButton: true,
+        confirmButtonColor: "#d33",
+      });
     }
   };
 
@@ -109,12 +127,18 @@ function SongForm() {
           required
         >
           <option value="">Selecciona un género</option>
-          <option value="1">Balada</option>
-          <option value="2">Corridos</option>
-          <option value="3">Salsa</option>
-          <option value="4">Reggaetón</option>
           <option value="5">Bachata</option>
-          <option value="6">Popular</option>
+          <option value="10">Balada</option>
+          <option value="8">Corridos</option>
+          <option value="3">Hip Hop</option>
+          <option value="12">Jazz</option>
+          <option value="6">Merengue</option>
+          <option value="1">Pop</option>
+          <option value="11">Pop Latino</option>
+          <option value="7">Reggaetón</option>
+          <option value="2">Rock</option>
+          <option value="4">Salsa</option>
+          <option value="9">Vallenato</option>
         </select>
       </div>
 
@@ -124,3 +148,5 @@ function SongForm() {
 }
 
 export default SongForm;
+
+

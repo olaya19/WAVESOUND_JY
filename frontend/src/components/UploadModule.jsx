@@ -6,11 +6,12 @@ import "./UploadModule.css";
 function UploadModule({ rolUsuario }) {
   const [opcion, setOpcion] = useState("");
 
-  if (rolUsuario !== 3) {
+  // Ahora tanto Artistas (3) como Productores (4) pueden subir
+  if (![3, 4].includes(rolUsuario)) {
     return (
       <div className="upload-module">
         <p className="upload-module-denied">
-          🚫 Solo los artistas pueden subir canciones o álbumes.
+          🚫 Solo artistas y productores pueden subir canciones o álbumes.
         </p>
       </div>
     );
@@ -43,3 +44,5 @@ function UploadModule({ rolUsuario }) {
 }
 
 export default UploadModule;
+
+
