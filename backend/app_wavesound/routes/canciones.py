@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 from app_wavesound.db.database import get_db
 from app_wavesound.schemas.Canciones import CancionCreate, CancionOut, CancionBase
+from app_wavesound.schemas.Albumes import AlbumOut
 from app_wavesound.controllers import canciones_services
-from app_wavesound.routes.auth import get_current_user
+
+from app_wavesound.auth.auth import get_current_user
+from app_wavesound.controllers import albumes_services
 
 router = APIRouter(prefix="/canciones", tags=["Canciones"])
 
@@ -82,6 +85,27 @@ def actualizar_cancion(
         raise HTTPException(status_code=404, detail="Canción no encontrada")
     return cancion
 
+# -----------------------
+# asignar canción a álbum
+# -----------------------
+@router.put("/{id_cancion}/asignar-album/{id_album}")
+def asignar_cancion_a_album(
+    id_cancion: int,
+    id_album: int,
+    db: Session = Depends(get_db),
+    usuario_actual=Depends(get_current_user)
+):
+    cancion = canciones_services.obtener_cancion(db, id_cancion)
+
+    if not cancion:
+        raise HTTPException(status_code=404, detail="Canción no encontrada")
+
+    cancion.id_album = id_album
+    db.commit()
+    db.refresh(cancion)
+
+    return {"msg": f"Canción {id_cancion} asignada al álbum {id_album}"}
+
 
 # -----------------------
 # Eliminar canción
@@ -96,6 +120,23 @@ def eliminar_cancion(
     if not cancion:
         raise HTTPException(status_code=404, detail="Canción no encontrada")
     return {"msg": f"Canción {id_cancion} eliminada correctamente"}
+
+# -----------------------
+# Eliminar canción de álbum
+# -----------------------
+@router.delete("/{album_id}/canciones/{cancion_id}", response_model=AlbumOut)
+def remove_song_from_album(
+    album_id: int,
+    cancion_id: int,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    album, error = albumes_services.remove_cancion_from_album(db, album_id, cancion_id)
+
+    if error:
+        raise HTTPException(status_code=400, detail=error)
+
+    return album
 
 
 # -----------------------

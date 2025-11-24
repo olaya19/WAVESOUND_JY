@@ -1,28 +1,59 @@
-# schemas/usuarios.py
+# app_wavesound/schemas/Usuarios.py
+
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
-from .Roles import RolOut
+from app_wavesound.schemas.Roles import RolOut
 
+
+# -------------------------------------------------
+# Base
+# -------------------------------------------------
 class UsuarioBase(BaseModel):
-    nombre_usuario: str             
-    nickname: str                   
+    nombre_usuario: str
+    nickname: str
     email: EmailStr
-    
+
+
+# -------------------------------------------------
+# Crear usuario normal
+# -------------------------------------------------
 class UsuarioCreate(BaseModel):
-    nickname: str             # <-- agregado aquí
+    nickname: str
     nombre_usuario: str
     email: EmailStr
     contraseña: str
     id_rol: int
 
+
+# -------------------------------------------------
+# Login normal
+# -------------------------------------------------
+class LoginUsuario(BaseModel):
+    username: str  # nickname o email
+    password: str
+
+
+# -------------------------------------------------
+# Login con Google
+# -------------------------------------------------
+class GoogleLogin(BaseModel):
+    token_google: str
+
+
+# -------------------------------------------------
+# Respuesta al frontend
+# -------------------------------------------------
 class UsuarioOut(UsuarioBase):
     id_usuario: int
     rol: Optional[RolOut]
-    
-class LoginUsuario(BaseModel):
-    username: str   # Puede ser email o nickname
-    password: str   
 
+    class Config:
+        model_config = {"from_attributes": True}
+
+
+# -------------------------------------------------
+# Salida de perfil (para vista pública)
+# -------------------------------------------------
 class CancionPerfilOut(BaseModel):
     id: int
     titulo: str
@@ -31,9 +62,11 @@ class CancionPerfilOut(BaseModel):
     album: Optional[str]
     reproducciones: int
 
+
 class AlbumPerfilOut(BaseModel):
     id: int
     titulo: str
+
 
 class PerfilUsuarioOut(BaseModel):
     id_usuario: int
