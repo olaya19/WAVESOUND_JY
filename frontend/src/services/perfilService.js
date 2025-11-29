@@ -1,12 +1,18 @@
-// src/services/perfilService.js
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/perfiles"; // ✅ usa 127.0.0.1 para mantener coherencia
+const API_URL = "http://127.0.0.1:8000/perfiles";
 
-// 🔹 Crear perfil (sin token porque normalmente es público tras logueo)
-export const crearPerfil = async (perfilData) => {
+// ===============================
+// 📌 Crear perfil
+// ===============================
+export const crearPerfil = async (formData, token) => {
   try {
-    const response = await axios.post(`${API_URL}/`, perfilData);
+    const response = await axios.post(`${API_URL}/`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error al crear perfil:", error.response?.data || error);
@@ -14,13 +20,14 @@ export const crearPerfil = async (perfilData) => {
   }
 };
 
-// 🔹 Obtener el perfil del usuario actual (requiere token)
+// ===============================
+// 📌 Obtener mi perfil
+// ===============================
 export const getMiPerfil = async (token) => {
   try {
-    if (!token) throw new Error("Token no disponible ❌");
     const response = await axios.get(`${API_URL}/me`, {
       headers: {
-        Authorization: `Bearer ${token}`, // ✅ encabezado correcto
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -30,10 +37,11 @@ export const getMiPerfil = async (token) => {
   }
 };
 
-// 🔹 Editar perfil (usa FormData porque puede incluir imagen)
+// ===============================
+// 📌 Editar perfil
+// ===============================
 export const editarPerfil = async (formData, token) => {
   try {
-    if (!token) throw new Error("Token no disponible ❌");
     const response = await axios.put(`${API_URL}/editar`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -47,7 +55,9 @@ export const editarPerfil = async (formData, token) => {
   }
 };
 
-// 🔹 Obtener perfil público por ID de usuario
+// ===============================
+// 📌 Obtener perfil público
+// ===============================
 export const getPerfilByUsuario = async (id_usuario) => {
   try {
     const response = await axios.get(`${API_URL}/${id_usuario}`);

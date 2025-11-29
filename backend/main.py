@@ -28,3 +28,5 @@ app.include_router(perfiles.router)
 app.include_router(canciones.router)
 app.include_router(reproducciones.router)
 app.include_router(favorito.router)
+
+
