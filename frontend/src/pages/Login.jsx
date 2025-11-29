@@ -1,22 +1,48 @@
-import React, { useState } from "react";
+// src/pages/Login.jsx
+import React, { useState, useEffect } from "react";
 import "../pages/Login.css";
 import { useLogin } from "../services/useLogin";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash, FaUser, FaLock } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc"; // ✅ Google "G" icon
+import { FcGoogle } from "react-icons/fc";
 import bgImage from "../assets/FONDO.jpeg";
 import discoImg from "../assets/disco3.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { username, setUsername, password, setPassword, errors, loading, handleLogin } = useLogin();
+  const {
+    username, setUsername,
+    password, setPassword,
+    errors, loading,
+    handleLogin,
+    handleGoogleResponse
+  } = useLogin();
+
   const [showPassword, setShowPassword] = useState(false);
 
+  // ----------------------------
+  // GOOGLE ONE TAP
+  // ----------------------------
+  useEffect(() => {
+    if (!window.google || !window.google.accounts) return;
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: (response) =>
+        handleGoogleResponse(response.credential, navigate, Swal),
+    });
+
+    window.google.accounts.id.prompt();
+  }, []);
+
+  // ----------------------------
+  // LOGIN NORMAL
+  // ----------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await handleLogin();
 
+    const res = await handleLogin();
     if (!res) {
       Swal.fire({
         icon: "error",
@@ -39,20 +65,26 @@ const Login = () => {
       background: "#121212",
       color: "#fff",
     }).then(() => {
-      if(res.id_rol === 1) navigate("/AdminPanel");
-      else navigate("/Home");
+      res.id_rol === 1 ? navigate("/AdminPanel") : navigate("/Home");
     });
   };
 
-  const handleGoogleLogin = () => {
-    Swal.fire({
-      icon: "info",
-      title: "Google Login",
-      text: "Funcionalidad de login con Google",
-      confirmButtonColor: "#6e00ff",
-      background: "#121212",
-      color: "#fff",
+  // ----------------------------
+  // BOTÓN GOOGLE (popup)
+  // ----------------------------
+  const handleGoogleButton = () => {
+    if (!window.google) {
+      Swal.fire("Error", "Google no está disponible", "error");
+      return;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: (response) =>
+        handleGoogleResponse(response.credential, navigate, Swal),
     });
+
+    window.google.accounts.id.prompt();
   };
 
   return (
@@ -71,7 +103,6 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Usuario o Email"
-              required
             />
           </div>
           {errors.username && <small className="error-text">{errors.username}</small>}
@@ -84,7 +115,6 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
-              required
             />
             <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -93,7 +123,7 @@ const Login = () => {
           {errors.password && <small className="error-text">{errors.password}</small>}
 
           <div className="links">
-            <a href="#">¿Olvidaste tu contraseña?</a>
+            <a>¿Olvidaste tu contraseña?</a>
             <a href="/Register">¿No tienes cuenta? Regístrate</a>
           </div>
 
@@ -101,8 +131,8 @@ const Login = () => {
             {loading ? "Cargando..." : "INICIAR SESIÓN"}
           </button>
 
-          {/* Botón Google con ícono G */}
-          <button type="button" className="google-btn" onClick={handleGoogleLogin}>
+          {/* GOOGLE BUTTON */}
+          <button type="button" className="google-btn" onClick={handleGoogleButton}>
             <FcGoogle size={20} style={{ marginRight: "8px" }} />
             Iniciar con Google
           </button>
@@ -113,4 +143,3 @@ const Login = () => {
 };
 
 export default Login;
-

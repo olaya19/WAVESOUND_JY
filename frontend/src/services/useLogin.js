@@ -1,5 +1,6 @@
+// src/services/useLogin.js
 import { useState } from "react";
-import { loginUsuario } from "./authService";
+import { loginUsuario, loginConGoogle } from "./authService";
 
 export function useLogin() {
   const [username, setUsername] = useState("");
@@ -7,7 +8,9 @@ export function useLogin() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Validación básica
+  // -------------------------------------
+  // Validación básica
+  // -------------------------------------
   const validate = () => {
     let valid = true;
     const errs = {};
@@ -25,7 +28,9 @@ export function useLogin() {
     return valid;
   };
 
-  // 🔹 Función principal de login
+  // -------------------------------------
+  // Login normal Usuario/Password
+  // -------------------------------------
   const handleLogin = async () => {
     if (!validate()) return null;
 
@@ -34,24 +39,67 @@ export function useLogin() {
       const datos = { username, password };
       const res = await loginUsuario(datos);
 
-      // 📦 Guardamos toda la información relevante en localStorage
       const userData = {
-        id_usuario: res.id_usuario,      // <-- lo que devuelve el backend
+        id_usuario: res.id_usuario,
         nombre_usuario: res.nombre_usuario,
         id_rol: res.id_rol,
         token: res.access_token,
       };
 
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", res.access_token); // ✅ token directo
+      localStorage.setItem("token", res.access_token);
 
-      return res; // retornamos todo por si lo necesita el componente
+      return res;
     } catch (err) {
-      console.error("❌ Error en login:", err);
       setErrors({ api: err.response?.data?.detail || "Error de conexión" });
       return null;
     } finally {
       setLoading(false);
+    }
+  };
+
+  // -------------------------------------
+  // Login con Google
+  // -------------------------------------
+  const handleGoogleResponse = async (credential, navigate, Swal) => {
+    try {
+      const googlePayload = { credential };
+
+      const res = await loginConGoogle(googlePayload);
+
+      const userData = {
+        id_usuario: res.id_usuario,
+        nombre_usuario: res.nombre_usuario,
+        id_rol: res.id_rol,
+        token: res.access_token,
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", res.access_token);
+
+      const rolNombre =
+        ["Administrador", "Oyente", "Artista", "Productor"][res.id_rol - 1] ||
+        "Usuario";
+
+      await Swal.fire({
+        icon: "success",
+        title: `Bienvenido, ${res.nombre_usuario}!`,
+        text: `Has iniciado sesión como ${rolNombre}`,
+        confirmButtonColor: "#6e00ff",
+        background: "#121212",
+        color: "#fff",
+      });
+
+      res.id_rol === 1 ? navigate("/AdminPanel") : navigate("/Home");
+    } catch (err) {
+      console.error("Error Google Login:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Error con Google",
+        text: err.response?.data?.detail || "No se pudo iniciar sesión",
+        background: "#121212",
+        color: "#fff",
+      });
     }
   };
 
@@ -63,6 +111,6 @@ export function useLogin() {
     errors,
     loading,
     handleLogin,
+    handleGoogleResponse,
   };
 }
-

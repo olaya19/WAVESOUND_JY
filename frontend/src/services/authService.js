@@ -39,6 +39,24 @@ export const loginUsuario = async ({ username, password }) => {
   }
 };
 
+// --------------------- LOGIN CON GOOGLE ---------------------
+const GOOGLE_LOGIN_URL = "http://127.0.0.1:8000/google/login";
+
+export const loginConGoogle = async (googleData) => {
+  try {
+    const res = await axios.post(GOOGLE_LOGIN_URL, googleData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("❌ Error en loginConGoogle:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 // --------------------- LOGOUT ---------------------
 const LOGOUT_URL = "http://127.0.0.1:8000/usuarios/logout";
 
