@@ -4,10 +4,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app_wavesound.db.database import get_db
 from app_wavesound.schemas.Usuarios import UsuarioCreate, UsuarioOut, PerfilUsuarioOut
 from app_wavesound.controllers.user_data_services import registrar_usuario, obtener_usuarios, autenticar_usuario
-from app_wavesound.routes.auth import create_access_token, logout, get_current_user
+from app_wavesound.auth.auth import create_access_token, logout, get_current_user
 from app_wavesound.controllers.perfil_service import obtener_perfil_completo
-from app_wavesound.models.models import Usuarios  # 👈 Modelo real de usuarios
-
+from app_wavesound.models.models import Usuarios  
+from app_wavesound.auth.auth_google import router as google_router
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 # -----------------------
@@ -73,3 +73,5 @@ def obtener_perfil(current_user=Depends(get_current_user), db: Session = Depends
     if not perfil:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return perfil
+
+router.include_router(google_router)

@@ -4,7 +4,7 @@ from typing import List
 from app_wavesound.db.database import get_db
 from app_wavesound.schemas.Favorito import FavoritoCreate, FavoritoOut
 from app_wavesound.controllers import favoritos_services
-from app_wavesound.routes.auth import get_current_user
+from app_wavesound.auth.auth import get_current_user
 
 router = APIRouter(prefix="/favoritos", tags=["Favoritos"])
 

@@ -1,9 +1,10 @@
+# schemas/seguidores.py
 from pydantic import BaseModel
 from datetime import datetime
 
 class SeguidorBase(BaseModel):
-    id_usuario: int
-    id_seguido: int
+    id_usuario: int      # quien sigue
+    id_seguido: int      # a quién sigue
 
 class SeguidorCreate(SeguidorBase):
     fecha_seguimiento: datetime
@@ -13,5 +14,4 @@ class SeguidorOut(SeguidorBase):
     fecha_seguimiento: datetime
 
     class Config:
-
-     model_config = {"from_attributes": True}
+        from_attributes = True

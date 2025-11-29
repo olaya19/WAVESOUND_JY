@@ -4,7 +4,7 @@ from app_wavesound.db.database import get_db
 from app_wavesound.controllers import perfil_service
 from app_wavesound.schemas.Perfiles import PerfilCreate, PerfilOut
 from app_wavesound.models.models import Usuarios
-from app_wavesound.routes.auth import get_current_user
+from app_wavesound.auth.auth import get_current_user
 import os
 import shutil
 
