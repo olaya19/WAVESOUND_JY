@@ -1,6 +1,10 @@
 // src/services/useLogin.js
 import { useState } from "react";
 import { loginUsuario, loginConGoogle } from "./authService";
+import { jwtDecode } from "jwt-decode";
+
+console.log("CLIENT_ID VITE:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+
 
 export function useLogin() {
   const [username, setUsername] = useState("");
@@ -62,43 +66,51 @@ export function useLogin() {
   // Login con Google
   // -------------------------------------
   const handleGoogleResponse = async (credential, navigate, Swal) => {
-    try {
-      const googlePayload = { credential };
+  try {
+    // 1. Decodificar token de Google
+    const data = jwtDecode(credential);
 
-      const res = await loginConGoogle(googlePayload);
+    const googleUser = {
+      email: data.email,
+      nombre_usuario: data.name,
+      picture: data.picture,
+    };
 
-      const userData = {
-        id_usuario: res.id_usuario,
-        nombre_usuario: res.nombre_usuario,
-        id_rol: res.id_rol,
-        token: res.access_token,
-      };
+    // 2. Mandar al backend
+    const res = await loginConGoogle(googleUser);
 
-      localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("token", res.access_token);
+    const userData = {
+      id_usuario: res.id_usuario,
+      nombre_usuario: res.nombre_usuario,
+      id_rol: res.id_rol,
+      token: res.access_token,
+    };
 
-      const rolNombre =
-        ["Administrador", "Oyente", "Artista", "Productor"][res.id_rol - 1] ||
-        "Usuario";
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", res.access_token);
 
-      await Swal.fire({
-        icon: "success",
-        title: `Bienvenido, ${res.nombre_usuario}!`,
-        text: `Has iniciado sesión como ${rolNombre}`,
-        confirmButtonColor: "#6e00ff",
-        background: "#121212",
-        color: "#fff",
-      });
+    const rolNombre =
+      ["Administrador", "Oyente", "Artista", "Productor"][res.id_rol - 1] ||
+      "Usuario";
 
-      res.id_rol === 1 ? navigate("/AdminPanel") : navigate("/Home");
-    } catch (err) {
-      console.error("Error Google Login:", err);
-      Swal.fire({
-        icon: "error",
-        title: "Error con Google",
-        text: err.response?.data?.detail || "No se pudo iniciar sesión",
-        background: "#121212",
-        color: "#fff",
+    await Swal.fire({
+      icon: "success",
+      title: `Bienvenido, ${res.nombre_usuario}!`,
+      text: `Has iniciado sesión como ${rolNombre}`,
+      confirmButtonColor: "#6e00ff",
+      background: "#121212",
+      color: "#fff",
+    });
+
+    res.id_rol === 1 ? navigate("/AdminPanel") : navigate("/Home");
+  } catch (err) {
+    console.error("Error Google Login:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Error con Google",
+      text: err.response?.data?.detail || "No se pudo iniciar sesión",
+      background: "#121212",
+      color: "#fff",
       });
     }
   };

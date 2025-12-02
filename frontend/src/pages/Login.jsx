@@ -22,21 +22,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // ----------------------------
-  // GOOGLE ONE TAP
-  // ----------------------------
-  useEffect(() => {
-    if (!window.google || !window.google.accounts) return;
-
-    window.google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      callback: (response) =>
-        handleGoogleResponse(response.credential, navigate, Swal),
-    });
-
-    window.google.accounts.id.prompt();
-  }, []);
-
-  // ----------------------------
   // LOGIN NORMAL
   // ----------------------------
   const handleSubmit = async (e) => {
