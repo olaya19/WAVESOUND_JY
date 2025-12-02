@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones, favorito, albumes 
+from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones, favorito, albumes, seguidores
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -29,5 +29,6 @@ app.include_router(perfiles.router)
 app.include_router(canciones.router)
 app.include_router(reproducciones.router)
 app.include_router(favorito.router)
+app.include_router(seguidores.router)
 
 
