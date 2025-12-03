@@ -22,7 +22,7 @@ def crear_perfil(db: Session, perfil_data: PerfilCreate):
 
 def obtener_perfil_completo(db: Session, id_usuario: int):
     """Obtiene la información completa del perfil de un usuario."""
-
+    
     usuario = (
         db.query(Usuarios)
         .options(

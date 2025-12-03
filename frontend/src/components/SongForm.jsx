@@ -127,18 +127,18 @@ function SongForm() {
           required
         >
           <option value="">Selecciona un género</option>
-          <option value="5">Bachata</option>
-          <option value="10">Balada</option>
-          <option value="8">Corridos</option>
-          <option value="3">Hip Hop</option>
-          <option value="12">Jazz</option>
+          <option value="1">Bachata</option>
+          <option value="2">Balada</option>
+          <option value="3">corridos tumbados</option>
+          <option value="4">Hip Hop</option>
+          <option value="5">Jazz</option>
           <option value="6">Merengue</option>
-          <option value="1">Pop</option>
-          <option value="11">Pop Latino</option>
-          <option value="7">Reggaetón</option>
-          <option value="2">Rock</option>
-          <option value="4">Salsa</option>
-          <option value="9">Vallenato</option>
+          <option value="7">Pop</option>
+          <option value="8">Pop Latino</option>
+          <option value="9">Reggaetón</option>
+          <option value="10">Rock</option>
+          <option value="11">Salsa</option>
+          <option value="12">Vallenato</option>
         </select>
       </div>
 

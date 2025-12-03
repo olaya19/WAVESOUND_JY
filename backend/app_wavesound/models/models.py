@@ -14,23 +14,26 @@ class Roles(BASE):
 # Usuarios
 class Usuarios(BASE):
     __tablename__ = "usuarios"
+
     id_usuario = Column(Integer, primary_key=True)
     id_rol = Column(Integer, ForeignKey("roles.id_rol"))
     nickname = Column(String(50), unique=True, nullable=False)
     nombre_usuario = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
-    contraseña = Column(String(255), nullable=False)  # guardar hash
+    contraseña = Column(String(255), nullable=False)
 
+    # Usuarios que este usuario sigue
     seguidos = relationship(
         "Seguidores",
-        foreign_keys="Seguidores.id_seguidor",
+        foreign_keys="Seguidores.id_usuario",   # El usuario que sigue
         backref="seguidor",
         cascade="all, delete-orphan"
     )
 
+    # Usuarios que siguen a este usuario
     seguidores = relationship(
         "Seguidores",
-        foreign_keys="Seguidores.id_seguido",
+        foreign_keys="Seguidores.id_seguido",   # El usuario seguido
         backref="seguido",
         cascade="all, delete-orphan"
     )
@@ -41,6 +44,7 @@ class Usuarios(BASE):
     albumes = relationship("Albumes", back_populates="usuario")
     listas = relationship("Listas_Reproducciones", back_populates="usuario")
     favoritos = relationship("Favoritos", back_populates="usuario")
+
 
 # Perfiles 
 
