@@ -59,8 +59,8 @@ function Nav() {
         {/* Derechos de Autor: Artista, Productor, Admin */}
         {(rol === 1 || rol === 3 || rol === 4) && (
           <i
-            className={`fa-solid fa-file-alt ${currentPath === "/derechos" ? "active" : ""}`}
-            onClick={() => navigate("/Derechos")}
+            className={`fa-solid fa-file-alt ${currentPath === "/derechosautor" ? "active" : ""}`}
+            onClick={() => navigate("/DerechosAutor")}
             title="Derechos de Autor"
           />
         )}

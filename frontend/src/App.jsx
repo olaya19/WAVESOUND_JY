@@ -9,7 +9,7 @@ import Profile from "./pages/Profile";
 import Upload from "./pages/Upload";
 import AdminPanel from "./pages/AdminPanel";
 import Menu from "./pages/Menu";
-import Derechos from "./pages/Derechos"; // 🔹 Página de Derechos de Autor
+import DerechosAutor from "./pages/DerechosAutor"; // 🔹 Página de Derechos de Autor
 
 function Layout({ children }) {
   const location = useLocation();
@@ -34,7 +34,7 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/Upload" element={<Upload />} />
           <Route path="/AdminPanel" element={<AdminPanel />} />
-          <Route path="/Derechos" element={<Derechos />} /> {/* 🔹 Nueva ruta */}
+          <Route path="/DerechosAutor" element={<DerechosAutor />} /> {/* 🔹 Nueva ruta */}
           <Route path="*" element={<Home />} />
         </Routes>
       </Layout>

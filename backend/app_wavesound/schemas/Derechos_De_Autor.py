@@ -6,10 +6,8 @@ from decimal import Decimal
 class DerechoAutorBase(BaseModel):
     id_cancion: int
     nombre_autor: str
-    porcentaje_royalties: Optional[Decimal] = None
     fecha_acuerdo: Optional[date] = None
     documento_legal: Optional[str] = None
-    activo: Optional[bool] = True
     id_usuario_autor: int
 
 class DerechoAutorCreate(DerechoAutorBase):

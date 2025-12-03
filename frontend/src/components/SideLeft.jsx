@@ -15,8 +15,9 @@ function SideLeft() {
     const fetchUsuarios = async () => {
       setLoading(true);
       try {
-        const artistasData = await getUsuariosPorRol(3); // Artistas
-        const productoresData = await getUsuariosPorRol(4); // Productores
+        const artistasData = await getUsuariosPorRol(3);
+        const productoresData = await getUsuariosPorRol(4);
+
         setArtistas(artistasData);
         setProductores(productoresData);
       } catch (error) {
@@ -39,50 +40,36 @@ function SideLeft() {
 
   if (loading) return <p style={{ color: "#fff" }}>Cargando usuarios...</p>;
 
+  const renderList = (lista) => (
+    <ul>
+      {lista.map((u) => (
+        <li key={u.id_usuario} className="side-item">
+          <span className="icon-circle" onClick={() => goToProfile(u.nombre_usuario)}>
+            <i className="fa-solid fa-user"></i>
+          </span>
+
+          <span className="username" onClick={() => goToProfile(u.nombre_usuario)}>
+            {u.nombre_usuario}
+          </span>
+
+          <button className="btn-circle follow-btn">
+            <i className="fa-solid fa-user-plus"></i>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <aside className="sidebar-left">
-      {/* Artistas */}
       <div className="box">
         <h3>Artistas a seguir</h3>
-        {artistas.length > 0 ? (
-          <ul>
-            {artistas.map((u) => (
-              <li key={u.id_usuario}>
-                <span className="icon-circle" onClick={() => goToProfile(u.nombre_usuario)}>
-                  <i className="fa-solid fa-user"></i>
-                </span>
-                {u.nombre_usuario}
-                <button className="btn-circle">
-                  <i className="fa-solid fa-user-plus"></i>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No hay artistas disponibles.</p>
-        )}
+        {artistas.length > 0 ? renderList(artistas) : <p>No hay artistas disponibles.</p>}
       </div>
 
-      {/* Productores */}
       <div className="box">
         <h3>Productores a seguir</h3>
-        {productores.length > 0 ? (
-          <ul>
-            {productores.map((u) => (
-              <li key={u.id_usuario}>
-                <span className="icon-circle" onClick={() => goToProfile(u.nombre_usuario)}>
-                  <i className="fa-solid fa-user"></i>
-                </span>
-                {u.nombre_usuario}
-                <button className="btn-circle">
-                  <i className="fa-solid fa-user-plus"></i>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No hay productores disponibles.</p>
-        )}
+        {productores.length > 0 ? renderList(productores) : <p>No hay productores disponibles.</p>}
       </div>
     </aside>
   );
