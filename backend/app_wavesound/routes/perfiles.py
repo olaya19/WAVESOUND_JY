@@ -18,7 +18,7 @@ router = APIRouter(prefix="/perfiles", tags=["Perfiles"])
 def crear_perfil(
     nombre_artista: str = Form(...),
     biografia: str = Form(...),
-    genero_musical: str = Form(...),
+    id_genero: int = Form(...),
     foto_perfil: UploadFile | None = File(None),
     db: Session = Depends(get_db),
     current_user: Usuarios = Depends(get_current_user)
@@ -26,6 +26,7 @@ def crear_perfil(
 
     ruta_imagen = None
 
+    # --- subir imagen ---
     if foto_perfil:
         ext = foto_perfil.filename.split(".")[-1].lower()
         if ext not in ["jpg", "jpeg", "png", "webp"]:
@@ -40,15 +41,18 @@ def crear_perfil(
 
         ruta_imagen = f"static/perfiles/{foto_perfil.filename}"
 
+    # Armamos el schema Pydantic
     perfil_data = PerfilCreate(
         id_usuario=current_user.id_usuario,
         nombre_artista=nombre_artista,
         biografia=biografia,
-        genero_musical=genero_musical,
+        id_genero=id_genero,
         foto_perfil=ruta_imagen
     )
 
-    return perfil_service.crear_perfil(db, perfil_data)
+    # --- AQUI el cambio importante ---
+    return perfil_service.crear_perfil(db=db, perfil=perfil_data)
+
 
 
 # ===============================
@@ -56,13 +60,14 @@ def crear_perfil(
 # ===============================
 @router.get("/me", response_model=PerfilOut)
 def obtener_mi_perfil(
-    db: Session = Depends(get_db), 
+    db: Session = Depends(get_db),
     current_user: Usuarios = Depends(get_current_user)
 ):
     perfil = perfil_service.obtener_perfil(db, current_user.id_usuario)
     if not perfil:
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     return perfil
+
 
 
 # ===============================
@@ -75,7 +80,7 @@ def editar_perfil(
 
     nombre_artista: str = Form(None),
     biografia: str = Form(None),
-    genero_musical: str = Form(None),
+    id_genero: int = Form(None),
 
     eliminar_foto: str = Form(None),
     foto_perfil: UploadFile | None = File(None)
@@ -89,18 +94,14 @@ def editar_perfil(
     if biografia:
         data["biografia"] = biografia
 
-    if genero_musical:
-        data["genero_musical"] = genero_musical
+    if id_genero:
+        data["id_genero"] = id_genero
 
-    # -------------------------
-    # ELIMINAR FOTO
-    # -------------------------
+    # Eliminar foto
     if eliminar_foto == "1":
         data["foto_perfil"] = None
 
-    # -------------------------
-    # SUBIR FOTO NUEVA
-    # -------------------------
+    # Subir nueva foto
     if foto_perfil:
         ext = foto_perfil.filename.split(".")[-1].lower()
         if ext not in ["jpg", "jpeg", "png", "webp"]:
@@ -125,6 +126,7 @@ def editar_perfil(
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
 
     return perfil_actualizado
+
 
 
 # ===============================

@@ -1,23 +1,32 @@
 from sqlalchemy.orm import Session, joinedload
-from app_wavesound.models.models import Usuarios, Canciones, Albumes, Perfiles
+from app_wavesound.models.models import Usuarios, Canciones, Albumes, Perfiles, Genero
+from fastapi import HTTPException
 from app_wavesound.schemas.Perfiles import PerfilCreate
 
-def crear_perfil(db: Session, perfil_data: PerfilCreate):
-    perfil_existente = db.query(Perfiles).filter(Perfiles.id_usuario == perfil_data.id_usuario).first()
-    if perfil_existente:
-        return perfil_existente  # Evita duplicar
+
+def crear_perfil(db: Session, data: PerfilCreate, id_usuario: int):
 
     nuevo_perfil = Perfiles(
-        id_usuario=perfil_data.id_usuario,
-        nombre_artista=perfil_data.nombre_artista,
-        biografia=perfil_data.biografia,
-        foto_perfil=perfil_data.foto_perfil,
-        genero_musical=perfil_data.genero_musical
+        id_usuario=id_usuario,
+        nombre_artista=data.nombre_artista,
+        biografia=data.biografia,
+        foto_perfil=data.foto_perfil
     )
+
     db.add(nuevo_perfil)
     db.commit()
     db.refresh(nuevo_perfil)
+
+    for id_gen in data.generos:
+        genero = db.query(Genero).filter_by(id_genero=id_gen).first()
+        if genero:
+            nuevo_perfil.generos.append(genero)
+
+    db.commit()
+    db.refresh(nuevo_perfil)
+
     return nuevo_perfil
+
 
 
 def obtener_perfil_completo(db: Session, id_usuario: int):

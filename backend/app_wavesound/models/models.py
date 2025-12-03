@@ -1,5 +1,5 @@
 from ..db.database import BASE
-from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -50,15 +50,18 @@ class Usuarios(BASE):
 
 class Perfiles(BASE):
     __tablename__ = "perfiles"
-    id_perfil = Column(Integer, primary_key=True)
-    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
-    nombre_artista = Column(String(50))
-    biografia = Column(String(100))
-    foto_perfil = Column(String(100))
-    id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=True)
 
-    genero = relationship("Genero")
-    usuario = relationship("Usuarios", back_populates="perfil")
+    id_perfil = Column(Integer, primary_key=True, autoincrement=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    nombre_artista = Column(String(100), nullable=False)
+    biografia = Column(Text)
+    foto_perfil = Column(String(255))
+
+    generos = relationship(
+        "Genero",
+        secondary="perfil_generos",
+        back_populates="perfiles"
+    )
 
 # Seguidores
 class Seguidores(BASE):
@@ -72,9 +75,15 @@ class Seguidores(BASE):
 
 class Genero(BASE):
     __tablename__ = "genero"
-    id_genero = Column(Integer, primary_key=True)
-    genero = Column(String(50), nullable=False, unique=True)
 
+    id_genero = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(50), unique=True, nullable=False)
+
+    perfiles = relationship(
+        "Perfiles",
+        secondary="perfil_generos",
+        back_populates="generos"
+    )
     canciones = relationship("Canciones", back_populates="genero")
 
 # Álbumes
@@ -177,6 +186,7 @@ class Lista_Canciones(BASE):
     __tablename__ = "lista_canciones"
     id_lista = Column(Integer, ForeignKey("listas_reproducciones.id_lista"), primary_key=True)
     id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"), primary_key=True)
+    orden = Column(Integer, default=0)
 
     lista = relationship("Listas_Reproducciones", back_populates="canciones")
     cancion = relationship("Canciones", back_populates="listas")

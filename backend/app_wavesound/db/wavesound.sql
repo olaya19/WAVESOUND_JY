@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-12-2025 a las 05:14:55
+-- Tiempo de generación: 03-12-2025 a las 16:20:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -260,6 +260,13 @@ CREATE TABLE `listas_reproducciones` (
   `privada` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `listas_reproducciones`
+--
+
+INSERT INTO `listas_reproducciones` (`id_lista`, `id_usuario`, `nombre_lista`, `descripcion`, `privada`) VALUES
+(1, 20, 'Harley', 'la mejor musica', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -268,7 +275,8 @@ CREATE TABLE `listas_reproducciones` (
 
 CREATE TABLE `lista_canciones` (
   `id_lista` int(11) NOT NULL,
-  `id_cancion` int(11) NOT NULL
+  `id_cancion` int(11) NOT NULL,
+  `orden` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -282,24 +290,22 @@ CREATE TABLE `perfiles` (
   `id_usuario` int(11) DEFAULT NULL,
   `nombre_artista` varchar(50) DEFAULT NULL,
   `biografia` varchar(100) DEFAULT NULL,
-  `foto_perfil` varchar(100) DEFAULT NULL,
-  `genero_musical` varchar(50) DEFAULT NULL
+  `foto_perfil` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `perfiles`
 --
 
-INSERT INTO `perfiles` (`id_perfil`, `id_usuario`, `nombre_artista`, `biografia`, `foto_perfil`, `genero_musical`) VALUES
-(1, 6, 'YeralArtist23', 'Soy cantante guitarrista Pianista y me encanta hacer musica ', 'static/perfiles/Call_of_Duty_Black_Ops_II_box_artwork.png', 'Corridos  Rock  Pop rock  Blues  Country balada y '),
-(2, 7, 'JeifferGuitar 🌚🎸', '¡Hey! Soy JeifferGuitar, un apasionado de las seis cuerdas 🎸. La guitarra es mi voz y mi forma de co', 'static/perfiles/pepe.jpeg', 'Corridos  Rock  Pop rock  Blues  Country'),
-(3, 17, 'YeralMusic2 Pro', 'Artista de corridos y rock. Productora y guitarrista avanzada.', 'static/perfiles/perfil_yeral_v2.jpg', 'Corridos, Rock, Pop Alternativo'),
-(4, 14, 'Dani56 😉😍💯', 'Me encanta la musica de todo tipo y apoyar a mis artistas pereferidos', 'static/perfiles/smallville.jpg', 'Salsa, Merengue,Rancheras , Pop , Country'),
-(5, 11, 'NikiRo17', 'Amante del rock. Toco, creo y vibro con riffs que hablan por mí. 🎸🔥', 'static/perfiles/guitar-hero.jpeg', 'Rock  Rock alternativo  Hard rock  Indie rock  Met'),
-(6, 12, 'LauriñeS🐧✨😎', 'Amante del saxofón. Vibro con el jazz y sonidos que fluyen con libertad 🎷✨', 'static/perfiles/gato.jpg', 'Jazz  Blues  Swing  Bossa nova  Smooth jazz'),
-(7, 8, 'BeivyProducer 🎵🎛️', 'Producer que crea, mezcla y da vida a sonidos con estilo propio 🎧🔥', 'static/perfiles/juego2.jpg', 'Techno  House  Deep house  EDM  Trance'),
-(8, 19, 'YeralSound🎶✨', 'Canto, toco piano y guitarra. Transformo emociones en melodías con mi propio estilo. Cada nota es pa', 'static/perfiles/minecraft-banner.jpg', 'Pop acústico  Balada pop  Pop rock  Indie pop  R&B');
-
+INSERT INTO `perfiles` (`id_perfil`, `id_usuario`, `nombre_artista`, `biografia`, `foto_perfil`) VALUES
+(1, 6, 'YeralArtist23', 'Soy cantante guitarrista Pianista y me encanta hacer musica ', 'static/perfiles/Call_of_Duty_Black_Ops_II_box_artwork.png'),
+(2, 7, 'JeifferGuitar 🌚🎸', '¡Hey! Soy JeifferGuitar, un apasionado de las seis cuerdas 🎸. La guitarra es mi voz y mi forma de co', 'static/perfiles/pepe.jpeg'),
+(3, 17, 'YeralMusic2 Pro', 'Artista de corridos y rock. Productora y guitarrista avanzada.', 'static/perfiles/perfil_yeral_v2.jpg'),
+(4, 14, 'Dani56 😉😍💯', 'Me encanta la musica de todo tipo y apoyar a mis artistas pereferidos', 'static/perfiles/smallville.jpg',),
+(5, 11, 'NikiRo17', 'Amante del rock. Toco, creo y vibro con riffs que hablan por mí. 🎸🔥', 'static/perfiles/guitar-hero.jpeg'),
+(6, 12, 'LauriñeS🐧✨😎', 'Amante del saxofón. Vibro con el jazz y sonidos que fluyen con libertad 🎷✨', 'static/perfiles/gato.jpg'),
+(7, 8, 'BeivyProducer 🎵🎛️', 'Producer que crea, mezcla y da vida a sonidos con estilo propio 🎧🔥', 'static/perfiles/juego2.jpg' ),
+(8, 19, 'YeralSound🎶✨', 'Canto, toco piano y guitarra. Transformo emociones en melodías con mi propio estilo. Cada nota es pa', 'static/perfiles/minecraft-banner.jpg')
 -- --------------------------------------------------------
 
 --
@@ -393,7 +399,8 @@ INSERT INTO `usuarios` (`id_usuario`, `id_rol`, `nickname`, `nombre_usuario`, `e
 (15, 1, 'yeralAdmin', 'Yeris Admin', 'adminyeral@gmail.com', '$2b$12$UETViRvkaZfZrAb6fQinO.MpV95qv/esM2a.1G61/p0yrVMaX0FAa'),
 (16, 1, 'jeifferAdmin', 'jeiffersitoAdmin', 'adminjeiffer@gmail.com', '$2b$12$SSG/AVDorSTIk5UKopBi.O6nMill//CEf2IkccpC2BzDxyCM0ywoO'),
 (17, 3, 'yeral1234', 'Yeral Olaya', 'yeral1@gmail.com', '$2b$12$r2v0JpOTam.dimkTc1uKNufLGRnfylZwzWyWpUhooMxeVaVWaEsm6'),
-(19, 3, 'geraldinolaya88', 'Yeraldin Olaya Ríos', 'geraldinolaya88@gmail.com', 'GOOGLE_ACCOUNT');
+(19, 3, 'geraldinolaya88', 'Yeraldin Olaya Ríos', 'geraldinolaya88@gmail.com', 'GOOGLE_ACCOUNT'),
+(20, 1, 'Hharley', 'jeiffer', 'harley@gmail.com', '$2b$12$qTCJkkE9WHV7Axr6aPSz2OrgABeZdKRQmkbKWzXnCQFqqrqxzBBdO');
 
 --
 -- Índices para tablas volcadas
@@ -546,13 +553,13 @@ ALTER TABLE `favoritos`
 -- AUTO_INCREMENT de la tabla `genero`
 --
 ALTER TABLE `genero`
-  MODIFY `id_genero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_genero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `listas_reproducciones`
 --
 ALTER TABLE `listas_reproducciones`
-  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_lista` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles`
@@ -588,7 +595,7 @@ ALTER TABLE `seguidores`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restricciones para tablas volcadas
