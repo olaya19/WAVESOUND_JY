@@ -21,6 +21,20 @@ class Usuarios(BASE):
     email = Column(String(100), unique=True, nullable=False)
     contraseña = Column(String(255), nullable=False)  # guardar hash
 
+    seguidos = relationship(
+        "Seguidores",
+        foreign_keys="Seguidores.id_seguidor",
+        backref="seguidor",
+        cascade="all, delete-orphan"
+    )
+
+    seguidores = relationship(
+        "Seguidores",
+        foreign_keys="Seguidores.id_seguido",
+        backref="seguido",
+        cascade="all, delete-orphan"
+    )
+
     rol = relationship("Roles", back_populates="usuarios")
     perfil = relationship("Perfiles", back_populates="usuario", uselist=False)
     canciones = relationship("Canciones", back_populates="usuario")
@@ -37,8 +51,9 @@ class Perfiles(BASE):
     nombre_artista = Column(String(50))
     biografia = Column(String(100))
     foto_perfil = Column(String(100))
-    genero_musical = Column(String(50))
+    id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=True)
 
+    genero = relationship("Genero")
     usuario = relationship("Usuarios", back_populates="perfil")
 
 # Seguidores
