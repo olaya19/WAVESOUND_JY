@@ -14,8 +14,11 @@ class PerfilCreate(PerfilBase):
     id_usuario: int
 
 
-class PerfilOut(PerfilBase):
+class PerfilOut(BaseModel):
     id_perfil: int
-    id_usuario: Optional[int] = None
+    nombre_artista: str
+    biografia: Optional[str]
+    foto_perfil: Optional[str]
+    generos: list[str]  
 
     model_config = {"from_attributes": True}

@@ -1,26 +1,25 @@
 from sqlalchemy.orm import Session
-from app_wavesound.models.models import Seguidores, Usuarios, Perfiles
+from app_wavesound.models.models import Seguidores, Usuarios, Perfiles, Generos
 from datetime import datetime
+
 
 def seguir_usuario(db: Session, seguidor_id: int, seguido_id: int):
 
     if seguidor_id == seguido_id:
         return None, "No puedes seguirte a ti mismo"
 
-    # Validar usuarios
     seguidor = db.query(Usuarios).filter_by(id_usuario=seguidor_id).first()
     seguido = db.query(Usuarios).filter_by(id_usuario=seguido_id).first()
 
     if not seguidor or not seguido:
         return None, "Usuario no encontrado"
 
-    # Verificar si ya lo sigue
-    existe = db.query(Seguidores).filter_by(
+    ya_sigue = db.query(Seguidores).filter_by(
         id_seguidor=seguidor_id,
         id_seguido=seguido_id
     ).first()
 
-    if existe:
+    if ya_sigue:
         return None, "Ya sigues a este usuario"
 
     nuevo = Seguidores(
@@ -34,6 +33,7 @@ def seguir_usuario(db: Session, seguidor_id: int, seguido_id: int):
     db.refresh(nuevo)
 
     return nuevo, None
+
 
 def dejar_de_seguir(db: Session, seguidor_id: int, seguido_id: int):
     registro = db.query(Seguidores).filter_by(
@@ -53,65 +53,71 @@ def dejar_de_seguir(db: Session, seguidor_id: int, seguido_id: int):
 def obtener_seguidores(db: Session, user_id: int):
     return db.query(Seguidores).filter_by(id_seguido=user_id).all()
 
+
 def obtener_seguidos(db: Session, user_id: int):
     return db.query(Seguidores).filter_by(id_seguidor=user_id).all()
 
+
 def obtener_sugerencias_de_usuarios(db: Session, id_usuario: int):
 
-    # --- Usuarios que ya sigo ---
+    # IDs de los usuarios que ya sigo
     seguidos_ids = {
         s.id_seguido
-        for s in db.query(Seguidores).filter(Seguidores.id_usuario == id_usuario).all()
+        for s in db.query(Seguidores).filter(Seguidores.id_seguidor == id_usuario).all()
     }
 
-    # También excluirme a mí mismo
+    # No sugerirme a mí mismo
     seguidos_ids.add(id_usuario)
 
-    # Obtener mi perfil (para género musical)
     perfil = db.query(Perfiles).filter(Perfiles.id_usuario == id_usuario).first()
-    genero_actual = perfil.genero_musical if perfil else None
 
     sugerencias = []
 
-    # 1️⃣ Coincidencia por género musical
-    if genero_actual:
+    
+    if perfil and perfil.generos:
+        generos_ids = [g.id_genero for g in perfil.generos]
+
         por_genero = (
             db.query(Usuarios)
-            .join(Perfiles, Perfiles.id_usuario == Usuarios.id_usuario)
+            .join(Perfiles)
+            .join(Perfiles.generos)
             .filter(
-                Perfiles.genero_musical == genero_actual,
-                Usuarios.id_usuario.notin(seguidos_ids)
+                Perfiles.id_usuario != id_usuario,
+                Usuarios.id_usuario.notin(seguidos_ids),
+                Perfiles.generos.any(Generos.id_genero.in_(generos_ids))
             )
             .limit(10)
             .all()
         )
+
         sugerencias.extend(por_genero)
 
-    # 2️⃣ Amigos de mis amigos
-    amigos_mis_seguidos = (
+    amigos_mis_amigos = (
         db.query(Usuarios)
         .join(Seguidores, Seguidores.id_seguido == Usuarios.id_usuario)
         .filter(
-            Seguidores.id_usuario.in_(seguidos_ids),
+            Seguidores.id_seguidor.in_(seguidos_ids),
             Usuarios.id_usuario.notin(seguidos_ids)
         )
         .limit(10)
         .all()
     )
-    sugerencias.extend(amigos_mis_seguidos)
 
-    # 3️⃣ Usuarios que no sigo (exploración)
+    sugerencias.extend(amigos_mis_amigos)
+
+  
     otros = (
         db.query(Usuarios)
         .filter(Usuarios.id_usuario.notin(seguidos_ids))
         .limit(10)
         .all()
     )
+
     sugerencias.extend(otros)
 
-    # 💡 Eliminar duplicados preservando orden
     vistos = set()
     resultado = []
+
     for usuario in sugerencias:
         if usuario.id_usuario not in vistos:
             vistos.add(usuario.id_usuario)

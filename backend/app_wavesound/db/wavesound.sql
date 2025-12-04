@@ -301,7 +301,7 @@ INSERT INTO `perfiles` (`id_perfil`, `id_usuario`, `nombre_artista`, `biografia`
 (1, 6, 'YeralArtist23', 'Soy cantante guitarrista Pianista y me encanta hacer musica ', 'static/perfiles/Call_of_Duty_Black_Ops_II_box_artwork.png'),
 (2, 7, 'JeifferGuitar 🌚🎸', '¡Hey! Soy JeifferGuitar, un apasionado de las seis cuerdas 🎸. La guitarra es mi voz y mi forma de co', 'static/perfiles/pepe.jpeg'),
 (3, 17, 'YeralMusic2 Pro', 'Artista de corridos y rock. Productora y guitarrista avanzada.', 'static/perfiles/perfil_yeral_v2.jpg'),
-(4, 14, 'Dani56 😉😍💯', 'Me encanta la musica de todo tipo y apoyar a mis artistas pereferidos', 'static/perfiles/smallville.jpg',),
+(4, 14, 'Dani56 😉😍💯', 'Me encanta la musica de todo tipo y apoyar a mis artistas pereferidos', 'static/perfiles/smallville.jpg'),
 (5, 11, 'NikiRo17', 'Amante del rock. Toco, creo y vibro con riffs que hablan por mí. 🎸🔥', 'static/perfiles/guitar-hero.jpeg'),
 (6, 12, 'LauriñeS🐧✨😎', 'Amante del saxofón. Vibro con el jazz y sonidos que fluyen con libertad 🎷✨', 'static/perfiles/gato.jpg'),
 (7, 8, 'BeivyProducer 🎵🎛️', 'Producer que crea, mezcla y da vida a sonidos con estilo propio 🎧🔥', 'static/perfiles/juego2.jpg' ),

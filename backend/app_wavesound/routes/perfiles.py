@@ -1,140 +1,114 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app_wavesound.db.database import get_db
-from app_wavesound.controllers import perfil_service
-from app_wavesound.schemas.Perfiles import PerfilCreate, PerfilOut
-from app_wavesound.models.models import Usuarios
 from app_wavesound.auth.auth import get_current_user
+from app_wavesound.controllers.perfil_service import (
+    crear_perfil_service,
+    obtener_perfil_completo,
+    actualizar_perfil_service,
+    eliminar_perfil_service
+)
 import os
-import shutil
 
 router = APIRouter(prefix="/perfiles", tags=["Perfiles"])
 
+UPLOAD_DIR = "static/perfiles"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# ===============================
-# CREAR PERFIL
-# ===============================
-@router.post("/", response_model=PerfilOut)
+
+# ============================================================
+# CREAR PERFIL — FRONT usa: POST /perfiles/
+# ============================================================
+@router.post("/")
 def crear_perfil(
     nombre_artista: str = Form(...),
     biografia: str = Form(...),
-    id_genero: int = Form(...),
-    foto_perfil: UploadFile | None = File(None),
-    db: Session = Depends(get_db),
-    current_user: Usuarios = Depends(get_current_user)
+    generos: str = Form(...),     # "1,2,3"
+    foto: UploadFile = File(None),
+    usuario_actual=Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
+    foto_path = None
 
-    ruta_imagen = None
+    # Guardar foto si viene
+    if foto:
+        ext = foto.filename.split(".")[-1]
+        filename = f"{usuario_actual.id_usuario}_perfil.{ext}"
+        foto_path = os.path.join(UPLOAD_DIR, filename)
 
-    # --- subir imagen ---
-    if foto_perfil:
-        ext = foto_perfil.filename.split(".")[-1].lower()
-        if ext not in ["jpg", "jpeg", "png", "webp"]:
-            raise HTTPException(status_code=400, detail="Formato no permitido")
+        with open(foto_path, "wb") as f:
+            f.write(foto.file.read())
 
-        carpeta = "app_wavesound/static/perfiles"
-        os.makedirs(carpeta, exist_ok=True)
+        foto_path = foto_path.replace("\\", "/")
 
-        file_path = os.path.join(carpeta, foto_perfil.filename)
-        with open(file_path, "wb") as f:
-            shutil.copyfileobj(foto_perfil.file, f)
+    generos_ids = [int(g.strip()) for g in generos.split(",")]
 
-        ruta_imagen = f"static/perfiles/{foto_perfil.filename}"
-
-    # Armamos el schema Pydantic
-    perfil_data = PerfilCreate(
-        id_usuario=current_user.id_usuario,
+    return crear_perfil_service(
+        db=db,
+        id_usuario=usuario_actual.id_usuario,
         nombre_artista=nombre_artista,
         biografia=biografia,
-        id_genero=id_genero,
-        foto_perfil=ruta_imagen
+        generos_ids=generos_ids,
+        foto_perfil=foto_path
     )
 
-    # --- AQUI el cambio importante ---
-    return perfil_service.crear_perfil(db=db, perfil=perfil_data)
 
-
-
-# ===============================
-# OBTENER MI PERFIL
-# ===============================
-@router.get("/me", response_model=PerfilOut)
-def obtener_mi_perfil(
-    db: Session = Depends(get_db),
-    current_user: Usuarios = Depends(get_current_user)
-):
-    perfil = perfil_service.obtener_perfil(db, current_user.id_usuario)
+# ============================================================
+# OBTENER MI PERFIL — FRONT usa: GET /perfiles/me
+# ============================================================
+@router.get("/me")
+def obtener_mi_perfil(usuario_actual=Depends(get_current_user), db: Session = Depends(get_db)):
+    perfil = obtener_perfil_completo(db, user_id=usuario_actual.id_usuario)
     if not perfil:
-        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+        raise HTTPException(status_code=404, detail="No tienes perfil creado")
     return perfil
 
 
-
-# ===============================
-# EDITAR PERFIL
-# ===============================
-@router.put("/editar", response_model=PerfilOut)
+# ============================================================
+#  EDITAR PERFIL — FRONT usa: PUT /perfiles/editar
+# ============================================================
+@router.put("/editar")
 def editar_perfil(
-    db: Session = Depends(get_db),
-    current_user: Usuarios = Depends(get_current_user),
-
     nombre_artista: str = Form(None),
     biografia: str = Form(None),
-    id_genero: int = Form(None),
-
-    eliminar_foto: str = Form(None),
-    foto_perfil: UploadFile | None = File(None)
+    generos: str = Form(None),  # formato: "1,2,3"
+    foto: UploadFile = File(None),
+    usuario_actual=Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
 
-    data = {}
+    foto_path = None
 
-    if nombre_artista:
-        data["nombre_artista"] = nombre_artista
+    if foto:
+        ext = foto.filename.split(".")[-1]
+        filename = f"{usuario_actual.id_usuario}_perfil.{ext}"
+        foto_path = os.path.join(UPLOAD_DIR, filename)
 
-    if biografia:
-        data["biografia"] = biografia
+        with open(foto_path, "wb") as f:
+            f.write(foto.file.read())
 
-    if id_genero:
-        data["id_genero"] = id_genero
+        foto_path = foto_path.replace("\\", "/")
 
-    # Eliminar foto
-    if eliminar_foto == "1":
-        data["foto_perfil"] = None
+    generos_ids = None
+    if generos:
+        generos_ids = [int(g.strip()) for g in generos.split(",")]
 
-    # Subir nueva foto
-    if foto_perfil:
-        ext = foto_perfil.filename.split(".")[-1].lower()
-        if ext not in ["jpg", "jpeg", "png", "webp"]:
-            raise HTTPException(status_code=400, detail="Formato inválido")
-
-        carpeta = "app_wavesound/static/perfiles"
-        os.makedirs(carpeta, exist_ok=True)
-
-        file_path = os.path.join(carpeta, foto_perfil.filename)
-        with open(file_path, "wb") as f:
-            shutil.copyfileobj(foto_perfil.file, f)
-
-        data["foto_perfil"] = f"static/perfiles/{foto_perfil.filename}"
-
-    perfil_actualizado = perfil_service.actualizar_perfil(
+    return actualizar_perfil_service(
         db=db,
-        id_usuario=current_user.id_usuario,
-        data=data
+        user_id=usuario_actual.id_usuario,
+        nombre_artista=nombre_artista,
+        biografia=biografia,
+        generos_ids=generos_ids,
+        foto_perfil=foto_path
     )
 
-    if not perfil_actualizado:
-        raise HTTPException(status_code=404, detail="Perfil no encontrado")
 
-    return perfil_actualizado
-
-
-
-# ===============================
-# OBTENER PERFIL DE OTRO USUARIO
-# ===============================
+# ============================================================
+#  OBTENER PERFIL PÚBLICO — FRONT usa: GET /perfiles/{id}
+# ============================================================
 @router.get("/{id_usuario}")
-def obtener_perfil_usuario(id_usuario: int, db: Session = Depends(get_db)):
-    perfil = perfil_service.obtener_perfil_completo(db, id_usuario)
+def obtener_perfil_publico(id_usuario: int, db: Session = Depends(get_db)):
+    perfil = obtener_perfil_completo(db, user_id=id_usuario)
     if not perfil:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
     return perfil

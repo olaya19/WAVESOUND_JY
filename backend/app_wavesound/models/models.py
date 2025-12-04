@@ -22,19 +22,19 @@ class Usuarios(BASE):
     email = Column(String(100), unique=True, nullable=False)
     contraseña = Column(String(255), nullable=False)
 
-    # Usuarios que este usuario sigue
-    seguidos = relationship(
+    # Usuarios que este usuario sigue (yo → otros)
+    siguiendo = relationship(
         "Seguidores",
-        foreign_keys="Seguidores.id_usuario",   # El usuario que sigue
-        backref="seguidor",
+        foreign_keys=lambda: [Seguidores.id_seguidor],
+        back_populates="seguidor",
         cascade="all, delete-orphan"
     )
 
-    # Usuarios que siguen a este usuario
+    # Usuarios que siguen a este usuario (otros → yo)
     seguidores = relationship(
         "Seguidores",
-        foreign_keys="Seguidores.id_seguido",   # El usuario seguido
-        backref="seguido",
+        foreign_keys=lambda: [Seguidores.id_seguido],
+        back_populates="seguido",
         cascade="all, delete-orphan"
     )
 
@@ -44,7 +44,6 @@ class Usuarios(BASE):
     albumes = relationship("Albumes", back_populates="usuario")
     listas = relationship("Listas_Reproducciones", back_populates="usuario")
     favoritos = relationship("Favoritos", back_populates="usuario")
-
 
 # Perfiles 
 
@@ -57,33 +56,57 @@ class Perfiles(BASE):
     biografia = Column(Text)
     foto_perfil = Column(String(255))
 
+    usuario = relationship("Usuarios", back_populates="perfil")
     generos = relationship(
-        "Genero",
+        "Generos",
         secondary="perfil_generos",
         back_populates="perfiles"
     )
 
+class PerfilGenero(BASE):
+    __tablename__ = "perfil_generos"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_perfil = Column(Integer, ForeignKey("perfiles.id_perfil"), nullable=False)
+    id_genero = Column(Integer, ForeignKey("generos.id_genero"), nullable=False)
+
 # Seguidores
 class Seguidores(BASE):
     __tablename__ = "seguidores"
-    id_seguidor = Column(Integer, primary_key=True)
-    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))  # quien sigue
-    id_seguido = Column(Integer, ForeignKey("usuarios.id_usuario"))  # a quién sigue
-    fecha_seguimiento = Column(DateTime)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_seguidor = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    id_seguido = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+
+    seguidor = relationship(
+        "Usuarios",
+        foreign_keys=[id_seguidor],
+        back_populates="siguiendo"
+    )
+
+    seguido = relationship(
+        "Usuarios",
+        foreign_keys=[id_seguido],
+        back_populates="seguidores"
+    )
+
 
 # Géneros 
 
-class Genero(BASE):
-    __tablename__ = "genero"
+class Generos(BASE):
+    __tablename__ = "generos"
 
     id_genero = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String(50), unique=True, nullable=False)
+    nombre_genero = Column(String(50), unique=True, nullable=False)
 
+    # Perfiles que usan este género (muchos a muchos)
     perfiles = relationship(
         "Perfiles",
         secondary="perfil_generos",
         back_populates="generos"
     )
+
+    # Canciones que usan este género (uno a muchos)
     canciones = relationship("Canciones", back_populates="genero")
 
 # Álbumes
@@ -112,13 +135,13 @@ class Canciones(BASE):
     duracion = Column(Integer, nullable=True)  # en segundos
     archivo_url = Column(String(255), nullable=False)
     portada_url = Column(String(255), nullable=True)
-    id_genero = Column(Integer, ForeignKey("genero.id_genero"), nullable=False)
+    id_genero = Column(Integer, ForeignKey("generos.id_genero"), nullable=False)
     id_album = Column(Integer, ForeignKey("albumes.id_album"), nullable=True)
     fecha_creacion = Column(DateTime, default=datetime.utcnow)
 
     # Relaciones
     usuario = relationship("Usuarios", back_populates="canciones")
-    genero = relationship("Genero", back_populates="canciones")
+    genero = relationship("Generos", back_populates="canciones")
     album = relationship("Albumes", back_populates="canciones")
     reproducciones = relationship("Reproducciones", back_populates="cancion")
     derechos = relationship("Derechos_Autor", back_populates="cancion")
