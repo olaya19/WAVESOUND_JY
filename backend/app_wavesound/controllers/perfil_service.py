@@ -47,29 +47,27 @@ def crear_perfil_service(db: Session, id_usuario: int, nombre_artista: str,
 
 def obtener_perfil_completo(db: Session, user_id: int):
 
-    user = db.query(Usuarios).filter(Usuarios.id_usuario == user_id).first()
-    if not user:
+    
+
+    usuario = db.query(Usuarios).filter(Usuarios.id_usuario == user_id).first()
+    if not usuario:
         return None
 
     perfil = db.query(Perfiles).filter(Perfiles.id_usuario == user_id).first()
     if not perfil:
         return None
+    
+    if perfil.foto_perfil:
+       perfil.foto_perfil = f"http://127.0.0.1:8000/{perfil.foto_perfil}"
 
-    generos = (
-        db.query(Generos)
-        .join(PerfilGenero, PerfilGenero.id_genero == Generos.id_genero)
-        .filter(PerfilGenero.id_perfil == perfil.id_perfil)
-        .all()
-    )
 
     return {
-        "id_usuario": user.id_usuario,
-        "nombre_usuario": user.nombre_usuario,
-        "correo": user.correo,
+        "id_usuario": usuario.id_usuario,
+        "nombre_usuario": usuario.nombre_usuario,
         "nombre_artista": perfil.nombre_artista,
         "biografia": perfil.biografia,
         "foto_perfil": perfil.foto_perfil,
-        "generos": [g.nombre_genero for g in generos]
+        "generos": [g.nombre_genero for g in perfil.generos]
     }
 
 

@@ -72,7 +72,7 @@ function Profile() {
     const fd = new FormData();
     fd.append("nombre_artista", formData.nombre_artista);
     fd.append("biografia", formData.biografia);
-    fd.append("genero_musical", formData.genero_musical);
+    fd.append("generos_ids", JSON.stringify([formData.genero_musical]));;
     if (formData.foto_perfil) fd.append("foto_perfil", formData.foto_perfil);
 
     try {
@@ -92,7 +92,7 @@ function Profile() {
 
     if (formData.nombre_artista) fd.append("nombre_artista", formData.nombre_artista);
     if (formData.biografia) fd.append("biografia", formData.biografia);
-    if (formData.genero_musical) fd.append("genero_musical", formData.genero_musical);
+    if (formData.genero_musical) fd.append("generos_ids", JSON.stringify([formData.genero_musical]));
 
     if (formData.foto_perfil) fd.append("foto_perfil", formData.foto_perfil);
 
