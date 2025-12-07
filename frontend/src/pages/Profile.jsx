@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SongCard from "../components/SongCard";
 import { getCancionesByUser } from "../services/cancionesService";
 import { crearPerfil, getMiPerfil, editarPerfil } from "../services/perfilService";
+import { getGeneros } from "../services/generosService";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./Profile.css";
@@ -19,21 +20,36 @@ function Profile() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [previewImg, setPreviewImg] = useState(null);
 
+  const [generos, setGeneros] = useState([]);
+  const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
+
   const [formData, setFormData] = useState({
     nombre_artista: "",
     biografia: "",
-    genero_musical: "",
     foto_perfil: null,
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataCanciones = await getCancionesByUser(user.id_usuario);
-        setCanciones(dataCanciones);
+        const cancionesData = await getCancionesByUser(user.id_usuario);
+        setCanciones(cancionesData);
+
+        const generosData = await getGeneros();
+        setGeneros(generosData);
 
         const perfilData = await getMiPerfil(token);
         setPerfil(perfilData);
+
+        setFormData({
+          nombre_artista: perfilData?.nombre_artista || "",
+          biografia: perfilData?.biografia || "",
+          foto_perfil: null,
+        });
+
+        if (perfilData?.generos_ids) {
+          setGenerosSeleccionados(perfilData.generos_ids);
+        }
 
       } catch {
         console.warn("No hay perfil creado.");
@@ -45,22 +61,19 @@ function Profile() {
     fetchData();
   }, [user.id_usuario, token]);
 
+  const toggleGenero = (id) => {
+    setGenerosSeleccionados((prev) =>
+      prev.includes(id) ? prev.filter(g => g !== id) : [...prev, id]
+    );
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (files) {
       const file = files[0];
-
-      if (file && !["image/jpeg", "image/png", "image/webp", "image/jpg"].includes(file.type)) {
-        Swal.fire({ icon: "error", title: "Formato inválido", text: "Solo JPG, JPEG, PNG o WEBP" });
-        return;
-      }
-
       setFormData({ ...formData, [name]: file });
-
-      const preview = URL.createObjectURL(file);
-      setPreviewImg(preview);
-
+      setPreviewImg(URL.createObjectURL(file));
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -68,18 +81,16 @@ function Profile() {
 
   const handleCrearPerfil = async (e) => {
     e.preventDefault();
-
     const fd = new FormData();
     fd.append("nombre_artista", formData.nombre_artista);
     fd.append("biografia", formData.biografia);
-    fd.append("generos_ids", JSON.stringify([formData.genero_musical]));;
+    fd.append("generos_ids", JSON.stringify(generosSeleccionados));
     if (formData.foto_perfil) fd.append("foto_perfil", formData.foto_perfil);
 
     try {
       await crearPerfil(fd, token);
       Swal.fire({ icon: "success", title: "Perfil creado", timer: 1500, showConfirmButton: false });
       window.location.reload();
-
     } catch {
       Swal.fire({ icon: "error", title: "Error al crear perfil" });
     }
@@ -87,22 +98,22 @@ function Profile() {
 
   const handleEditarPerfil = async (e) => {
     e.preventDefault();
-
     const fd = new FormData();
-
-    if (formData.nombre_artista) fd.append("nombre_artista", formData.nombre_artista);
-    if (formData.biografia) fd.append("biografia", formData.biografia);
-    if (formData.genero_musical) fd.append("generos_ids", JSON.stringify([formData.genero_musical]));
-
+    fd.append("nombre_artista", formData.nombre_artista);
+    fd.append("biografia", formData.biografia);
+    fd.append("generos_ids", JSON.stringify(generosSeleccionados));
     if (formData.foto_perfil) fd.append("foto_perfil", formData.foto_perfil);
 
     try {
-      const updated = await editarPerfil(fd, token);
-      setPerfil(updated);
+      await editarPerfil(fd, token);
+      Swal.fire({ icon: "success", title: "Perfil actualizado", timer: 1500, showConfirmButton: false });
+
       setEditMode(false);
       setPreviewImg(null);
 
-      Swal.fire({ icon: "success", title: "Perfil actualizado", timer: 1500, showConfirmButton: false });
+      const updatedPerfil = await getMiPerfil(token);
+      setPerfil(updatedPerfil);
+      setGenerosSeleccionados(updatedPerfil.generos_ids);
 
     } catch {
       Swal.fire({ icon: "error", title: "Error al actualizar perfil" });
@@ -111,22 +122,37 @@ function Profile() {
 
   if (loading) return <p className="loading">Cargando...</p>;
 
-  // ===========================
-  // CREAR PERFIL
-  // ===========================
+  const fotoURL = previewImg
+    ? previewImg
+    : perfil?.foto_perfil
+    ? perfil.foto_perfil
+    : "/default-avatar.png";
+
+  /* ============================================================
+     SI NO EXISTE PERFIL → FORMULARIO DE CREAR
+     ============================================================ */
   if (!perfil) {
     return (
       <div className="create-profile-container">
         <h2>Crear Perfil</h2>
-
         <form className="profile-form" onSubmit={handleCrearPerfil}>
           <input type="text" name="nombre_artista" placeholder="Nombre artístico" onChange={handleChange} required />
           <textarea name="biografia" placeholder="Biografía" onChange={handleChange} />
-          <input type="text" name="genero_musical" placeholder="Género musical" onChange={handleChange} />
 
-          {previewImg && (
-            <img src={previewImg} className="preview-image" alt="preview" />
-          )}
+          <label>Géneros musicales</label>
+          <div className="generos-container">
+            {generos.map(g => (
+              <div
+                key={g.id_genero}
+                className={`genero-card ${generosSeleccionados.includes(g.id_genero) ? "selected" : ""}`}
+                onClick={() => toggleGenero(g.id_genero)}
+              >
+                {g.nombre_genero}
+              </div>
+            ))}
+          </div>
+
+          {previewImg && <img src={previewImg} className="preview-image" alt="preview" />}
 
           <label className="file-label">
             Subir foto de perfil
@@ -139,41 +165,24 @@ function Profile() {
     );
   }
 
-  const fotoURL = previewImg
-    ? previewImg
-    : perfil.foto_perfil
-      ? `http://127.0.0.1:8000/${perfil.foto_perfil}`
-      : "/default-avatar.png";
-
-  // ===========================
-  // PERFIL EXISTENTE
-  // ===========================
+  /* ============================================================
+     PERFIL YA EXISTE → MOSTRAR Y EDITAR
+     ============================================================ */
   return (
     <div className="profile-container-main">
-      
       <div className="artist-card">
-
         <div className="artist-header">
-
           {!imgLoaded && <div className="artist-image-skeleton"></div>}
-
           <img
             src={fotoURL}
             alt="Foto"
             className="artist-image"
             onLoad={() => setImgLoaded(true)}
-            style={{
-              opacity: imgLoaded ? 1 : 0,
-              transition: "opacity 0.3s ease-in-out"
-            }}
+            style={{ opacity: imgLoaded ? 1 : 0, transition: "opacity 0.3s" }}
           />
-
           <h2 className="artist-name">{perfil.nombre_artista}</h2>
         </div>
-
-        <button className="btn-editar" onClick={() => setEditMode(true)}>
-          Editar Perfil
-        </button>
+        <button className="btn-editar" onClick={() => setEditMode(true)}>Editar Perfil</button>
       </div>
 
       <div className="artist-info">
@@ -182,19 +191,32 @@ function Profile() {
             <h3>Biografía</h3>
             <p>{perfil.biografia || "Sin biografía"}</p>
 
-            <h3>Género Musical</h3>
-            <p>{perfil.genero_musical || "No especificado"}</p>
+            <h3>Géneros Musicales</h3>
+            <p>
+              {perfil.generos?.length > 0
+                ? perfil.generos.join(", ")
+                : "No especificado"}
+            </p>
           </>
         ) : (
           <form className="edit-form" onSubmit={handleEditarPerfil}>
+            {previewImg && <img src={previewImg} className="preview-image" alt="preview" />}
 
-            {previewImg && (
-              <img src={previewImg} className="preview-image" alt="preview" />
-            )}
+            <input type="text" name="nombre_artista" value={formData.nombre_artista} onChange={handleChange} />
+            <textarea name="biografia" value={formData.biografia} onChange={handleChange} />
 
-            <input type="text" name="nombre_artista" placeholder="Nuevo nombre" onChange={handleChange} />
-            <textarea name="biografia" placeholder="Actualizar biografía" onChange={handleChange} />
-            <input type="text" name="genero_musical" placeholder="Actualizar género" onChange={handleChange} />
+            <label>Géneros musicales</label>
+            <div className="generos-container">
+              {generos.map(g => (
+                <div
+                  key={g.id_genero}
+                  className={`genero-card ${generosSeleccionados.includes(g.id_genero) ? "selected" : ""}`}
+                  onClick={() => toggleGenero(g.id_genero)}
+                >
+                  {g.nombre_genero}
+                </div>
+              ))}
+            </div>
 
             <label className="file-label">
               Subir nueva foto
@@ -202,20 +224,15 @@ function Profile() {
             </label>
 
             <button type="submit" className="btn-guardar">Guardar</button>
-            <button type="button" className="btn-cancelar" onClick={() => { setEditMode(false); setPreviewImg(null); }}>
-              Cancelar
-            </button>
+            <button type="button" className="btn-cancelar" onClick={() => { setEditMode(false); setPreviewImg(null); }}>Cancelar</button>
           </form>
         )}
       </div>
 
       <div className="artist-songs">
         <h3>Canciones Subidas</h3>
-
         {canciones.length > 0 ? (
-          canciones.map((c) => (
-            <SongCard key={c.id_cancion} {...c} usuario={user.nombre_usuario} />
-          ))
+          canciones.map(c => <SongCard key={c.id_cancion} {...c} usuario={user.nombre_usuario} />)
         ) : (
           <p>No tienes canciones registradas.</p>
         )}
@@ -225,3 +242,4 @@ function Profile() {
 }
 
 export default Profile;
+

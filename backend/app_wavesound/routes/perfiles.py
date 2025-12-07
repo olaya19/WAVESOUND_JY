@@ -9,10 +9,15 @@ from app_wavesound.controllers.perfil_service import (
     actualizar_perfil_service,
     eliminar_perfil_service
 )
+import json
+import os
 
 router = APIRouter(prefix="/perfiles", tags=["Perfiles"])
 
 
+# -----------------------------------------------------
+#  Crear perfil
+# -----------------------------------------------------
 @router.post("/")
 def crear_perfil(
     nombre_artista: str = Form(...),
@@ -22,13 +27,17 @@ def crear_perfil(
     db: Session = Depends(get_db),
     usuario_actual=Depends(get_current_user)
 ):
-    generos_ids = eval(generos_ids)
+    generos_ids = json.loads(generos_ids)
 
     foto_path = None
     if foto_perfil:
+        upload_dir = "app_wavesound/static/perfiles"
+        os.makedirs(upload_dir, exist_ok=True)
+
         foto_path = f"static/perfiles/{usuario_actual.id_usuario}_{foto_perfil.filename}"
+
         with open(f"app_wavesound/{foto_path}", "wb") as buffer:
-         buffer.write(foto_perfil.file.read())
+            buffer.write(foto_perfil.file.read())
 
     return crear_perfil_service(
         db=db,
@@ -68,26 +77,30 @@ def editar_perfil(
     db: Session = Depends(get_db),
     usuario_actual=Depends(get_current_user)
 ):
-    generos_ids = eval(generos_ids)
+    generos_ids = json.loads(generos_ids)
 
     foto_path = None
     if foto_perfil:
-        foto_path = f"uploads/perfiles/{usuario_actual.id_usuario}_{foto_perfil.filename}"
-        with open(foto_path, "wb") as buffer:
+        upload_dir = "app_wavesound/static/perfiles"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        foto_path = f"static/perfiles/{usuario_actual.id_usuario}_{foto_perfil.filename}"
+
+        with open(f"app_wavesound/{foto_path}", "wb") as buffer:
             buffer.write(foto_perfil.file.read())
 
     return actualizar_perfil_service(
         db=db,
-        id_usuario=usuario_actual.id_usuario,
+        user_id=usuario_actual.id_usuario,  # ✔ nombre correcto
         nombre_artista=nombre_artista,
         biografia=biografia,
         generos_ids=generos_ids,
         foto_perfil=foto_path
-    )
+)
 
 
 # -----------------------------------------------------
-#  Obtener perfil público por ID
+#  Obtener perfil público
 # -----------------------------------------------------
 @router.get("/{id_usuario}")
 def obtener_perfil_publico(id_usuario: int, db: Session = Depends(get_db)):
@@ -96,7 +109,7 @@ def obtener_perfil_publico(id_usuario: int, db: Session = Depends(get_db)):
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-    perfil = obtener_perfil_completo(db, usuario)
+    perfil = obtener_perfil_completo(db, usuario.id_usuario)
 
     if perfil is None:
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
