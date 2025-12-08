@@ -2,7 +2,7 @@ from ..db.database import BASE
 from sqlalchemy import Column, Integer, String, ForeignKey ,DateTime,DECIMAL ,Date, Boolean, UniqueConstraint, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Roles 
 class Roles(BASE):
@@ -21,7 +21,8 @@ class Usuarios(BASE):
     nombre_usuario = Column(String(50), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     contraseña = Column(String(255), nullable=False)
-
+    is_verified = Column(Boolean, default=False)
+    
     # Usuarios que este usuario sigue (yo → otros)
     siguiendo = relationship(
         "Seguidores",
@@ -37,7 +38,7 @@ class Usuarios(BASE):
         back_populates="seguido",
         cascade="all, delete-orphan"
     )
-
+    
     rol = relationship("Roles", back_populates="usuarios")
     perfil = relationship("Perfiles", back_populates="usuario", uselist=False)
     canciones = relationship("Canciones", back_populates="usuario")
@@ -46,6 +47,15 @@ class Usuarios(BASE):
     favoritos = relationship("Favoritos", back_populates="usuario")
 
 # Perfiles 
+
+class VerificationToken(BASE):
+    __tablename__ = "verification_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id_usuario", ondelete="CASCADE"))
+    token = Column(String, unique=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(hours=1))
 
 class Perfiles(BASE):
     __tablename__ = "perfiles"
