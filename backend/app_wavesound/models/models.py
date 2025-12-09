@@ -165,10 +165,11 @@ class Canciones(BASE):
 
 class Reproducciones(BASE):
     __tablename__ = "reproducciones"
-    id_reproduccion = Column(Integer, primary_key=True)
-    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
-    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
-    fecha_reproduccion = Column(DateTime)
+
+    id_reproduccion = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"), nullable=False)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    fecha_reproduccion = Column(DateTime, nullable=False)
 
     cancion = relationship("Canciones", back_populates="reproducciones")
 

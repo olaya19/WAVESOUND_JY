@@ -1,0 +1,65 @@
+.mini-player {
+  width: 100%;
+  height: 80px;
+  background: #0B0B0D; /* Fondo WaveSound */
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  border-top: 2px solid #1A1A1D;
+  box-shadow: 0 -2px 20px rgba(168, 85, 247, 0.2);
+}
+
+.mp-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.mp-cover {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 10px;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+.mp-text h4 {
+  font-size: 15px;
+  color: white;
+  margin: 0;
+}
+
+.mp-text p {
+  font-size: 12px;
+  color: #c3c3c3;
+  margin: 0;
+}
+
+.mp-controls {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.mp-btn {
+  color: #A855F7; /* Morado WaveSound */
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.mp-btn:hover {
+  color: #C084FC;
+  transform: scale(1.15);
+}
+
+.mp-visualizer {
+  height: 40px;
+  flex: 1;
+  margin-left: 20px;
+}
