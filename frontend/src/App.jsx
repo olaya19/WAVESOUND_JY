@@ -10,6 +10,7 @@ import Upload from "./pages/Upload";
 import AdminPanel from "./pages/AdminPanel";
 import Menu from "./pages/Menu";
 import DerechosAutor from "./pages/DerechosAutor"; // 🔹 Página de Derechos de Autor
+import Playlist from "./pages/Playlist"; // 🔹 Página de Playlists
 
 function Layout({ children }) {
   const location = useLocation();
@@ -35,6 +36,7 @@ function App() {
           <Route path="/Upload" element={<Upload />} />
           <Route path="/AdminPanel" element={<AdminPanel />} />
           <Route path="/DerechosAutor" element={<DerechosAutor />} /> {/* 🔹 Nueva ruta */}
+          <Route path="/Playlist" element={<Playlist />} /> {/* 🔹 Nueva ruta de Playlist */}
           <Route path="*" element={<Home />} />
         </Routes>
       </Layout>
@@ -43,5 +45,6 @@ function App() {
 }
 
 export default App;
+
 
 

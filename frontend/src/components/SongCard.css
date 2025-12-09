@@ -269,3 +269,9 @@
   margin-top: 2px;
   text-shadow: 0 0 4px rgba(65, 220, 151, 0.4);
 }
+
+.playlist-btn.en-playlist {
+  background-color: #F3C11B;
+  color: #000;
+  border-color: #F3C11B;
+}
