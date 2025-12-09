@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app_wavesound.models.models import Canciones, Reproducciones, Perfiles
+from app_wavesound.models.models import Canciones, Reproducciones, Perfiles, Usuarios
 from app_wavesound.schemas.Canciones import CancionCreate, CancionBase
 from datetime import datetime
+from pathlib import Path
 
 # Crear canción
 def crear_cancion(db: Session, cancion_data: CancionCreate):
@@ -12,60 +13,87 @@ def crear_cancion(db: Session, cancion_data: CancionCreate):
     db.refresh(nueva_cancion)
     return nueva_cancion
 
+# Obtener canciones públicas con foto y nombre
+def obtener_canciones_publicas(db: Session):
+    canciones = (
+        db.query(Canciones, Usuarios, Perfiles)
+        .join(Usuarios, Usuarios.id_usuario == Canciones.id_usuario)
+        .outerjoin(Perfiles, Perfiles.id_usuario == Usuarios.id_usuario)
+        .order_by(Canciones.id_cancion.desc())
+        .all()
+    )
 
-# Obtener todas las canciones
-def obtener_canciones(db: Session):
-    canciones = db.query(Canciones).all()
     resultado = []
-    for c in canciones:
-        total = db.query(func.count(Reproducciones.id_reproduccion))\
-                  .filter(Reproducciones.id_cancion == c.id_cancion).scalar()
+    for c, u, p in canciones:
+        # URL de foto de perfil
+        foto = None
+        if p and p.foto_perfil:
+            foto = p.foto_perfil
+            if not foto.startswith("/"):
+                foto = f"/{foto}"  # ruta relativa al static
+        usuario_data = {
+            "nombre_usuario": u.nombre_usuario,
+            "nickname": u.nickname,
+            "nombre_artista": p.nombre_artista if p else None,
+            "foto_perfil": foto
+        }
+
         resultado.append({
-            **c.__dict__,
-            "total_reproducciones": total or 0
+            "id_cancion": c.id_cancion,
+            "titulo": c.titulo,
+            "descripcion": c.descripcion,
+            "duracion": c.duracion,
+            "archivo_url": c.archivo_url,
+            "portada_url": c.portada_url,
+            "id_usuario": c.id_usuario,
+            "id_genero": c.id_genero,
+            "id_album": c.id_album,
+            "fecha_creacion": c.fecha_creacion,
+            "total_reproducciones": 0,
+            "usuario": usuario_data
         })
     return resultado
 
-
-# Obtener canciones públicas
-def obtener_canciones_publicas(db: Session):
-    return obtener_canciones(db)
-
-
-# Obtener canciones por usuario
+# Obtener canciones por usuario con foto y nombre
 def obtener_canciones_por_usuario(db: Session, id_usuario: int):
-    return db.query(Canciones).filter(Canciones.id_usuario == id_usuario).all()
+    canciones = (
+        db.query(Canciones, Usuarios, Perfiles)
+        .join(Usuarios, Usuarios.id_usuario == Canciones.id_usuario)
+        .outerjoin(Perfiles, Perfiles.id_usuario == Usuarios.id_usuario)
+        .filter(Canciones.id_usuario == id_usuario)
+        .order_by(Canciones.id_cancion.desc())
+        .all()
+    )
 
+    resultado = []
+    for c, u, p in canciones:
+        foto = None
+        if p and p.foto_perfil:
+            foto = p.foto_perfil
+            if not foto.startswith("/"):
+                foto = f"/{foto}"
+        usuario_data = {
+            "nombre_usuario": u.nombre_usuario,
+            "nickname": u.nickname,
+            "nombre_artista": p.nombre_artista if p else None,
+            "foto_perfil": foto
+        }
 
-# Obtener canción por ID
-def obtener_cancion(db: Session, id_cancion: int):
-    return db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
-
-
-# Actualizar canción
-def actualizar_cancion(db: Session, id_cancion: int, datos: CancionBase):
-    cancion = db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
-    if hasattr(id_usuario, "id"):
-        id_usuario = id_usuario.id
-        perfil = db.query(Perfiles).filter(Perfiles.id_usuario == id_usuario).first()
-    if not cancion:
-        return None
-    for key, value in datos.dict(exclude_unset=True).items():
-        setattr(cancion, key, value)
-    db.commit()
-    db.refresh(cancion)
-    return cancion
-
-
-# Eliminar canción
-def eliminar_cancion(db: Session, id_cancion: int):
-    cancion = db.query(Canciones).filter(Canciones.id_cancion == id_cancion).first()
-    if not cancion:
-        return None
-    db.delete(cancion)
-    db.commit()
-    return cancion
-
+        resultado.append({
+            "id_cancion": c.id_cancion,
+            "titulo": c.titulo,
+            "descripcion": c.descripcion,
+            "duracion": c.duracion,
+            "archivo_url": c.archivo_url,
+            "portada_url": c.portada_url,
+            "id_usuario": c.id_usuario,
+            "id_genero": c.id_genero,
+            "id_album": c.id_album,
+            "fecha_creacion": c.fecha_creacion,
+            "total_reproducciones": 0,
+            "usuario": usuario_data
+        })
+    return resultado
 
 # Registrar reproducción
 def registrar_reproduccion(db: Session, id_cancion: int, id_usuario: int):
@@ -78,14 +106,15 @@ def registrar_reproduccion(db: Session, id_cancion: int, id_usuario: int):
     db.commit()
     return nueva_rep
 
-
-# Obtener total de reproducciones
+# Total reproducciones
 def obtener_total_reproducciones(db: Session, id_cancion: int):
-    return db.query(func.count(Reproducciones.id_reproduccion))\
+    return db.query(func.count(Reproducciones.id_reproduccion)) \
              .filter(Reproducciones.id_cancion == id_cancion).scalar()
 
 
-# Obtener top canciones (más reproducidas)
+# -----------------------
+# Top canciones
+# -----------------------
 def obtener_top_canciones(db: Session, limite: int = 10):
     resultado = (
         db.query(

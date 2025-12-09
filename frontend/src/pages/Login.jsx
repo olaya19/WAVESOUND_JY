@@ -79,15 +79,18 @@ const Login = () => {
           <img src={discoImg} className="planet-spin" alt="Disco Bola" />
         </div>
 
-        <form onSubmit={handleSubmit}>
+        {/* FORM LOGIN */}
+        <form onSubmit={handleSubmit} autoComplete="off">
           {/* Usuario */}
           <div className="input-box">
             <span className="icon-circle"><FaUser /></span>
             <input
               type="text"
+              name="user_name_custom"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Usuario o Email"
+              autoComplete="off"
             />
           </div>
           {errors.username && <small className="error-text">{errors.username}</small>}
@@ -97,9 +100,11 @@ const Login = () => {
             <span className="icon-circle"><FaLock /></span>
             <input
               type={showPassword ? "text" : "password"}
+              name="user_pass_custom"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
+              autoComplete="new-password"
             />
             <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}

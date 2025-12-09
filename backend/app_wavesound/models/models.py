@@ -80,6 +80,7 @@ class PerfilGenero(BASE):
     id_perfil = Column(Integer, ForeignKey("perfiles.id_perfil"), nullable=False)
     id_genero = Column(Integer, ForeignKey("generos.id_genero"), nullable=False)
 
+
 # Seguidores
 class Seguidores(BASE):
     __tablename__ = "seguidores"
@@ -87,6 +88,7 @@ class Seguidores(BASE):
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_seguidor = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
     id_seguido = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    fecha_seguimiento = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     seguidor = relationship(
         "Usuarios",
@@ -99,7 +101,6 @@ class Seguidores(BASE):
         foreign_keys=[id_seguido],
         back_populates="seguidores"
     )
-
 
 # Géneros 
 

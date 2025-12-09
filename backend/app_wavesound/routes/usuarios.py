@@ -39,6 +39,8 @@ async def register(user_data: UsuarioCreate, db: Session = Depends(get_db)):
     enviar_email_verificacion(nuevo_usuario.email, token)
 
     return nuevo_usuario
+
+
 # ---------------------------------------------------------
 # VERIFICAR EMAIL DESDE LINK
 # ---------------------------------------------------------
@@ -103,6 +105,10 @@ def reenviar_verificacion(usuario_id: int, db: Session = Depends(get_db)):
 
     return {"message": "Correo reenviado ✔"}
 
+
+# ---------------------------------------------------------
+# FORGOT PASSWORD
+# ---------------------------------------------------------
 @router.post("/usuarios/forgot-password")
 def forgot_password(email: str, db: Session = Depends(get_db)):
     user = db.query(Usuarios).filter(Usuarios.email == email).first()
@@ -120,6 +126,9 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
     return {"message": "Correo enviado para restablecer contraseña"}
 
 
+# ---------------------------------------------------------
+# RESET PASSWORD
+# ---------------------------------------------------------
 @router.post("/usuarios/reset-password")
 def reset_password(token: str, nueva_password: str, db: Session = Depends(get_db)):
     try:
@@ -197,6 +206,31 @@ def listar_usuarios_por_rol(rol_id: int, db: Session = Depends(get_db)):
 
 
 # ---------------------------------------------------------
+# LISTADO POR ROL CON PERFIL
+# ---------------------------------------------------------
+@router.get("/rol/{rol_id}/con-perfil")
+def listar_usuarios_por_rol_con_perfil(rol_id: int, db: Session = Depends(get_db)):
+    """
+    Devuelve todos los usuarios de un rol específico
+    junto con su foto de perfil si existe
+    """
+    usuarios = db.query(Usuarios).filter(Usuarios.id_rol == rol_id).all()
+    if not usuarios:
+        raise HTTPException(status_code=404, detail="No se encontraron usuarios con ese rol")
+
+    resultado = []
+    for u in usuarios:
+        perfil = obtener_perfil_completo(db, u.id_usuario)
+        resultado.append({
+            "id_usuario": u.id_usuario,
+            "nombre_usuario": u.nombre_usuario,
+            "foto_perfil": perfil["foto_perfil"] if perfil else None
+        })
+
+    return resultado
+
+
+# ---------------------------------------------------------
 # PERFIL DEL USUARIO
 # ---------------------------------------------------------
 @router.get("/perfil", response_model=PerfilUsuarioOut)
@@ -207,4 +241,7 @@ def obtener_perfil(current_user=Depends(get_current_user), db: Session = Depends
     return perfil
 
 
+# ---------------------------------------------------------
+# INTEGRACIÓN GOOGLE
+# ---------------------------------------------------------
 router.include_router(google_router)

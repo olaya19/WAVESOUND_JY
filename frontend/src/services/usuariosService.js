@@ -10,3 +10,15 @@ export const getUsuariosPorRol = async (rol_id) => {
     return [];
   }
 };
+
+// 🔥 Nuevo servicio para traer usuarios + foto de perfil
+export const getUsuariosPorRolConPerfil = async (rol_id) => {
+  try {
+    const res = await axios.get(`${API_URL}rol/${rol_id}/con-perfil`);
+    return res.data;
+  } catch (error) {
+    console.error("❌ Error al traer usuarios con perfil:", error.response?.data || error.message);
+    return [];
+  }
+};
+

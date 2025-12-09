@@ -9,7 +9,6 @@
   min-height: 100vh;
 }
 
-
 /* 🟣 SIDEBARS (IZQ y DER) */
 .sidebar-left, .sidebar-right {
   background: rgba(25, 72, 110, 0.45);
@@ -88,7 +87,7 @@
   margin: 8px 0;
 }
 
-/* 💚 BOTÓN DE SUBIR (ESTILO LOGIN) */
+/* 💚 BOTÓN DE SUBIR */
 .upload-btn {
   width: 100%;
   padding: 12px;
@@ -136,41 +135,114 @@
   cursor: pointer;
 }
 
-/* 🧠 SIDEBAR IZQUIERDA */
-.sidebar-left h3 {
-  color: #41DC97;
-  border-bottom: 1px solid rgba(65, 220, 151, 0.3);
-  padding-bottom: 5px;
-  margin-bottom: 10px;
+/* === SIDELEFT NUEVO Y MEJORADO === */
+
+.sideleft-box {
+  margin-bottom: 20px;
 }
 
-.sidebar-left ul {
+/* 🎨 TITULOS */
+.sideleft-title {
+  font-size: 1.1rem;
+  color: #F3C11B;
+  margin-bottom: 12px;
+  text-shadow: 0 0 6px rgba(243, 193, 27, 0.35);
+}
+
+/* LISTA */
+.sideleft-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 15px 0;
+  margin: 0;
 }
 
-.sidebar-left li {
-  color: #e0e0e0;
-  font-size: 14px;
-  margin-bottom: 6px;
+.sideleft-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+
+  border: 2px solid rgba(65, 220, 151, 0.55);
+  transition: 0.25s;
+}
+
+.sideleft-item:hover {
+  background: rgba(56, 17, 92, 0.25);
+  transform: translateX(4px);
+}
+
+/* 👤 Imagen + nombre */
+.sideleft-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.sidebar-left li:hover {
-  color: #F3C11B;
-  transform: translateX(3px);
+.sideleft-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #41DC97;
 }
 
-/* 🌙 SCROLL MODERNO */
-::-webkit-scrollbar {
-  width: 8px;
+.sideleft-username {
+  color: #ffffff;
+  font-weight: 600;
+  transition: 0.2s;
 }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #F3C11B, #41DC97);
-  border-radius: 10px;
+
+.sideleft-username:hover {
+  color: #41DC97;
 }
-::-webkit-scrollbar-track {
-  background: #000000;
+
+/* 🟢 BOTÓN SEGUIR — TAMAÑO UNIFORME */
+.sideleft-follow-btn {
+  width: 95px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0;
+  border-radius: 12px;
+
+  background: transparent;
+  border: 2px solid #41DC97;
+  color: #41DC97;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s ease;
+  font-size: 14px;
 }
+
+.sideleft-follow-btn:hover {
+  background: #41DC97;
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* 🔵 BOTÓN SIGUIENDO — TAMAÑO UNIFORME TAMBIÉN */
+.sideleft-follow-btn.siguiendo {
+  width: 95px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #19486E;
+  border-color: #41DC97;
+  color: #fff;
+  font-size: 14px;
+}
+
+.sideleft-follow-btn.siguiendo:hover {
+  background: #38115C;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+ 
