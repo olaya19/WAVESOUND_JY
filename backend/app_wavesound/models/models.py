@@ -53,7 +53,7 @@ class VerificationToken(BASE):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("usuarios.id_usuario", ondelete="CASCADE"))
-    token = Column(String, unique=True, index=True)
+    token = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(hours=1))
 
@@ -124,13 +124,12 @@ class Generos(BASE):
 
 class Albumes(BASE):
     __tablename__ = "albumes"
-    id_album = Column(Integer, primary_key=True)
+    id_album = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
     titulo = Column(String(100))
     descripcion = Column(String(500))
     portada = Column(String(255))
     fecha_lanzamiento = Column(Date)
-    
 
     usuario = relationship("Usuarios", back_populates="albumes")
     canciones = relationship("Canciones", back_populates="album")
@@ -139,7 +138,7 @@ class Albumes(BASE):
 class Canciones(BASE):
     __tablename__ = "canciones"
 
-    id_cancion = Column(Integer, primary_key=True, index=True)
+    id_cancion = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
     titulo = Column(String(100), nullable=False, index=True)
     descripcion = Column(String(255), nullable=True)
@@ -155,7 +154,7 @@ class Canciones(BASE):
     genero = relationship("Generos", back_populates="canciones")
     album = relationship("Albumes", back_populates="canciones")
     reproducciones = relationship("Reproducciones", back_populates="cancion")
-    derechos = relationship("Derechos_Autor", back_populates="cancion")
+    derechos_autor = relationship("Derechos_Autor", back_populates="cancion")
     permisos = relationship("Permisos_Reproduccion", back_populates="cancion")
     listas = relationship("Lista_Canciones", back_populates="cancion")
     favoritos = relationship("Favoritos", back_populates="cancion")
@@ -173,30 +172,32 @@ class Reproducciones(BASE):
 
     cancion = relationship("Canciones", back_populates="reproducciones")
 
-# Derechos
+# Derechosa
 
 class Derechos_Autor(BASE):
     __tablename__ = "derechos_autor"
-    id_registro = Column(Integer, primary_key=True)
-    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"))
-    nombre_autor = Column(String(40))
-    fecha_acuerdo = Column(Date)
-    documento_legal = Column(String(1000))
-    id_usuario_autor = Column(Integer, ForeignKey("usuarios.id_usuario"))
+
+    id_registro = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id_cancion = Column(Integer, ForeignKey("canciones.id_cancion"), nullable=True)
+    id_usuario_autor = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=True)
+    nombre_autor = Column(String(40), nullable=True)
+    fecha_acuerdo = Column(Date, nullable=True)
+    documento_legal = Column(String(1000), nullable=True)
+
 
     documentos = relationship("Documentos_Derechos_Autor", back_populates="derecho_autor")
-    cancion = relationship("Canciones", back_populates="derechos")
+    cancion = relationship("Canciones", back_populates="derechos_autor")
 
 # Documentos De Derechos De Autor
 
 class Documentos_Derechos_Autor(BASE):
     __tablename__ = "documentos_derechos_autor"
-    id_documento = Column(Integer, primary_key=True, autoincrement=True)
+    id_documento = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_registro = Column(Integer, ForeignKey("derechos_autor.id_registro"), nullable=False)
-    tipo_documento = Column(String(50), nullable=False)
-    nombre_documento = Column(String(150), nullable=False)
-    ruta_archivo = Column(String(300), nullable=False)
-    fecha_subida = Column(DateTime, default=func.now())
+    tipo_documento = Column(String(100), nullable=False)
+    nombre_documento = Column(String(255), nullable=True)
+    ruta_archivo = Column(String(500), nullable=False)
+    fecha_subida = Column(DateTime, nullable=False)
     vigente = Column(Boolean, default=True)
 
     derecho_autor = relationship("Derechos_Autor", back_populates="documentos")
@@ -206,7 +207,8 @@ class Documentos_Derechos_Autor(BASE):
 
 class Listas_Reproducciones(BASE):
     __tablename__ = "listas_reproducciones"
-    id_lista = Column(Integer, primary_key=True)
+
+    id_lista = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"))
     nombre_lista = Column(String(100))
     descripcion = Column(String(500))
