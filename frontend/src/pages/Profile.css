@@ -16,14 +16,13 @@
   }
 }
 
-/* Animación */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================
-   CARD PERFIL (glass + neon)
+   CARD PERFIL
    ============================ */
 .artist-card {
   background: rgba(26, 0, 48, 0.55);
@@ -49,7 +48,6 @@
   align-items: center;
 }
 
-/* Imagen con halo neon animado */
 .artist-image {
   width: 160px;
   height: 160px;
@@ -66,8 +64,18 @@
   100% { box-shadow: 0 0 14px rgba(0,255,204,0.4); }
 }
 
+.artist-name {
+  margin-top: 1rem;
+}
+
+.followers-count {
+  color: #00ffcc;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
 /* ============================
-   BOTONES (reactivos)
+   BOTONES
    ============================ */
 .btn-editar,
 .btn-guardar,
@@ -105,7 +113,7 @@
 }
 
 /* ============================
-   INFO PERFIL (professional)
+   INFO PERFIL
    ============================ */
 .artist-info {
   background: rgba(13, 26, 38, 0.55);
@@ -124,7 +132,7 @@
 }
 
 /* ============================
-   FORMULARIOS (clean + modern)
+   FORMULARIOS
    ============================ */
 .profile-form,
 .edit-form {
@@ -176,51 +184,6 @@
 }
 
 /* ============================
-   CREAR PERFIL CARD
-   ============================ */
-.create-profile-container {
-  width: 90%;
-  max-width: 450px;
-  margin: 2rem auto;
-  background: rgba(18, 0, 36, 0.55);
-  padding: 2rem;
-  border-radius: 15px;
-  border: 2px solid rgba(0, 255, 204, 0.5);
-  text-align: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(0,255,204,0.25);
-  animation: fadeIn 1s ease;
-}
-
-/* ============================
-   EDIT FORM STYLING (mejorado)
-   ============================ */
-.edit-form {
-  background: rgba(18, 0, 36, 0.7);
-  padding: 1.5rem;
-  border-radius: 15px;
-  border: 2px solid rgba(110,0,255,0.6);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  box-shadow: 0 0 20px rgba(110,0,255,0.35);
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.edit-form:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 28px rgba(110,0,255,0.5);
-}
-
-.edit-form label {
-  color: #00ffcc;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-  text-shadow: 0 0 6px rgba(0,255,204,0.6);
-}
-
-/* ============================
    SONG LIST
    ============================ */
 .artist-songs {
@@ -260,4 +223,59 @@
   color: #121212;
   border-color: #00ffcc;
   box-shadow: 0 0 12px #00ffcc;
+}
+
+/* ============================
+   CREAR PERFIL CARD
+   ============================ */
+.create-profile-container {
+  width: 90%;
+  max-width: 450px;
+  margin: 2rem auto;
+  background: rgba(18, 0, 36, 0.55);
+  padding: 2rem;
+  border-radius: 15px;
+  border: 2px solid rgba(0, 255, 204, 0.5);
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,255,204,0.25);
+  animation: fadeIn 1s ease;
+}
+
+/* ============================
+   EDIT FORM
+   ============================ */
+.edit-form {
+  background: rgba(18, 0, 36, 0.7);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 2px solid rgba(110,0,255,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 0 20px rgba(110,0,255,0.35);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit-form:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 28px rgba(110,0,255,0.5);
+}
+
+.edit-form label {
+  color: #00ffcc;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 
+}
+
+.preview-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+  border: 3px solid #00ffcc;
+  box-shadow: 0 0 14px rgba(0,255,204,0.6);
 }

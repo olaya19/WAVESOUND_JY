@@ -3,6 +3,7 @@ import SongCard from "../components/SongCard";
 import { getCancionesByUser } from "../services/cancionesService";
 import { crearPerfil, getMiPerfil, editarPerfil } from "../services/perfilService";
 import { getGeneros } from "../services/generosService";
+import { getSeguidores } from "../services/seguidoresService";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./Profile.css";
@@ -22,6 +23,8 @@ function Profile() {
 
   const [generos, setGeneros] = useState([]);
   const [generosSeleccionados, setGenerosSeleccionados] = useState([]);
+
+  const [seguidoresCount, setSeguidoresCount] = useState(0);
 
   const [formData, setFormData] = useState({
     nombre_artista: "",
@@ -51,8 +54,12 @@ function Profile() {
           setGenerosSeleccionados(perfilData.generos_ids);
         }
 
+        // Contar seguidores usando servicio corregido
+        const seguidores = await getSeguidores();
+        setSeguidoresCount(seguidores.length);
+
       } catch {
-        console.warn("No hay perfil creado.");
+        console.warn("No hay perfil creado o error al cargar datos.");
       } finally {
         setLoading(false);
       }
@@ -115,6 +122,10 @@ function Profile() {
       setPerfil(updatedPerfil);
       setGenerosSeleccionados(updatedPerfil.generos_ids);
 
+      // Actualizar seguidores
+      const seguidores = await getSeguidores();
+      setSeguidoresCount(seguidores.length);
+
     } catch {
       Swal.fire({ icon: "error", title: "Error al actualizar perfil" });
     }
@@ -128,9 +139,9 @@ function Profile() {
     ? perfil.foto_perfil
     : "/default-avatar.png";
 
-  /* ============================================================
-     SI NO EXISTE PERFIL → FORMULARIO DE CREAR
-     ============================================================ */
+  // =============================
+  // PERFIL NO EXISTE
+  // =============================
   if (!perfil) {
     return (
       <div className="create-profile-container">
@@ -165,9 +176,9 @@ function Profile() {
     );
   }
 
-  /* ============================================================
-     PERFIL YA EXISTE → MOSTRAR Y EDITAR
-     ============================================================ */
+  // =============================
+  // PERFIL EXISTE
+  // =============================
   return (
     <div className="profile-container-main">
       <div className="artist-card">
@@ -181,6 +192,7 @@ function Profile() {
             style={{ opacity: imgLoaded ? 1 : 0, transition: "opacity 0.3s" }}
           />
           <h2 className="artist-name">{perfil.nombre_artista}</h2>
+          <p className="followers-count">{seguidoresCount} seguidores</p>
         </div>
         <button className="btn-editar" onClick={() => setEditMode(true)}>Editar Perfil</button>
       </div>
@@ -242,4 +254,3 @@ function Profile() {
 }
 
 export default Profile;
-

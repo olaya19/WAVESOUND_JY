@@ -65,23 +65,16 @@ function Home() {
           icon: "info",
         });
       } else {
-        Swal.fire({
-          title: "Redirigiendo...",
-          icon: "success",
-          timer: 1200,
-          showConfirmButton: false,
-        });
-        setTimeout(() => navigate("/subir-cancion"), 1200);
+        navigate("/upload"); // Redirige a SongForm / Upload
       }
     }
 
     if (action === "playlist") navigate("/playlist");
-    if (action === "likes") navigate("/me-gusta");
+    if (action === "likes") navigate("/mis-favoritos"); // Redirige a favoritos
   };
 
   return (
     <div className="home-container">
-
       <SideLeft />
 
       <main className="feed">
@@ -111,9 +104,6 @@ function Home() {
                 ? getRolName(c.usuario.id_rol)
                 : "Invitado";
 
-              // -----------------------
-              // Foto de perfil correcta
-              // -----------------------
               let fotoPerfil = c.usuario?.foto_perfil || null;
               if (c.usuario?.foto_perfil) {
                 fotoPerfil = c.usuario.foto_perfil.startsWith("http")
@@ -161,5 +151,3 @@ function Home() {
 }
 
 export default Home;
-
-

@@ -11,21 +11,21 @@ import AdminPanel from "./pages/AdminPanel";
 import Menu from "./pages/Menu";
 import DerechosAutor from "./pages/DerechosAutor";
 import Playlist from "./pages/Playlist";
-
+import MisFavoritos from "./pages/MisFavoritos";
 import MiniPlayer from "./components/MiniPLayer";
 
-// 👉 IMPORTANTE
+// Contexto global del reproductor
 import { PlayerProvider } from "./context/PlayerContext";
 
 function Layout({ children }) {
   const location = useLocation();
-  const hideNav = ["/Login", "/Register"].includes(location.pathname);
+  const hideNav = ["/login", "/register"].includes(location.pathname.toLowerCase());
 
   return (
     <>
       {!hideNav && <Nav />}
       {children}
-      <MiniPlayer /> {/* 🔥 Reproductor global */}
+      <MiniPlayer /> {/* Reproductor global */}
     </>
   );
 }
@@ -33,18 +33,19 @@ function Layout({ children }) {
 function App() {
   return (
     <Router>
-      <PlayerProvider>   {/* ⬅️ ENVUELVE TODA LA APP */}
+      <PlayerProvider>
         <Layout>
           <Routes>
-            <Route path="/Home" element={<Home />} />
-            <Route path="/Profile" element={<Profile />} />
-            <Route path="/Menu" element={<Menu />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path="/Register" element={<Register />} />
-            <Route path="/Upload" element={<Upload />} />
-            <Route path="/AdminPanel" element={<AdminPanel />} />
-            <Route path="/DerechosAutor" element={<DerechosAutor />} />
-            <Route path="/Playlist" element={<Playlist />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/adminpanel" element={<AdminPanel />} />
+            <Route path="/derechosautor" element={<DerechosAutor />} />
+            <Route path="/playlist" element={<Playlist />} />
+            <Route path="/mis-favoritos" element={<MisFavoritos />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </Layout>
@@ -54,6 +55,3 @@ function App() {
 }
 
 export default App;
-
-
-

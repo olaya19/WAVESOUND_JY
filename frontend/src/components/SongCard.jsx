@@ -8,7 +8,8 @@ import { agregarFavorito, eliminarFavorito } from "../services/favoritosService"
 import {
   obtenerPlaylistsUsuario,
   agregarCancionAPlaylist,
-  crearPlaylist
+  crearPlaylist,
+  obtenerCancionesPlaylist
 } from "../services/playlistsService";
 
 import "./SongCard.css";
@@ -52,6 +53,35 @@ function SongCard({
     };
 
     fetchLikes();
+  }, [id_cancion]);
+
+  // -----------------------------
+  // Detectar si ya está en playlist
+  // -----------------------------
+  useEffect(() => {
+    const verificarSiEstaEnPlaylist = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user?.id_usuario) return;
+
+        const playlists = await obtenerPlaylistsUsuario(user.id_usuario);
+
+        let encontrada = false;
+        for (const pl of playlists) {
+          const canciones = await obtenerCancionesPlaylist(pl.id_lista);
+          if (canciones.some(c => c.id_cancion === id_cancion)) {
+            encontrada = true;
+            break;
+          }
+        }
+
+        setIsEnPlaylist(encontrada);
+      } catch (err) {
+        console.error("Error verificando playlist:", err);
+      }
+    };
+
+    verificarSiEstaEnPlaylist();
   }, [id_cancion]);
 
   // -----------------------------
@@ -148,10 +178,7 @@ function SongCard({
         const [nombre, descripcion] = formValues;
 
         const nueva = await crearPlaylist(
-          user.id_usuario,
-          nombre,
-          descripcion,
-          false
+          { id_usuario: user.id_usuario, nombre, descripcion, privada: false }
         );
 
         playlistId = nueva.id_lista;
