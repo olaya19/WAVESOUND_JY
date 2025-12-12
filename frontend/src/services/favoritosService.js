@@ -1,9 +1,11 @@
-// app_wavesound/services/favoritosService.js
+// src/services/favoritosService.js
 
-// Trae el token guardado en localStorage
+// Traer token desde localStorage
 const getAuthToken = () => localStorage.getItem("token");
 
-// Agregar canción a favoritos
+// ------------------------------
+// ⭐ Agregar canción a favoritos
+// ------------------------------
 export const agregarFavorito = async (id_cancion) => {
   const token = getAuthToken();
   console.log("Agregar favorito - token:", token, "id_cancion:", id_cancion);
@@ -13,22 +15,27 @@ export const agregarFavorito = async (id_cancion) => {
 
   const res = await fetch("http://127.0.0.1:8000/favoritos/", {
     method: "POST",
-    headers: { 
+    headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ id_cancion })
+    body: JSON.stringify({ id_cancion }),
   });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
+    console.error("❌ Error al agregar favorito:", errorData);
     throw new Error(errorData.detail || "No se pudo agregar a favoritos");
   }
 
-  return await res.json();
+  const data = await res.json();
+  console.log("✔ Favorito agregado:", data);
+  return data;
 };
 
-// Eliminar canción de favoritos
+// ------------------------------
+// ⭐ Quitar canción de favoritos
+// ------------------------------
 export const eliminarFavorito = async (id_cancion) => {
   const token = getAuthToken();
   console.log("Eliminar favorito - token:", token, "id_cancion:", id_cancion);
@@ -38,20 +45,23 @@ export const eliminarFavorito = async (id_cancion) => {
 
   const res = await fetch(`http://127.0.0.1:8000/favoritos/${id_cancion}`, {
     method: "DELETE",
-    headers: {
-      "Authorization": `Bearer ${token}`
-    }
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
+    console.error("❌ Error al eliminar favorito:", errorData);
     throw new Error(errorData.detail || "No se pudo eliminar de favoritos");
   }
 
-  return await res.json();
+  const data = await res.json();
+  console.log("✔ Favorito eliminado:", data);
+  return data;
 };
 
-// Obtener todos los favoritos del usuario
+// ------------------------------
+// ⭐ Obtener favoritos del usuario
+// ------------------------------
 export const obtenerFavoritos = async () => {
   const token = getAuthToken();
   console.log("Obtener favoritos - token:", token);
@@ -59,14 +69,19 @@ export const obtenerFavoritos = async () => {
   if (!token) throw new Error("Usuario no autenticado");
 
   const res = await fetch("http://127.0.0.1:8000/favoritos/", {
-    headers: { "Authorization": `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
+    console.error("❌ Error obteniendo favoritos:", errorData);
     throw new Error(errorData.detail || "No se pudieron obtener los favoritos");
   }
 
-  return await res.json();
-};
+  const data = await res.json();
 
+  console.log("✔ Favoritos obtenidos:", data);
+
+  // Garantizar siempre un array válido
+  return Array.isArray(data) ? data : [];
+};

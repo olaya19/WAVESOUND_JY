@@ -1,13 +1,11 @@
 // src/pages/MisFavoritos.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import SongCard from "../components/SongCard";
 import { obtenerFavoritos } from "../services/favoritosService";
 import "./MisFavoritos.css";
 
 function MisFavoritos() {
-  const navigate = useNavigate();
   const [favoritos, setFavoritos] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +13,8 @@ function MisFavoritos() {
     const fetchFavoritos = async () => {
       try {
         const data = await obtenerFavoritos();
-        setFavoritos(data);
+        console.log("Favoritos recibidos:", data);
+        setFavoritos(Array.isArray(data) ? data : []);
       } catch (error) {
         Swal.fire({
           icon: "error",
@@ -33,6 +32,7 @@ function MisFavoritos() {
   return (
     <div className="favoritos-container">
       <h2>Mis Canciones Favoritas</h2>
+
       {loading && <p>Cargando favoritos...</p>}
 
       {!loading && favoritos.length === 0 && (
@@ -42,24 +42,33 @@ function MisFavoritos() {
       <div className="favoritos-grid">
         {!loading &&
           favoritos.map((f) => {
-            const c = f.cancion; // Asegurarse que la API retorna la canción completa
+            const c = f.cancion || {}; // ← evita romper si falta
+
+            const user = c.usuario || {};
+
             const userName =
-              c.usuario?.nombre_artista ||
-              c.usuario?.nickname ||
-              c.usuario?.nombre_usuario ||
-              "Desconocido";
+              user.nombre_artista ||
+              user.nickname ||
+              user.nombre_usuario ||
+              "Artista desconocido";
 
             return (
               <SongCard
                 key={c.id_cancion}
                 id_cancion={c.id_cancion}
                 usuario={userName}
-                titulo={c.titulo}
-                duracion={c.duracion ? `${c.duracion} seg` : "3:00"}
+                titulo={c.titulo || "Sin título"}
+                duracion={
+                  c.duracion
+                    ? isNaN(c.duracion)
+                      ? c.duracion
+                      : `${c.duracion} seg`
+                    : "3:00"
+                }
                 descripcion={c.descripcion || "Sin descripción"}
-                archivo_url={c.archivo_url}
+                archivo_url={c.archivo_url || ""}
                 portada_url={c.portada_url || ""}
-                foto_perfil={c.usuario?.foto_perfil || ""}
+                foto_perfil={user.foto_perfil || ""}
               />
             );
           })}

@@ -1,3 +1,4 @@
+# app_wavesound/controllers/favoritos_services.py
 from sqlalchemy.orm import Session
 from app_wavesound.models.models import Favoritos, Canciones
 from app_wavesound.schemas.Favorito import FavoritoCreate, FavoritoOut
@@ -21,15 +22,16 @@ def agregar_favorito(db: Session, id_usuario: int, favorito_data: FavoritoCreate
         raise HTTPException(status_code=400, detail="La canción ya está en tus favoritos")
 
     nuevo_favorito = Favoritos(
-    id_usuario=id_usuario,
-    id_cancion=favorito_data.id_cancion,
-    fecha_agregado=datetime.now()  # <-- asigna la fecha aquí
+        id_usuario=id_usuario,
+        id_cancion=favorito_data.id_cancion,
+        fecha_agregado=datetime.now()
     )
 
     db.add(nuevo_favorito)
     db.commit()
     db.refresh(nuevo_favorito)
     return FavoritoOut.model_validate(nuevo_favorito)
+
 
 def eliminar_favorito(db: Session, id_usuario: int, id_cancion: int):
     favorito = db.query(Favoritos).filter(
@@ -47,7 +49,31 @@ def eliminar_favorito(db: Session, id_usuario: int, id_cancion: int):
 
 def listar_favoritos_usuario(db: Session, id_usuario: int):
     favoritos = db.query(Favoritos).filter(Favoritos.id_usuario == id_usuario).all()
-    return [FavoritoOut.model_validate(f) for f in favoritos]
+    
+    resultado = []
+    for f in favoritos:
+        cancion = db.query(Canciones).filter(Canciones.id_cancion == f.id_cancion).first()
+        if cancion:
+            resultado.append({
+                "id_favorito": f.id_favorito,
+                "fecha_agregado": f.fecha_agregado,
+                "cancion": {
+                    "id_cancion": cancion.id_cancion,
+                    "titulo": cancion.titulo,
+                    "descripcion": cancion.descripcion,
+                    "duracion": cancion.duracion,
+                    "archivo_url": cancion.archivo_url,
+                    "portada_url": cancion.portada_url,
+                    "usuario": {
+                        "id_usuario": cancion.usuario.id_usuario if hasattr(cancion.usuario, "id_usuario") else None,
+                        "nombre_usuario": getattr(cancion.usuario, "nombre_usuario", None),
+                        "nickname": getattr(cancion.usuario, "nickname", None),
+                        "nombre_artista": getattr(cancion.usuario, "nombre_artista", None),
+                        "foto_perfil": getattr(cancion.usuario, "foto_perfil", None)
+                    }
+                }
+            })
+    return resultado
 
 
 def obtener_likes_cancion(db: Session, id_cancion: int, id_usuario: int):
