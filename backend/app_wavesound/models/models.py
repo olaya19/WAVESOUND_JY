@@ -51,7 +51,7 @@ class Usuarios(BASE):
 class VerificationToken(BASE):
     __tablename__ = "verification_tokens"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True )
     user_id = Column(Integer, ForeignKey("usuarios.id_usuario", ondelete="CASCADE"))
     token = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -172,7 +172,7 @@ class Reproducciones(BASE):
 
     cancion = relationship("Canciones", back_populates="reproducciones")
 
-# Derechosa
+# Derechos
 
 class Derechos_Autor(BASE):
     __tablename__ = "derechos_autor"

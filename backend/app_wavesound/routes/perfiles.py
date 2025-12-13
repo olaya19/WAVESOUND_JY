@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 from app_wavesound.db.database import get_db
 from app_wavesound.auth.auth import get_current_user
 from app_wavesound.models.models import Usuarios
@@ -15,9 +16,22 @@ import os
 router = APIRouter(prefix="/perfiles", tags=["Perfiles"])
 
 
-# -----------------------------------------------------
-#  Crear perfil
-# -----------------------------------------------------
+# ---------------------------------------------
+#   Filtro básico de lenguaje ofensivo
+# ---------------------------------------------
+PALABRAS_OFENSIVAS = [
+    "maldita", "basura", "hp", "gonorrea", "mierda",
+    "estupido", "idiota", "asqueroso", "imbecil"
+]
+
+def contiene_lenguaje_ofensivo(texto: str) -> bool:
+    texto = texto.lower()
+    return any(p in texto for p in PALABRAS_OFENSIVAS)
+
+
+# ---------------------------------------------
+#   Crear perfil
+# ---------------------------------------------
 @router.post("/")
 def crear_perfil(
     nombre_artista: str = Form(...),
@@ -28,6 +42,13 @@ def crear_perfil(
     usuario_actual=Depends(get_current_user)
 ):
     generos_ids = json.loads(generos_ids)
+
+    # Validación de lenguaje ofensivo
+    if contiene_lenguaje_ofensivo(biografia):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "El texto contiene lenguaje inapropiado."}
+        )
 
     foto_path = None
     if foto_perfil:
@@ -49,9 +70,9 @@ def crear_perfil(
     )
 
 
-# -----------------------------------------------------
-#  Obtener mi perfil
-# -----------------------------------------------------
+# ---------------------------------------------
+#   Obtener mi perfil
+# ---------------------------------------------
 @router.get("/me")
 def obtener_mi_perfil(
     db: Session = Depends(get_db),
@@ -65,9 +86,9 @@ def obtener_mi_perfil(
     return perfil
 
 
-# -----------------------------------------------------
-#  Editar perfil
-# -----------------------------------------------------
+# ---------------------------------------------
+#   Editar perfil
+# ---------------------------------------------
 @router.put("/editar")
 def editar_perfil(
     nombre_artista: str = Form(...),
@@ -78,6 +99,13 @@ def editar_perfil(
     usuario_actual=Depends(get_current_user)
 ):
     generos_ids = json.loads(generos_ids)
+
+    # Validación de lenguaje ofensivo
+    if contiene_lenguaje_ofensivo(biografia):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "El texto contiene lenguaje inapropiado."}
+        )
 
     foto_path = None
     if foto_perfil:
@@ -91,17 +119,17 @@ def editar_perfil(
 
     return actualizar_perfil_service(
         db=db,
-        user_id=usuario_actual.id_usuario,  # ✔ nombre correcto
+        user_id=usuario_actual.id_usuario,
         nombre_artista=nombre_artista,
         biografia=biografia,
         generos_ids=generos_ids,
         foto_perfil=foto_path
-)
+    )
 
 
-# -----------------------------------------------------
-#  Obtener perfil público
-# -----------------------------------------------------
+# ---------------------------------------------
+#   Obtener perfil público
+# ---------------------------------------------
 @router.get("/{id_usuario}")
 def obtener_perfil_publico(id_usuario: int, db: Session = Depends(get_db)):
 
@@ -117,9 +145,9 @@ def obtener_perfil_publico(id_usuario: int, db: Session = Depends(get_db)):
     return perfil
 
 
-# -----------------------------------------------------
-#  Eliminar perfil
-# -----------------------------------------------------
+# ---------------------------------------------
+#   Eliminar perfil
+# ---------------------------------------------
 @router.delete("/eliminar")
 def eliminar_perfil(
     db: Session = Depends(get_db),

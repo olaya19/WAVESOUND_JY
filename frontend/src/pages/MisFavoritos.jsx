@@ -1,7 +1,7 @@
 // src/pages/MisFavoritos.jsx
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import SongCard from "../components/SongCard";
+import SongMiniCard from "../components/SongMiniCard";
 import { obtenerFavoritos } from "../services/favoritosService";
 import "./MisFavoritos.css";
 
@@ -13,7 +13,6 @@ function MisFavoritos() {
     const fetchFavoritos = async () => {
       try {
         const data = await obtenerFavoritos();
-        console.log("Favoritos recibidos:", data);
         setFavoritos(Array.isArray(data) ? data : []);
       } catch (error) {
         Swal.fire({
@@ -42,33 +41,14 @@ function MisFavoritos() {
       <div className="favoritos-grid">
         {!loading &&
           favoritos.map((f) => {
-            const c = f.cancion || {}; // ← evita romper si falta
-
-            const user = c.usuario || {};
-
-            const userName =
-              user.nombre_artista ||
-              user.nickname ||
-              user.nombre_usuario ||
-              "Artista desconocido";
+            const c = f.cancion || {};
 
             return (
-              <SongCard
+              <SongMiniCard
                 key={c.id_cancion}
-                id_cancion={c.id_cancion}
-                usuario={userName}
-                titulo={c.titulo || "Sin título"}
-                duracion={
-                  c.duracion
-                    ? isNaN(c.duracion)
-                      ? c.duracion
-                      : `${c.duracion} seg`
-                    : "3:00"
-                }
-                descripcion={c.descripcion || "Sin descripción"}
-                archivo_url={c.archivo_url || ""}
-                portada_url={c.portada_url || ""}
-                foto_perfil={user.foto_perfil || ""}
+                titulo={c.titulo}
+                archivo_url={c.archivo_url}
+                portada_url={c.portada_url}
               />
             );
           })}

@@ -40,7 +40,7 @@ async def subir_documento(
 
 # GENERAR CERTIFICADO AUTOMÁTICO
 @router.post("/generar-certificado/{id_registro}", response_model=DocumentoDerechoAutorOut)
-async def generar_certificado_endpoint(
+def generar_certificado_endpoint(   # <-- quitar async
     id_registro: int,
     db: Session = Depends(get_db),
     usuario_actual=Depends(get_current_user)
@@ -55,7 +55,8 @@ async def generar_certificado_endpoint(
     if registro.id_usuario_autor != usuario_actual.id_usuario:
         raise HTTPException(status_code=403, detail="No autorizado para generar este certificado")
 
-    return await derechos_autor_services.generar_certificado(db, id_registro)
+    # Quitar await aquí
+    return derechos_autor_services.generar_certificado(db, id_registro)
 
 
 # OBTENER REGISTROS DE UN USUARIO
