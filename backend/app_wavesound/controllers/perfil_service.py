@@ -7,7 +7,7 @@ from pathlib import Path
 # Crear Perfil
 # ============================================================
 def crear_perfil_service(db: Session, id_usuario: int, nombre_artista: str,
-                         biografia: str, generos_ids: list, foto_perfil: str = None):
+                        biografia: str, generos_ids: list, foto_perfil: str = None):
 
     usuario = db.query(Usuarios).filter(Usuarios.id_usuario == id_usuario).first()
     if not usuario:
@@ -135,7 +135,6 @@ def actualizar_perfil_service(db: Session, user_id: int,
 # Eliminar Perfil
 # ============================================================
 def eliminar_perfil_service(db: Session, user_id: int):
-
     perfil = db.query(Perfiles).filter(Perfiles.id_usuario == user_id).first()
 
     if not perfil:

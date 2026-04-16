@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones, favorito, albumes, derechos_autor,seguidores,playlist,generos
+from app_wavesound.routes import usuarios, canciones, perfiles, reproducciones, favorito, albumes, derechos_autor,seguidores,playlist,generos, admin
 from app_wavesound.auth import auth_google
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -35,4 +35,6 @@ app.include_router(auth_google.router)
 app.include_router(derechos_autor.router)
 app.include_router(playlist.router)
 app.include_router(generos.router)
+app.include_router(admin.router)
+
 

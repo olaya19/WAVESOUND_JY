@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaUsers, FaMusic, FaFileAlt, FaSignOutAlt, FaHome,
   FaUserCheck, FaUserTimes, FaStar, FaClock, FaShieldAlt,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
-import "./Admin.css";
+import { getUsuariosAdmin } from "../services/adminService";
+import "./admin.css";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [activeTab, setActiveTab] = useState("usuarios");
+
+  const [usuarios, setUsuarios] = useState([]);
 
   const darkSwal = (options) => {
     Swal.fire({
@@ -22,6 +25,7 @@ const AdminPanel = () => {
     });
   };
 
+  // 🔐 Validación admin
   useEffect(() => {
     if (user.id_rol !== 1) {
       darkSwal({
@@ -32,6 +36,13 @@ const AdminPanel = () => {
       }).then(() => navigate("/Home"));
     }
   }, [navigate, user.id_rol]);
+
+  // 🔥 Cargar usuarios
+  useEffect(() => {
+    if (activeTab === "usuarios") {
+      getUsuariosAdmin().then(setUsuarios);
+    }
+  }, [activeTab]);
 
   const handleLogout = () => {
     darkSwal({
@@ -57,59 +68,95 @@ const AdminPanel = () => {
     });
   };
 
+  // 🔥 STATS dinámicos
   const stats = {
     usuarios: [
-      { title: "Total Usuarios", value: 1200, icon: <FaUsers />, color: "#41DC97" },
-      { title: "Usuarios Activos", value: 980, icon: <FaUserCheck />, color: "#38115C" },
-      { title: "Usuarios Inactivos", value: 220, icon: <FaUserTimes />, color: "#19486E" },
+      {
+        title: "Total Usuarios",
+        value: usuarios.length,
+        icon: <FaUsers />,
+        color: "#41DC97"
+      },
+      {
+        title: "Usuarios Activos",
+        value: usuarios.length,
+        icon: <FaUserCheck />,
+        color: "#38115C"
+      },
+      {
+        title: "Usuarios Inactivos",
+        value: 0,
+        icon: <FaUserTimes />,
+        color: "#19486E"
+      },
     ],
     canciones: [
-      { title: "Canciones Subidas", value: 540, icon: <FaMusic />, color: "#41DC97" },
-      { title: "Canciones Populares", value: 120, icon: <FaStar />, color: "#F3C11B" },
-      { title: "Pendientes Revisión", value: 30, icon: <FaClock />, color: "#38115C" },
+      { title: "Canciones Subidas", value: 0, icon: <FaMusic />, color: "#41DC97" },
+      { title: "Canciones Populares", value: 0, icon: <FaStar />, color: "#F3C11B" },
+      { title: "Pendientes", value: 0, icon: <FaClock />, color: "#38115C" },
     ],
     derechos: [
-      { title: "Registros Totales", value: 350, icon: <FaFileAlt />, color: "#41DC97" },
-      { title: "Protecciones Activas", value: 300, icon: <FaShieldAlt />, color: "#F3C11B" },
-      { title: "Conflictos Reportados", value: 12, icon: <FaFileAlt />, color: "#38115C" },
+      { title: "Registros Totales", value: 0, icon: <FaFileAlt />, color: "#41DC97" },
+      { title: "Protecciones", value: 0, icon: <FaShieldAlt />, color: "#F3C11B" },
+      { title: "Conflictos", value: 0, icon: <FaFileAlt />, color: "#38115C" },
     ],
   };
 
+  // 🔥 Gráfica simulada inteligente
+  const actividad = useMemo(() => {
+    return [
+      { dia: "Lunes", valor: Math.floor(Math.random() * (usuarios.length || 1)) },
+      { dia: "Martes", valor: Math.floor(Math.random() * (usuarios.length || 1)) },
+      { dia: "Miércoles", valor: Math.floor(Math.random() * (usuarios.length || 1)) },
+      { dia: "Jueves", valor: Math.floor(Math.random() * (usuarios.length || 1)) },
+      { dia: "Viernes", valor: Math.floor(Math.random() * (usuarios.length || 1)) },
+    ];
+  }, [usuarios]);
+
+  const maxValor = Math.max(...actividad.map(a => a.valor), 1);
+
   return (
     <div className="admin-container">
+      {/* SIDEBAR */}
       <aside className="admin-sidebar">
         <div className="sidebar-header">
           <h2>WaveSound Admin</h2>
           <p>{user.nombre_usuario || "Administrador"}</p>
         </div>
+
         <nav className="sidebar-nav">
           <button onClick={() => navigate("/Home")} className="home-btn">
             <FaHome /> Home
           </button>
+
           <button
             className={activeTab === "usuarios" ? "active" : ""}
             onClick={() => setActiveTab("usuarios")}
           >
             <FaUsers /> Usuarios
           </button>
+
           <button
             className={activeTab === "canciones" ? "active" : ""}
             onClick={() => setActiveTab("canciones")}
           >
             <FaMusic /> Canciones
           </button>
+
           <button
             className={activeTab === "derechos" ? "active" : ""}
             onClick={() => setActiveTab("derechos")}
           >
-            <FaFileAlt /> Derechos de Autor
+            <FaFileAlt /> Derechos
           </button>
         </nav>
+
         <button className="logout-btn" onClick={handleLogout}>
           <FaSignOutAlt /> Cerrar Sesión
         </button>
       </aside>
 
+      {/* MAIN */}
       <main className="admin-main">
         <h1>
           {activeTab === "usuarios"
@@ -119,6 +166,7 @@ const AdminPanel = () => {
             : "Derechos de Autor"}
         </h1>
 
+        {/* STATS */}
         <div className="stats-grid">
           {stats[activeTab].map((stat) => (
             <div
@@ -135,14 +183,82 @@ const AdminPanel = () => {
           ))}
         </div>
 
+        {/* CONTENIDO */}
         <div className="tab-content">
-          <p>
-            {activeTab === "usuarios"
-              ? "Aquí puedes listar, editar o eliminar usuarios."
-              : activeTab === "canciones"
-              ? "Aquí puedes gestionar canciones."
-              : "Aquí puedes gestionar registros y protecciones de derechos de autor."}
-          </p>
+          {activeTab === "usuarios" && (
+            <>
+              <h2>Lista de Usuarios</h2>
+
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Seguidores</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {usuarios.map((u) => (
+                    <tr key={u.id_usuario}>
+                      <td>
+                        <div className="user-cell">
+                          {u.foto_perfil ? (
+                            <img
+                              src={`http://127.0.0.1:8000/${u.foto_perfil}`}
+                              className="user-avatar"
+                              alt="perfil"
+                            />
+                          ) : (
+                            <div className="user-avatar" style={{ background: "#333" }} />
+                          )}
+
+                          {u.nombre_usuario}
+                        </div>
+                      </td>
+
+                      <td>
+                        <span className="badge badge-green">
+                          {u.seguidores} seguidores
+                        </span>
+                      </td>
+
+                      <td>
+                        <span className="badge badge-green">
+                          Activo
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* GRAFICA */}
+              <div className="chart-container">
+                <h3>Actividad de Usuarios</h3>
+
+                {actividad.map((item) => (
+                  <div key={item.dia}>
+                    <small>{item.dia}</small>
+                    <div
+                      className="bar"
+                      style={{
+                        width: `${(item.valor / maxValor) * 100}%`
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {activeTab === "canciones" && (
+            <p>Panel de canciones próximamente 🎵</p>
+          )}
+
+          {activeTab === "derechos" && (
+            <p>Panel de derechos próximamente 📄</p>
+          )}
         </div>
       </main>
     </div>
@@ -150,5 +266,3 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
-
-

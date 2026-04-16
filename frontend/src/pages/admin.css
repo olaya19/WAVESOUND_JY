@@ -67,3 +67,83 @@
   .admin-main { padding: 1rem; }
 }
 
+/* ========================= */
+/* TABLA PRO */
+/* ========================= */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.admin-table thead {
+  background: linear-gradient(135deg, #41DC97, #38115C);
+}
+
+.admin-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+}
+
+.admin-table tr:hover {
+  background: rgba(65, 220, 151, 0.1);
+  transition: 0.3s;
+}
+
+/* ========================= */
+/* USUARIO CELL */
+/* ========================= */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ========================= */
+/* BADGES */
+/* ========================= */
+.badge {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.badge-green {
+  background: #41DC97;
+  color: #000;
+}
+
+/* ========================= */
+/* GRAFICA SIMPLE */
+/* ========================= */
+.chart-container {
+  margin-top: 2rem;
+  background: #1c1c1c;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.bar {
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #41DC97, #38115C);
+  margin-bottom: 10px;
+}
